@@ -1,0 +1,11 @@
+org.apache.batik.apps.rasterizer.Main main
+
+small "-d" "scratch" "-scriptSecurityOff" "dat/batik/sydney.svg"
+default "-d" "scratch" "-scriptSecurityOff" "dat/batik/mapSpain.svg" "dat/batik/mapWaadt.svg"
+large "-d" "scratch" "-scriptSecurityOff" "dat/batik/mapSpain.svg" "dat/batik/mapWaadt.svg" "dat/batik/asf-logo.svg" "dat/batik/moonPhases.svg" "dat/batik/batik3D.svg" "dat/batik/strokeFont.svg"
+
+desc-short	"An Scalable Vector Graphics (SVG) toolkit"
+desc-long	"batik renders a number of svg files"
+desc-copyright	"Copyright (C) 2000 The Apache Software Foundation"
+desc-url        "http://xml.apache.org/batik/"
+desc-version	"1.5.1"

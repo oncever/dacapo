@@ -1,0 +1,19 @@
+/*
+ * Style sheet for GC benchmark pages
+ *
+ * Robin Garner, ANU, 2006
+ */
+body {
+	background-image: url("http://www-ali.cs.umass.edu/images/mustext.gif");
+    	font-family: arial;
+}
+p { 	color: black;
+}
+
+body.menu {
+	background-image: none;
+	/*background-color: rgb(40,40,180); */
+	background-color: rgb(240,240,240);
+	color: rgb(0,0,0);
+    	font-family: arial;
+}

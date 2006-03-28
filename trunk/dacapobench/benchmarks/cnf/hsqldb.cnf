@@ -1,0 +1,11 @@
+dacapo.PseudoJDBCBench main
+
+small "-driver" "org.hsqldb.jdbcDriver" "-url" "jdbc:hsqldb:scratch/hsqldb" "-user" "sa" "-init" "-clients" "1" "-tpc"  "1"   "-tps"  "1" "-v"
+default "-driver" "org.hsqldb.jdbcDriver" "-url" "jdbc:hsqldb:scratch/hsqldb" "-user" "sa" "-init" "-clients" "20" "-tpc" "2"   "-tps"  "2" "-v"
+large "-driver" "org.hsqldb.jdbcDriver" "-url" "jdbc:hsqldb:scratch/hsqldb" "-user" "sa" "-init" "-clients" "20" "-tpc" "5" "-tps" "15" "-v"
+
+desc-short	"An SQL relational database engine written in Java"
+desc-long	"HSQLDB executes a JDBC-like in-memory benchmark, executing a number of transactions against a model of a banking application"
+desc-copyright	"Copyright (c) 2001-2002, The HSQL Development Group"
+desc-url	"http://hsqldb.sourceforge.net"
+desc-version	"1.7.1"
