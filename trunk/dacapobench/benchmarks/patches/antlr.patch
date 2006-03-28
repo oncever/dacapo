@@ -1,0 +1,254 @@
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' antlr.orig/antlr-2.7.2/antlr/AntlrHarness.java antlr/antlr-2.7.2/antlr/AntlrHarness.java
+--- antlr.orig/antlr-2.7.2/antlr/AntlrHarness.java	1970-01-01 10:00:00.000000000 +1000
++++ antlr/antlr-2.7.2/antlr/AntlrHarness.java	2005-09-28 16:15:09.000000000 +1000
+@@ -0,0 +1,36 @@
++package antlr;
++import java.util.Vector;
++
++
++public class AntlrHarness {
++  public static void main(String[] args) {
++    int firstGrammarIndex = 0;
++    int nIterations = 1;
++    String[] newArgs = null;
++    Vector v = new Vector(args.length);
++    for (int i=0; i < args.length; i++) {
++      if (args[i].equals("-grammars")) {
++        firstGrammarIndex = i+1;
++        newArgs = new String[v.size()+1];
++        for (int j=0; j < v.size(); j++) {
++          newArgs[j] = (String)v.elementAt(j);
++        }
++        break;
++      } else if (args[i].equals("-iterations")) {
++        nIterations = Integer.parseInt(args[++i]);
++      } else {
++        v.addElement(args[i]);
++      }
++    }
++      
++    for (int iteration=0; iteration < nIterations; iteration++) {
++      for (int iGrammar=firstGrammarIndex;
++           iGrammar < args.length;
++           iGrammar++) {
++        newArgs[newArgs.length-1] = args[iGrammar];
++        System.out.println("Running antlr on grammar "+args[iGrammar]);
++        Tool.main(newArgs);
++      }
++    }
++  }
++}
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' antlr.orig/antlr-2.7.2/antlr/ImportVocabTokenManager.java antlr/antlr-2.7.2/antlr/ImportVocabTokenManager.java
+--- antlr.orig/antlr-2.7.2/antlr/ImportVocabTokenManager.java	2005-09-28 16:14:17.000000000 +1000
++++ antlr/antlr-2.7.2/antlr/ImportVocabTokenManager.java	2005-09-28 16:15:09.000000000 +1000
+@@ -26,34 +26,61 @@
+ 
+         this.grammar = grammar;
+         this.filename = filename_;
++        java.net.URL grammarURL = null;
+ 
+         // Figure out exactly where the file lives.  Check $PWD first,
+         // and then search in -o <output_dir>.
+         //
++        
+         File grammarFile = new File(filename);
+ 
+         if (!grammarFile.exists()) {
+             grammarFile = new File(antlrTool.getOutputDirectory(), filename);
+ 
+             if (!grammarFile.exists()) {
++              //-#if GCBM
++              grammarURL = dacapo.TestHarness.getURL(filename);
++              if (grammarURL == null) {
++                  // If not found: try in the data area of the jar file:
++                    grammarURL = dacapo.TestHarness.getURL("dat/antlr/"+filename);
++              }
++              if (grammarURL == null) {
+                 antlrTool.panic("Cannot find importVocab file '" + filename + "'");
+             }
++              //-#else
++              //antlrTool.panic("Cannot find importVocab file '" + filename + "'");
++              //-#endif
++            }
+         }
+ 
+         setReadOnly(true);
+ 
+         // Read a file with lines of the form ID=number
+         try {
+-            Reader fileIn = new BufferedReader(new FileReader(grammarFile));
++          //-#if GCBM
++          Reader fileIn;
++          if (grammarURL != null)
++            fileIn = new BufferedReader(new InputStreamReader(grammarURL.openStream()));
++          else
++            fileIn = new BufferedReader(new FileReader(grammarFile));
++          //-#else
++            //Reader fileIn = new BufferedReader(new FileReader(grammarFile));
++            //-#endif
+             ANTLRTokdefLexer tokdefLexer = new ANTLRTokdefLexer(fileIn);
+             ANTLRTokdefParser tokdefParser = new ANTLRTokdefParser(tokdefLexer);
+             tokdefParser.setTool(antlrTool);
+             tokdefParser.setFilename(filename);
+             tokdefParser.file(this);
+         }
+-        catch (FileNotFoundException fnf) {
++        //-#if GCBM
++        catch (IOException ex) {
+             antlrTool.panic("Cannot find importVocab file '" + filename + "'");
+         }
++        //-#else
++//         catch (FileNotFoundException fnf) {
++//             antlrTool.panic("Cannot find importVocab file '" + filename + "'");
++//         }
++        //-#endif
+         catch (RecognitionException ex) {
+             antlrTool.panic("Error parsing importVocab file '" + filename + "': " + ex.toString());
+         }
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' antlr.orig/antlr-2.7.2/antlr/Tool.java antlr/antlr-2.7.2/antlr/Tool.java
+--- antlr.orig/antlr-2.7.2/antlr/Tool.java	2005-09-28 16:14:17.000000000 +1000
++++ antlr/antlr-2.7.2/antlr/Tool.java	2005-09-28 16:15:09.000000000 +1000
+@@ -110,7 +110,11 @@
+      * provided WITHOUT WARRANTY either expressed or implied.  */
+     public void copyFile(String source_name, String dest_name)
+         throws IOException {
+-        File source_file = new File(source_name);
++      //-#if GCBM
++        java.net.URL sourceURL = null;
++      //-#else
++      //File source_file = new File(source_name);
++      //-#endif
+         File destination_file = new File(dest_name);
+         Reader source = null;
+         Writer destination = null;
+@@ -118,14 +122,18 @@
+         int bytes_read;
+ 
+         try {
+-            // First make sure the specified source file
+-            // exists, is a file, and is readable.
+-            if (!source_file.exists() || !source_file.isFile())
+-                throw new FileCopyException("FileCopy: no such source file: " +
+-                                            source_name);
+-            if (!source_file.canRead())
+-                throw new FileCopyException("FileCopy: source file " +
+-                                            "is unreadable: " + source_name);
++        //-#if GCBM
++          sourceURL = dacapo.TestHarness.getURL(source_name);
++        //-#else
++//             // First make sure the specified source file
++//             // exists, is a file, and is readable.
++//             if (!source_file.exists() || !source_file.isFile())
++//                 throw new FileCopyException("FileCopy: no such source file: " +
++//                                             source_name);
++//             if (!source_file.canRead())
++//                 throw new FileCopyException("FileCopy: source file " +
++//                                             "is unreadable: " + source_name);
++            //-#endif
+ 
+             // If the destination exists, make sure it is a writeable file
+             // and ask before overwriting it.  If the destination doesn't
+@@ -164,7 +172,11 @@
+ 
+             // If we've gotten this far, then everything is okay; we can
+             // copy the file.
+-            source = new BufferedReader(new FileReader(source_file));
++          //-#if GCBM
++            source = new BufferedReader(new InputStreamReader(sourceURL.openStream()));
++          //-#else
++            //source = new BufferedReader(new FileReader(source_file));
++            //-#endif
+             destination = new BufferedWriter(new FileWriter(destination_file));
+ 
+             buffer = new char[1024];
+@@ -409,7 +421,10 @@
+                                System.getProperty("line.separator"));
+             e.printStackTrace();
+         }
+-        System.exit(0);
++        //-#if GCBM
++        //-#else
++        //System.exit(0);
++        //-#endif
+     }
+ 
+     /** This method is used by all code generators to create new output
+@@ -423,7 +438,12 @@
+         Reader f = null;
+         try {
+             if (grammarFile != null) {
+-                f = new BufferedReader(new FileReader(grammarFile));
++              //-#if GCBM
++              java.net.URL sourceURL = dacapo.TestHarness.getURL(grammarFile);
++              f = new BufferedReader(new InputStreamReader(sourceURL.openStream()));
++              //-#else
++              //f = new BufferedReader(new FileReader(grammarFile));
++              //-#endif
+             }
+         }
+         catch (IOException e) {
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' antlr.orig/antlr-2.7.2/antlr/preprocessor/Hierarchy.java antlr/antlr-2.7.2/antlr/preprocessor/Hierarchy.java
+--- antlr.orig/antlr-2.7.2/antlr/preprocessor/Hierarchy.java	2005-09-28 16:14:17.000000000 +1000
++++ antlr/antlr-2.7.2/antlr/preprocessor/Hierarchy.java	2005-09-28 16:15:09.000000000 +1000
+@@ -92,7 +92,19 @@
+     }
+ 
+     public void readGrammarFile(String file) throws FileNotFoundException {
+-        Reader grStream = new BufferedReader(new FileReader(file));
++      //-#if GCBM
++      Reader grStream = null;
++      try {
++        java.net.URL sourceURL = null;
++        ClassLoader cl = this.getClass().getClassLoader();
++        sourceURL = cl.getResource(file);
++        grStream = new BufferedReader(new InputStreamReader(sourceURL.openStream()));
++      } catch (IOException e) {
++        antlrTool.toolError("error reading grammar(s):\n" + file);
++      }
++        //-#else
++        //Reader grStream = new BufferedReader(new FileReader(file));
++        //-#endif
+         addGrammarFile(new GrammarFile(antlrTool, file));
+ 
+         // Create the simplified grammar lexer/parser
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' antlr.orig/dacapo/AntlrHarness.java antlr/dacapo/AntlrHarness.java
+--- antlr.orig/dacapo/AntlrHarness.java	1970-01-01 10:00:00.000000000 +1000
++++ antlr/dacapo/AntlrHarness.java	2005-09-28 16:14:05.000000000 +1000
+@@ -0,0 +1,37 @@
++package dacapo;
++
++import java.util.Vector;
++import antlr.Tool;
++
++public class AntlrHarness {
++  public static void main(String[] args) {
++    int firstGrammarIndex = 0;
++    int nIterations = 1;
++    String[] newArgs = null;
++    Vector v = new Vector(args.length);
++    for (int i=0; i < args.length; i++) {
++      if (args[i].equals("-grammars")) {
++        firstGrammarIndex = i+1;
++        newArgs = new String[v.size()+1];
++        for (int j=0; j < v.size(); j++) {
++          newArgs[j] = (String)v.elementAt(j);
++        }
++        break;
++      } else if (args[i].equals("-iterations")) {
++        nIterations = Integer.parseInt(args[++i]);
++      } else {
++        v.addElement(args[i]);
++      }
++    }
++      
++    for (int iteration=0; iteration < nIterations; iteration++) {
++      for (int iGrammar=firstGrammarIndex;
++           iGrammar < args.length;
++           iGrammar++) {
++        newArgs[newArgs.length-1] = args[iGrammar];
++        System.out.println("Running antlr on grammar "+args[iGrammar]);
++        Tool.main(newArgs);
++      }
++    }
++  }
++}
