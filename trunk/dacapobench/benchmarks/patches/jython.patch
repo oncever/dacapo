@@ -1,0 +1,78 @@
+diff -N -u -r jython/dacapo/jythonHarness.java jython/dacapo/jythonHarness.java
+--- jython/dacapo/jythonHarness.java	1970-01-01 10:00:00.000000000 +1000
++++ jython/dacapo/jythonHarness.java	2004-09-24 00:42:45.000000000 +1000
+@@ -0,0 +1,39 @@
++package dacapo;
++
++import org.python.util.jython;
++
++
++public class jythonHarness {
++  
++  public static void main(String[] args) {
++    int size = 2;
++    for (int i = 0; i < args.length; i++) {
++      if (args[i].equals("small")) {
++        size = 1;
++      } else if (args[i].equals("large")) {
++        size = 3;
++      }
++    }
++    String[] jargs = new String[2];
++
++    int multiplier = (size == 3) ? 5 : 1;
++    jargs[0] = "dat/jython/heapsort.py";
++    jargs[1] = Integer.toString(200*multiplier);
++    jython.main(jargs);
++
++    if (size == 1) return;
++
++    jargs[0] = "dat/jython/sieve.py";
++    jargs[1] = Integer.toString(10*multiplier);
++    jython.main(jargs);
++
++    jargs[0] = "dat/jython/matrix.py";
++    jargs[1] = Integer.toString(5*multiplier);
++    jython.main(jargs);
++
++    jargs[0] = "dat/jython/objinst.py";
++    jargs[1] = Integer.toString(350*multiplier);
++    jython.main(jargs);
++
++  }
++}
+diff -N -u -r jython/jython/build.xml jython/jython/build.xml
+--- jython/jython/build.xml	2005-09-27 18:03:58.000000000 +1000
++++ jython/jython/build.xml	2005-09-27 18:04:55.000000000 +1000
+@@ -24,6 +24,7 @@
+         <pathelement path="${jdbc.jar}"/>
+         <pathelement path="${java.class.path}"/>
+         <pathelement location="${build.classes}"/>
++        <pathelement location="${dacapo.classes}"/>
+     </path>
+ 
+     <target name="init">
+diff -N -u -r jython/jython/org/python/core/__builtin__.java jython/jython/org/python/core/__builtin__.java
+--- jython/jython/org/python/core/__builtin__.java	2005-09-27 18:03:58.000000000 +1000
++++ jython/jython/org/python/core/__builtin__.java	2005-09-27 18:04:55.000000000 +1000
+@@ -1,6 +1,8 @@
+ // Copyright (c) Corporation for National Research Initiatives
+ package org.python.core;
+ 
++import dacapo.TestHarness;
++
+ import org.python.parser.SimpleNode;
+ import java.util.Hashtable;
+ 
+@@ -288,9 +290,9 @@
+     public static void execfile_flags(String name, PyObject globals,
+                                 PyObject locals,CompilerFlags cflags)
+     {
+-        java.io.FileInputStream file;
++        java.io.InputStream file;
+         try {
+-            file = new java.io.FileInputStream(name);
++            file = TestHarness.getInputStream(name);
+         } catch (java.io.FileNotFoundException e) {
+             throw Py.IOError(e);
+         }
