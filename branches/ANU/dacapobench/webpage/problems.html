@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="gcbm.css"/>
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  <title>The DaCapo Benchmark Suite</title>
+</head>
+
+<body>
+<h2>Known Problems</h2>
+<ul>
+  <li>The benchmarks 'chart' and 'batik' currently do not run with
+      JikesRVM (2.4.1) or Kaffe (1.1.6) for what appear to be class-library
+      related issues.<p>
+  </li>
+  <li>The benchmarks run with the Sun jdk 1.4 and 1.5, but do not build with
+      1.5.  This is a limitation of some of the benchmarks themselves.<p>
+  </li>
+  <li>
+The jar file contains the compiled classes for the benchmark programs, plus
+the minimum library jar file contents required to get the benchmarks to run.
+<p>
+If the system class libraries for your VM are missing classes distributed 
+as library jar files with the benchmark, please let us know so we can amend
+the build procedure.  After building with ant, the source tree for each 
+benchmark is left in the build_src subdirectory, and comparing the library
+jar files distributed with the benchmark and the dacapo build.xml might 
+provide the answer.<p>
+  </li>
+  <li>There are some issues with JikesRVM.</li>
+  <ul>
+    <li>By default, JikesRVM does not build classpath with support for
+AWT, which
+<span style="font-style: italic;">batik</span> and <span style="font-style: italic;">chart</span> use. Jikes can be configured
+to use AWT, by editing <span style="font-family: monospace;">rvm/bin/jBuildClasspathJar</span>,
+in particular, ensuring that the <span style="font-family: monospace;">--disable-gtk-peer</span>
+argument is <span style="font-style: italic;">not </span>set when
+classpath is built (ie you want the gtk-peer enabled).
+<p>
+(Updated 10/4/05) This no longer seems to be sufficient - JikesRVM (and Kaffe 1.1.6) no longer
+seem to run batik or chart even with gtk support installed.<p>
+</li>
+    <li>Version beta041020 did not include sufficient classes for Jikes
+RVM to run xalan.&nbsp; This is fixed in subsequent releases.<br>
+    </li>
+  </ul>
+</ul>
+<br>
+</body></html>
