@@ -1,0 +1,12 @@
+net.sourceforge.pmd.PMD main
+
+small "@dat/pmd/small.lst" "xml" "dat/pmd/rulesets/imports.xml" "-debug"
+default "@dat/pmd/large.lst" "xml" "dat/pmd/rulesets/imports.xml" "dat/pmd/rulesets/controversial.xml" "dat/pmd/rulesets/controversial.xml" "dat/pmd/rulesets/coupling.xml" "dat/pmd/rulesets/basic.xml" "dat/pmd/rulesets/braces.xml" "dat/pmd/rulesets/naming.xml" "dat/pmd/rulesets/design.xml" "dat/pmd/rulesets/unusedcode.xml" "-debug"
+large "@dat/pmd/large.lst" "xml" "dat/pmd/rulesets/basic.xml" "dat/pmd/rulesets/braces.xml" "dat/pmd/rulesets/codesize.xml" "dat/pmd/rulesets/controversial.xml" "dat/pmd/rulesets/coupling.xml" "dat/pmd/rulesets/design.xml" "dat/pmd/rulesets/favorites.xml" "dat/pmd/rulesets/finalizers.xml" "dat/pmd/rulesets/imports.xml" "dat/pmd/rulesets/javabeans.xml" "dat/pmd/rulesets/junit.xml" "dat/pmd/rulesets/naming.xml" "dat/pmd/rulesets/newrules.xml" "dat/pmd/rulesets/rulesets.properties" "dat/pmd/rulesets/scratchpad.xml" "dat/pmd/rulesets/strictexception.xml" "dat/pmd/rulesets/strings.xml" "dat/pmd/rulesets/unusedcode.xml" "-debug"
+
+
+desc-short	"A source code analyzer for Java"
+desc-long	"pmd analyzes a list of Java classes for a range of source code problems"
+desc-copyright	"Copyright (c) 2003, InfoEther, LLC"
+desc-url	"http://pmd.sourceforge.net/"
+desc-version	"1.8"

@@ -1,0 +1,11 @@
+edu.unm.cs.oal.DaCapo.JavaPostScript.Red.executive main
+
+small           "dat/ps/snowflakes.ps"
+default		"dat/ps/dragon2.ps"
+large		"dat/ps/fibonacci20.ps"
+huge            "dat/ps/bifur.ps"
+
+desc-short	"A postscript interpreter"
+desc-long	"A postscript file is read and interpreted"
+desc-copright	"Copyright (c) 2003 Michael Usner, Tuan Bui, Kade Elkins"
+desc-version	""
