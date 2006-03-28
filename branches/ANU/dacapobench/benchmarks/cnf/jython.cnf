@@ -1,0 +1,11 @@
+dacapo.jythonHarness main
+
+small "small"
+default "default"
+large "large"
+
+desc-short	"A python interpreter written in Java"
+desc-long	"jython executes (interprets) a series of python programs"
+desc-copyright	"Copyright (c) Python Software Foundation"
+desc-url	"http://www.jython.org/"
+desc-version	"2.1"

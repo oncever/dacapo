@@ -1,0 +1,11 @@
+dacapo.XalanHarness main
+
+small "2" "1"
+default "2" "2"
+large "8" "2"
+
+desc-short	"An XSLT processor for transforming XML documents"
+desc-long	"Xalan transforms an XML document (either an test case or the works of Shakespeare) and transforms the document into html"
+desc-copyright	"Copyright (C) 1999-2003 The Apache Software Foundation"
+desc-url	"http://xml.apache.org/xalan-j/"
+desc-version	"2.4.1"

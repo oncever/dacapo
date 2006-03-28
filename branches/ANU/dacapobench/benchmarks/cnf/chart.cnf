@@ -1,0 +1,11 @@
+dacapo.Plotter main
+
+small "-p" "compress" "-d" "scratch" "small" "dat/chart/compress.dat" 
+default "-p" "javac" "-d" "scratch" "small" "dat/chart/javac.dat"
+large "-p" "javac" "-d" "scratch" "large" "dat/chart/javac.dat"
+
+desc-short	"An graph plotting toolkit and pdf renderer"
+desc-long	"jfreechart plots a number of complex line graphs and renders them as pdf via itext"
+desc-copyright	"(C)opyright 2000-2004, by Object Refinery Limited and Contributors; Copyright 2000, 2001, 2002 by Bruno Lowagie"
+desc-url        "http//www.jfree.org, http://www.lowagie.com/iText/"
+desc-version	"0.9.21, 1.0b"
