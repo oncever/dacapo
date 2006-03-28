@@ -1,0 +1,13 @@
+org.apache.fop.apps.Fop main
+
+small "-d" "dat/fop/readme.fo" "scratch/readme.pdf"
+default "dat/fop/test.fo" "scratch/test.pdf"
+large "dat/fop/test.fo" "scratch/test.pdf"
+largeX "dat/fop/extensive.fo" "scratch/test.pdf"
+largeY "dat/fop/embedding.fo" "scratch/test.pdf"
+
+desc-short	"An output independant print formatter"
+desc-long	"fop takes an XSL-FO file, parses it and formats it, generating a pdf file"
+desc-copyright	"Copyright (C) 1999-2003 The Apache Software Foundation"
+desc-url        "http://xml.apache.org/fop/"
+desc-version	"0.20.5"
