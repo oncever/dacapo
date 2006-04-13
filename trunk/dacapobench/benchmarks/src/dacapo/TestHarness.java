@@ -1,5 +1,6 @@
 package dacapo;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.io.BufferedReader;
@@ -156,27 +157,49 @@ public class TestHarness {
           System.exit(12);
         }
         
-        TestHarness h = new TestHarness();
-        h.parseStream(ins);
+        TestHarness harness = new TestHarness(ins);
         
         if (info) {
-          h.bmInfo();
+          harness.bmInfo();
         } else {
           if (verbose)
-            h.dump();
+            harness.dump();
           
-          Method m = h.findMethod();
+          Class c = harness.findClass();
           
-          while (iterations > 1) {
-            callback.startWarmup(bm);
-            h.invokeConfiguration(m, config);
-            callback.stopWarmup(bm);
-            iterations--;
+          if (dacapo.Benchmark.class.isAssignableFrom(c)) {
+            Constructor cons = c.getConstructor(new Class[] {String.class,File.class});
+            
+            Benchmark b = (Benchmark) cons.newInstance(new Object[] {bm,scratchDir});
+            String[] bmArgs = (String[])((Vector)(harness.configurations.get(config))).toArray(new String[0]);
+            
+            for (; iterations > 1; iterations--) {
+              b.preIteration(bmArgs);
+              callback.startWarmup(bm);
+              b.iterate(bmArgs);
+              callback.stopWarmup(bm);
+              b.postIteration(bmArgs);
+           }
+
+            b.preIteration(bmArgs);
+            callback.start(bm);
+            b.iterate(bmArgs);
+            callback.stop(bm);
+            b.postIteration(bmArgs);
+            b.cleanup();
+          } else {
+            Method m = harness.findMethod();
+
+            for (; iterations > 1; iterations--) {
+              callback.startWarmup(bm);
+              harness.invokeConfiguration(m, config);
+              callback.stopWarmup(bm);
+            }
+
+            callback.start(bm);
+            harness.invokeConfiguration(m, config);
+            callback.stop(bm);
           }
-          
-          callback.start(bm);
-          h.invokeConfiguration(m, config);
-          callback.stop(bm);
         }
       }
     }
@@ -196,8 +219,9 @@ public class TestHarness {
     System.out.println("    -F                      Allow input data from filesystem");
     System.out.println("    -h                      Print this help");
     System.out.println("    -i                      Display benchmark information");
+    System.out.println("    -n <iter>               Run the benchmark <iter> times");
     System.out.println("    -s small|default|large  Size of input data");
-    System.out.println("    -two                    Run the benchmark twice");
+    System.out.println("    -two                    Run the benchmark twice (equivalent to -n 2)");
     System.out.println("    -v                      Verbose output");
   }
   
@@ -252,7 +276,7 @@ public class TestHarness {
     }
   }
   
-  private void parseStream(InputStream stream) {
+  private TestHarness(InputStream stream) {
     try {
       Reader r = new BufferedReader(new InputStreamReader(stream));
       StreamTokenizer tokenizer = new StreamTokenizer(r);
@@ -340,23 +364,31 @@ public class TestHarness {
     }
   }
   
-  private Method findMethod() {
+  private Class findClass() {
     try {
-      Class klass = Class.forName(className);
-      Method[] methods = klass.getDeclaredMethods();
-      for (int i=0; i < methods.length; i++) {
-        Method m = methods[i];
-        if (m.getName().equals(methodName)) {
-          return m;
-        }
-      }
+      return Class.forName(className);
     }
     catch (ClassNotFoundException e) {
       System.err.println(e);
       e.printStackTrace();
       System.exit(-1);
+      return null;  // not reached
     }
-    
+  }
+  
+  private Method findMethod() {
+    return findMethod(methodName);
+  }
+  
+  private Method findMethod(String methodName) {
+    Method[] methods = findClass().getDeclaredMethods();
+    for (int i=0; i < methods.length; i++) {
+      Method m = methods[i];
+      if (m.getName().equals(methodName)) {
+        return m;
+      }
+    }
+
     System.err.println("Method not found: "+methodName);
     System.exit(-1);
     return null;
