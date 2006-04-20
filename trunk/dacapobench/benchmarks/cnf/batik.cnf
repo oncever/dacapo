@@ -1,11 +1,26 @@
-org.apache.batik.apps.rasterizer.Main main
+benchmark batik
+  class dacapo.batik.BatikHarness;
 
-small "-d" "scratch" "-scriptSecurityOff" "dat/batik/sydney.svg"
-default "-d" "scratch" "-scriptSecurityOff" "dat/batik/mapSpain.svg" "dat/batik/mapWaadt.svg"
-large "-d" "scratch" "-scriptSecurityOff" "dat/batik/mapSpain.svg" "dat/batik/mapWaadt.svg" "dat/batik/asf-logo.svg" "dat/batik/moonPhases.svg" "dat/batik/batik3D.svg" "dat/batik/strokeFont.svg"
+size small args "-scriptSecurityOff","batik/sydney.svg"
+  output "sydney.png" digest 0xb1e76a60f331d69be47f7a82951d5d11ca016d37;
 
-desc-short	"An Scalable Vector Graphics (SVG) toolkit"
-desc-long	"batik renders a number of svg files"
-desc-copyright	"Copyright (C) 2000 The Apache Software Foundation"
-desc-url        "http://xml.apache.org/batik/"
-desc-version	"1.5.1"
+size default args "-scriptSecurityOff","batik/mapSpain.svg","batik/mapWaadt.svg"
+  output "mapSpain.png" digest 0x7274383b2da6cc8632064c447cb00099c57c9834,
+         "mapWaadt.png" digest 0x2b05ed69a32381f1453c7f410c214337eec64e32;
+
+size large args "-scriptSecurityOff","batik/mapSpain.svg","batik/mapWaadt.svg",
+                "batik/asf-logo.svg","batik/moonPhases.svg","batik/batik3D.svg",
+		"batik/strokeFont.svg"
+  output "mapSpain.png"   digest 0x7274383b2da6cc8632064c447cb00099c57c9834,
+         "mapWaadt.png"   digest 0x2b05ed69a32381f1453c7f410c214337eec64e32,
+         "asf-logo.png"   digest 0xb19da891b59cad1a2c5b4a16c5f37b19dda5643f,
+	 "moonPhases.png" digest 0xccff9473e438feee1a99bd417f43669dbf0ed971,
+	 "batik3D.png"    digest 0xbecbfce9988411f13481356abe5d0565d4eae84a,
+	 "strokeFont.png" digest 0xfdf62abaa0964f4bd401eaaa953b66eb1bab236f;
+
+description
+  short	"An Scalable Vector Graphics (SVG) toolkit",
+  long	"batik renders a number of svg files",
+  copyright	"Copyright (C) 2000 The Apache Software Foundation",
+  url        "http://xml.apache.org/batik/",
+  version	"1.5.1";

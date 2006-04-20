@@ -2,16 +2,23 @@ package dacapo;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import dacapo.parser.Config;
 
 /**
  * Each DaCapo benchmark is represented by an instance of this
@@ -22,16 +29,28 @@ import java.util.zip.ZipInputStream;
  *
  */
 public abstract class Benchmark {
-  private static final int BUFFER = 2048;
-  protected static final boolean verbose = true;
-  protected final File scratch;
-  protected final String name;
+  /*
+   * These flags are set by the TestHarness in response to command line flags
+   */
+  public static boolean verbose = false;
+  public static boolean digestOutput = true;
+  public static boolean preserve = false;
   
-  protected static ValidatingPrintStream out = new ValidatingPrintStream(System.out);
-  protected static ValidatingPrintStream err = new ValidatingPrintStream(System.err);
+  protected final File scratch;
+  protected final Config config;
+  
+  private static final int BUFFER = 2048;
+  protected static final MessageDigest outDigest = Digest.create();
+  protected static final MessageDigest errDigest = Digest.create();
+  protected static final PrintStream out = new PrintStream(
+      new DigestOutputStream(System.out,outDigest));
+  protected static final PrintStream err = new PrintStream(
+      new DigestOutputStream(System.err,errDigest));
   
   private static PrintStream savedOut = System.out;
   private static PrintStream savedErr = System.err;
+  
+  private String lastOutDigest, lastErrDigest;
   
   /**
    * When an instance of a Benchmark is created, it is expected to prepare 
@@ -39,9 +58,9 @@ public abstract class Benchmark {
    * 
    * @param scratch Scratch directory
    */
-  public Benchmark(String name, File scratch) throws Exception {
+  public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
-    this.name = name;
+    this.config = config;
     prepare();
   }
   
@@ -50,37 +69,35 @@ public abstract class Benchmark {
    * data/<code>name</code>.zip into the scratch directory.
    */
   protected void prepare() throws Exception {
-    unpackZipFileResource("data/"+name+".zip", scratch);
+    unpackZipFileResource("data/"+config.name+".zip", scratch);
   }
   
   /**
-   * Perform post-benchmark cleanup, deleting output files etc.
-   * By default it deletes a subdirectory of the scratch directory with
-   * the same name as the benchmark.
+   * Benchmark-specific per-iteration setup, outside the timing loop.
+   * 
+   * @param size
    */
-  public void cleanup() {
-    deleteTree(new File(scratch,name));
+  public void preIteration(String size) {
+    if (verbose) {
+      String[] args = config.getArgs(size);
+      for (int i=0; i < args.length; i++)
+        System.out.print(args[i]+" ");
+      System.out.println();
+    }
   }
   
   /**
-   * Perform validation of output
-   * 
-   * @return true if the output was correct
+   * Per-iteration setup, inside the timing loop.  Nothing comes between this and
+   * the call to 'iterate' - its porpose is to start collection of the input
+   * and output streams.  stopIteration() should be its inverse.
    */
-  public abstract boolean validate();
-  
-  /**
-   * Per-iteration preparation, outside the timing loop.
-   * Arguments are expected to be the same as are passed to the
-   * subsequent iteration() pass
-   * 
-   * @param args Arguments to the benchmark
-   */
-  public void preIteration(String [] args) {
-    System.setOut(out);
-    System.setErr(err);
-    out.reset();
-    err.reset();
+  public final void startIteration() {
+    if (digestOutput) {
+      System.setOut(out);
+      System.setErr(err);
+      outDigest.reset();
+      errDigest.reset();
+    }
   }
   
   /**
@@ -89,21 +106,148 @@ public abstract class Benchmark {
    * 
    * @param args Arguments to the benchmark
    */
-  public abstract void iterate(String [] args) throws Exception;
+  public abstract void iterate(String size) throws Exception;
+
+  /**
+   * Post-iteration tear-down, inside the timing loop.  Restores standard output
+   * and error, and saves the digest of the iteration output.  This is inside
+   * the timing loop so as not to process any output from the timing harness.
+   */
+  public final void stopIteration() {
+    if (digestOutput) {
+      System.setOut(savedOut);
+      System.setErr(savedErr);
+      lastOutDigest = Digest.toString(outDigest.digest());
+      lastErrDigest = Digest.toString(errDigest.digest());
+    }
+  }
   
   /**
-   * Per-iteration cleanup, outside the timing loop.  Args
-   * should be the same as the immediately preceding call to
-   * 'iteration()'
+   * Perform validation of output
    * 
-   * @param args Arguments to the benchmark
+   * @param size Size of the benchmark run.
+   * @return true if the output was correct
    */
-  public void postIteration(String [] args) {
-    System.setOut(savedOut);
-    System.setErr(savedErr);
-    System.out.println("Output lines "+out.getLineCount()+", error lines "+err.getLineCount());
-    System.out.println("Output writes "+out.writeCount+", error writes "+err.writeCount);
-    System.out.println("Output bytes "+out.byteCount+", error bytes "+err.byteCount);
+  public boolean validate(String size) {
+    boolean valid = true;
+    for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
+      String file = (String)v.next();
+      
+      /*
+       * Validate by file digest
+       */
+      if (config.hasDigest(size,file)) {
+        String refDigest = config.getDigest(size,file);
+        String digest;
+        if (file.equals("$stdout")) {
+          digest = lastOutDigest;
+        } else if (file.equals("$stderr")) {
+          digest = lastErrDigest;
+        } else {
+          try {
+            digest = Digest.toString(FileDigest.get(fileInScratch(file)));
+          } catch (FileNotFoundException e) {
+            digest = "<File not found>";
+          } catch (IOException e) {
+            digest = "<IO exception>";
+            e.printStackTrace();
+          }
+        }
+        if (!digestOutput && (file.equals("$stdout") || file.equals("$stderr")) ) {
+          // Not collecting digests for stdout and stderr, so can't check them
+        } else if (!digest.equals(refDigest)) {
+          valid = false;
+          System.err.println("Digest validation failed for "+file+", expecting "+refDigest+" found "+digest);
+        } else if (verbose) { 
+          System.out.println("Digest validation succeeded for "+file);
+        }
+      }
+      
+      /*
+       * Validate by line count
+       */
+      if (config.hasLines(size,file)) {
+        if (file.equals("$stdout") || file.equals("$stderr"))
+          System.err.println("Line count not supported for error/output streams");
+        else {
+          int refLines = config.getLines(size,file);
+          int lines;
+          try {
+            lines = lineCount(new File(scratch,file));
+          } catch (FileNotFoundException e) {
+            System.err.println("File not found, "+file);
+            lines = -1;
+          } catch (IOException e) {
+            e.printStackTrace();
+            lines = -1;
+          }
+          if (lines != refLines) {
+            valid = false;
+            System.err.println("Line count validation failed for "+file+", expecting "+refLines+" found "+lines);
+          } else if (verbose) { 
+            System.out.println("Line count validation succeeded for "+file);
+          }
+        }
+      }
+      
+      /*
+       * Validate by byte count
+       */
+      if (config.hasBytes(size,file)) {
+        if (file.equals("$stdout") || file.equals("$stderr"))
+          System.err.println("Byte count not supported for error/output streams");
+        else {
+          long refBytes = config.getBytes(size,file);
+          long bytes;
+          try {
+            bytes = byteCount(new File(scratch,file));
+          } catch (FileNotFoundException e) {
+            System.err.println("File not found, "+file);
+            bytes = -1;
+          } catch (IOException e) {
+            e.printStackTrace();
+            bytes = -1;
+          }
+          if (bytes != refBytes) {
+            valid = false;
+            System.err.println("Byte count validation failed for "+file+", expecting "+refBytes+" found "+bytes);
+          } else if (verbose) { 
+            System.out.println("Byte count validation succeeded for "+file);
+          }
+        }
+      }
+    }
+    return valid;
+  }
+  
+  /**
+   * Per-iteration cleanup, outside the timing loop.  By default it 
+   * deletes the named output files.
+   * 
+   * @param size Argument to the benchmark iteration.
+   */
+  public void postIteration(String size) {
+    if (!preserve) {
+      for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
+        String file = (String)v.next();
+        if (file.equals("$stdout") || file.equals("$stderr")) {
+        } else {
+          if (!config.isKept(size,file))
+            deleteFile(new File(scratch,file));
+        }
+      }
+    }
+  }
+  
+  /**
+   * Perform post-benchmark cleanup, deleting output files etc.
+   * By default it deletes a subdirectory of the scratch directory with
+   * the same name as the benchmark.
+   */
+  public void cleanup() {
+    if (!preserve) {
+      deleteTree(new File(scratch,config.name));
+    }
   }
   
   /*************************************************************************************
@@ -212,4 +356,25 @@ public abstract class Benchmark {
       deleteFile(files[i]);
     }
   }
+  
+  public static int lineCount(String file) throws IOException {
+    return lineCount(new File(file));
+  }
+  
+  public static int lineCount(File file) throws IOException {
+    int lines = 0;
+    BufferedReader in = new BufferedReader(new FileReader(file));
+    while (in.readLine() != null)
+      lines++;
+    in.close();
+    return lines;
+  }
+  
+  public static long byteCount(String file) throws IOException {
+    return byteCount(new File(file));
+  }
+  public static long byteCount(File file) throws IOException {
+    return file.length();
+  }
+  
 }

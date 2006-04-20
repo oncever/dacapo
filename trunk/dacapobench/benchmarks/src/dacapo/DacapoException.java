@@ -1,7 +1,7 @@
 package dacapo;
 
 public class DacapoException extends Exception {
-  DacapoException(String text) {
+  public DacapoException(String text) {
     super(text);
   }
 }
