@@ -23,598 +23,689 @@
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
-  <description>Dacapo benchmarks</description>
-  <property name="src" location="src"/>
-  <property name="patches" location="patches"/>
-  <property name="build_src" location="build_src"/>
-  <property name="build" location="build"/>
-  <property name="sources" location="sources"/>
-  <property name="stub" location="stub"/>
-  <property name="data" location="data"/>
-  <property name="config" location="cnf"/>
-  
-  <!-- External programs -->
-  <property name="make" location="/usr/bin/make"/>
+	<description>Dacapo benchmarks</description>
+	<property name="javacchome" location="/usr/share/javacc/lib"/>
+	<property name="src" location="src"/>
+	<property name="bmsrc" location="bmsrc"/>
+	<property name="patches" location="patches"/>
+	<property name="build_src" location="build_src"/>
+	<property name="build" location="build"/>
+	<property name="sources" location="sources"/>
+	<property name="stub" location="stub"/>
+	<property name="data" location="data"/>
+	<property name="zipdata" location="${build}/data"/>
+	<property name="config" location="cnf"/>
 
-  <target name="init">
-     <!-- Create the time stamp -->
-     <tstamp/>
-     <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
-    <mkdir dir="${build_src}"/>
-    </target>
+	<!-- External programs -->
+	<property name="make" location="/usr/bin/make"/>
 
-  
-  <target name="compile" depends="antlr,batik,bloat,chart,fop,hsqldb,jython,pmd,ps,xalan"
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp/>
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}"/>
+		<mkdir dir="${build}/data"/>
+		<mkdir dir="${build_src}"/>
+	</target>
+
+
+	<target name="compile" depends="lucene,antlr,batik,bloat,chart,fop,hsqldb,jython,pmd,ps,xalan"
           description="compile the sources for all benchmarks" >
-  </target>
-  
-  
-  <target name="harness" depends="init"
-          description="compile the source " >
-     <!-- Compile the java code from ${src} into ${build} -->
-     <javac srcdir="${src}" destdir="${build}" sourcepath="${stub}"/>
-   </target>
+	</target>
 
-  
-  <!-- ================================= 
+
+	<!-- ================================= 
+	        target: harness           
+	       ================================= -->
+	<target name="harness" depends="init" description="compile the source ">
+		<javacc javacchome="${javacchome}" target="${src}/dacapo/parser/ConfigFile.jj"/>
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" sourcepath="${stub}"/>
+	</target>
+
+	<!-- ================================= 
+	        target: bms          
+	       ================================= -->
+	<!--<target name="bms" depends="compile" description="compile the benchmarks"> -->
+	<target name="bms" depends="compile" description="compile the benchmarks">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${bmsrc}" destdir="${build}"/>
+	</target>
+
+
+	<!-- ================================= 
         target: dist              
        ================================= -->
-  <target name="dist" depends="compile,jar" 
-    description="--> Build the distribution from source">      
-  </target>
+	<target name="dist" depends="bms,jar" 
+    description="--> Build the distribution from source">
+	</target>
 
 
-  
-    <!-- ================================= 
+
+	<!-- ================================= 
           target: sourcedist              
          ================================= -->
-    <target name="sourcedist" depends="sources,dist" 
+	<target name="sourcedist" depends="sources,dist" 
       description="--> Download the source and then build">
-    </target>
+	</target>
 
 
-  <!-- ================================= 
+	<!-- ================================= 
         target: jar              
        ================================= -->
-  <target name="jar" depends="harness,init"
+	<target name="jar" depends="harness,init"
           description="generate the distribution jar file" >
-    <!-- Test data and configuration files -->
-    <copy todir="${build}/dat">      <fileset dir="${data}"/>         </copy>
-    <copy todir="${build}/dacapo">   <fileset dir="${config}"/>       </copy>
-    <copy todir="${build}/META-INF" overwrite="true"> 
-      <fileset dir="${src}/META-INF"/> 
-    </copy>
+		<!-- Test data and configuration files -->
+		<copy todir="${build}/dacapo">
+			<fileset dir="${config}"/>
+		</copy>
+		<copy todir="${build}/META-INF" overwrite="true">
+			<fileset dir="${src}/META-INF"/>
+		</copy>
 
-    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-    <jar jarfile="dacapo-${DSTAMP}.jar" basedir="${build}"
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="dacapo-${DSTAMP}.jar" basedir="${build}"
          index="true"
          manifest="${build}/META-INF/MANIFEST.MF"
     />
-  </target>
+	</target>
 
-  
-  <!-- ================================= 
+
+	<!-- ================================= 
         target: clean              
        ================================= -->
-  <target name="clean" 
+	<target name="clean" 
           description="clean up after the build process">
-    <delete dir="${build}"/>
-    <delete dir="${build_src}"/>
-    <delete dir="cachedir"/>           <!-- Jython's mess -->
-    <delete dir="scratch"/>            <!-- Jython again -->
-  </target>
+		<delete dir="${build}"/>
+		<delete dir="${build_src}/antlr/antlr-2.7.2"/>
+		<delete dir="${build_src}/batik/xml-batik"/>
+		<delete dir="${build_src}/bloat/bloat"/>
+		<delete dir="${build_src}/chart/jfreechart-1.0.0"/>
+		<delete dir="${build_src}/fop/fop-0.20.5"/>
+		<delete dir="${build_src}/hsqldb/hsqldb"/>
+		<delete dir="${build_src}/junit"/>
+		<delete dir="${build_src}/jython/jython"/>
+		<delete dir="${build_src}/lucene/lucene-1.9.1"/>
+		<delete dir="${build_src}/pmd/pmd-1.8"/>
+		<delete dir="${build_src}/ps/edu"/>
+		<delete dir="${build_src}/xalan/xalan-j_2_4_1"/>
+		<delete dir="${build_src}/xalan/xalan-j_2_7_0"/>
+		<delete dir="${build_src}/xerces"/>
+		<delete dir="cachedir"/>
+		<!-- Jython's mess -->
+		<delete dir="scratch"/>
+		<!-- default scratch directory -->
+	</target>
 
-  <!-- ================================= 
+	<!-- ================================= 
         target: distclean              
        ================================= -->
-  <target name="distclean" depends="clean"
+	<target name="distclean" depends="clean"
           description="clean up including the resulting jar files">
-    <delete dir="bin"/>
-    <delete>
-      <fileset dir="${basedir}">
-        <include name="dacapo*.jar"/>
-      </fileset>
-    </delete>
-  </target>
-  
-  
-    <!-- ================================= 
+		<delete dir="bin"/>
+		<delete>
+			<fileset dir="${basedir}">
+				<include name="dacapo*.jar"/>
+			</fileset>
+		</delete>
+	</target>
+
+
+	<!-- ================================= 
           target: sourceclean              
          ================================= -->
-    <target name="sourceclean" depends="distclean" 
+	<target name="sourceclean" depends="distclean" 
             description="--> Delete all downloadable sources, too">
-        <delete dir="${sources}"/>
-    </target>
+		<delete dir="${sources}"/>
+	</target>
 
 
-  
-  <!-- *************************************************************************** -->
-  <!--                        Fetch sources                                        -->
-  <!-- *************************************************************************** -->
-  
-  <target name="init-sources" description="Prepare to download sources">
-    <mkdir dir="${sources}"/>
-  </target>
-  
-  <target name="sources" 
+
+	<!-- *************************************************************************** -->
+	<!--                        Fetch sources                                        -->
+	<!-- *************************************************************************** -->
+
+	<target name="init-sources" description="Prepare to download sources">
+		<mkdir dir="${sources}"/>
+	</target>
+
+	<target name="sources" 
     description="Download sources from their original locations"
-    depends="antlr-source,batik-source,bloat-source,chart-source,fop-source,hsqldb-source,jython-source,pmd-source,ps-source,xalan-source,xerces-source">
-  </target>
+    depends="antlr-source,batik-source,bloat-source,chart-source,fop-source,hsqldb-source,jython-source,lucene-source,pmd-source,ps-source,xalan-source,xerces-source">
+	</target>
 
-  <target name="antlr-source" depends="init-sources">
-    <get src="http://www.antlr.org/download/antlr-2.7.2.tar.gz"
+	<target name="antlr-source" depends="init-sources">
+		<get src="http://www.antlr.org/download/antlr-2.7.2.tar.gz"
          dest="${sources}/antlr-2.7.2.tar.gz"
 	     usetimestamp="true"/>
-  </target>
-  
-  <target name="batik-source" depends="init-sources">
-    <get src="http://archive.apache.org/dist/xml/batik/batik-src-1.6.zip"
+	</target>
+
+	<target name="batik-source" depends="init-sources">
+		<get src="http://archive.apache.org/dist/xml/batik/batik-src-1.6.zip"
          dest="${sources}/batik-src-1.6.zip"
          usetimestamp="true"/>
-  </target>
-  
-  <target name="bloat-source" depends="init-sources">
-    <get src="ftp://ftp.cs.purdue.edu/pub/hosking/bloat/bloat-1.0-src.tar.gz"
+	</target>
+
+	<target name="bloat-source" depends="init-sources">
+		<get src="ftp://ftp.cs.purdue.edu/pub/hosking/bloat/bloat-1.0-src.tar.gz"
          dest="${sources}/bloat-1.0-src.tar.gz"/>
-    <get src="ftp://ftp.cs.purdue.edu/pub/hosking/bloat/bloat-1.0-examples.jar"
+		<get src="ftp://ftp.cs.purdue.edu/pub/hosking/bloat/bloat-1.0-examples.jar"
          dest="${sources}/bloat-1.0-examples.jar"/>
-  </target>
-  
-  <target name="chart-source" depends="init-sources">
-    <get src="http://easynews.dl.sourceforge.net/sourceforge/jfreechart/jfreechart-1.0.0.tar.gz"
+	</target>
+
+	<target name="chart-source" depends="init-sources">
+		<get src="http://easynews.dl.sourceforge.net/sourceforge/jfreechart/jfreechart-1.0.0.tar.gz"
          dest="${sources}/jfreechart-1.0.0.tar.gz"
 	     usetimestamp="true"/>
-    <get src="http://easynews.dl.sourceforge.net/sourceforge/itext/itext-1.02b.jar"
+		<get src="http://easynews.dl.sourceforge.net/sourceforge/itext/itext-1.02b.jar"
          dest="${sources}/itext-1.02b.jar"
 	     usetimestamp="true"/>
-  </target>
-  
-  <target name="fop-source" depends="init-sources">
-    <get src="http://archive.apache.org/dist/xml/fop/fop-0.20.5-src.tar.gz"
+	</target>
+
+	<target name="fop-source" depends="init-sources">
+		<get src="http://archive.apache.org/dist/xml/fop/fop-0.20.5-src.tar.gz"
          dest="${sources}/fop-0.20.5-src.tar.gz"
 	     usetimestamp="true"/>
-  </target>
+	</target>
 
-  <target name="hsqldb-source" depends="init-sources,junit-source">
-    <get dest="${sources}/hsqldb_1_7_1.zip" 
+	<target name="hsqldb-source" depends="init-sources,junit-source">
+		<get dest="${sources}/hsqldb_1_7_1.zip" 
          src="http://easynews.dl.sourceforge.net/sourceforge/hsqldb/hsqldb_1_7_1.zip"
 	     usetimestamp="true"/>
-  </target>
-  
-  <target name="jython-source" depends="init-sources">
-    <mkdir dir="${sources}/jython-2.1/"/>
-    <cvs cvsRoot=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython"
+	</target>
+
+	<target name="jython-source" depends="init-sources">
+		<mkdir dir="${sources}/jython-2.1/"/>
+		<cvs cvsRoot=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython"
          package="jython"
          tag="Release_2_1"
          dest="${sources}/jython-2.1/"/>
-    <tar basedir="${sources}/jython-2.1/" 
+		<tar basedir="${sources}/jython-2.1/" 
          destfile="${sources}/jython-2.1.tgz" 
          compression="gzip"/>
-    <delete dir="${sources}/jython-2.1"/>
-  </target>
+		<delete dir="${sources}/jython-2.1"/>
+	</target>
 
-  <target name="junit-source" depends="init-sources">
-    <get dest="${sources}/junit3.8.1.zip"
+	<target name="junit-source" depends="init-sources">
+		<get dest="${sources}/junit3.8.1.zip"
          src="http://easynews.dl.sourceforge.net/sourceforge/junit/junit3.8.1.zip"
 	     usetimestamp="true"/>
-  </target>
-  
-  <target name="pmd-source" depends="init-sources">
-    <get src="http://easynews.dl.sourceforge.net/sourceforge/pmd/pmd-src-1.8.zip"
+	</target>
+
+	<target name="lucene-source" depends="init-sources">
+		<get dest="${sources}/lucene-1.9.1-src.tar.gz"
+         src="http://apache.mirror.pacific.net.au/lucene/java/lucene-1.9.1-src.tar.gz"
+	 usetimestamp="true"/>
+	</target>
+
+	<target name="pmd-source" depends="init-sources">
+		<get src="http://easynews.dl.sourceforge.net/sourceforge/pmd/pmd-src-1.8.zip"
          dest="${sources}/pmd-src-1.8.zip"
 	     usetimestamp="true"/>
-  </target>
-  
-  <target name="ps-source" depends="init-sources">
-    <!-- ps was a student assignment - the source here is the definitive one -->
-    <copy file="originals/ps.tgz" todir="${sources}"/>
-  </target>
-  
-  <target name="xalan-source" depends="init-sources">
-    <get src="http://archive.apache.org/dist/xml/xalan-j/xalan-j_2_4_1-src.tar.gz"
-         dest="${sources}/xalan-j_2_4_1-src.tar.gz"
-	     usetimestamp="true"/>
-  </target>
-  
-  <target name="xerces-source" depends="init-sources">
-    <get src="http://archive.apache.org/dist/xml/xerces-j/Xerces-J-bin.2.5.0.tar.gz"
-         dest="${sources}/Xerces-J-bin.2.5.0.tar.gz"
-	     usetimestamp="true"/>
-  </target>
-  
+	</target>
 
-  <!-- *************************************************************************** -->
-  <!--                            Build                                            -->
-  <!-- *************************************************************************** -->
-  
-  <!-- ================================= 
+	<target name="ps-source" depends="init-sources">
+		<!-- ps was a student assignment - the source here is the definitive one -->
+		<copy file="originals/ps.tgz" todir="${sources}"/>
+	</target>
+
+	<target name="xalan-241-source" depends="init-sources">
+	  <get src="http://archive.apache.org/dist/xml/xalan-j/xalan-j_2_4_1-src.tar.gz"
+               dest="${sources}/xalan-j_2_4_1-src.tar.gz"
+	       usetimestamp="true"/>
+	</target>
+
+	<target name="xalan-source" depends="init-sources">
+	  <get src="http://archive.apache.org/dist/xml/xalan-j/xalan-j_2_7_0-src.tar.gz"
+               dest="${sources}/xalan-j_2_7_0-src.tar.gz"
+	       usetimestamp="true"/>
+	</target>
+
+	<target name="xerces-source" depends="init-sources">
+		<get src="http://archive.apache.org/dist/xml/xerces-j/Xerces-J-bin.2.8.0.tar.gz"
+         dest="${sources}/Xerces-J-bin.2.8.0.tar.gz"
+	     usetimestamp="true"/>
+	</target>
+
+
+	<!-- *************************************************************************** -->
+	<!--                            Build                                            -->
+	<!-- *************************************************************************** -->
+
+	<!-- ================================= 
         target: antlr 
        ================================= -->
-  <target name="antlr" description="Build antlr" depends="harness">
-    <mkdir dir="${build_src}/antlr"/>
-    <untar src="${sources}/antlr-2.7.2.tar.gz" 
+	<target name="antlr" description="Build antlr" depends="harness">
+		<mkdir dir="${build_src}/antlr"/>
+		<untar src="${sources}/antlr-2.7.2.tar.gz" 
            dest="${build_src}/antlr/"
 	       compression="gzip"/>
-    
-    <!-- Apply the dacapo patch -->
-    <patch patchfile="${patches}/antlr.patch" 
+
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/antlr.patch" 
            dir="${build_src}"
            strip="0"/>
-    
-    <!-- Build directly with javac, classfiles into the build directory -->
-    <javac srcdir="${build_src}/antlr/antlr-2.7.2/antlr/"
+
+		<!-- Build directly with javac, classfiles into the build directory -->
+		<javac srcdir="${build_src}/antlr/antlr-2.7.2/antlr/"
          classpath="${build}"
          destdir="${build}"/>
-    
-    <!-- Build the harness -->
-    <javac srcdir="${build_src}/antlr/dacapo/"
-         classpath="${build}"
-         destdir="${build}"/>
-  </target>
-  
-  <!-- ================================= 
+
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+         includes="antlr/**"
+         destfile="${zipdata}/antlr.zip"/>
+
+	</target>
+
+	<!-- ================================= 
         target: batik 
        ================================= -->
-   <target name="batik" description="Build batik" depends="harness,xerces">
-    <property name="batik-top" value="${build_src}/batik/xml-batik"/>
-    
-    <mkdir dir="${build_src}/batik"/>
-     
-     <!-- unpack the source files -->
-    <unzip src="${sources}/batik-src-1.6.zip" 
+	<target name="batik" description="Build batik" depends="harness,xerces">
+		<property name="batik-top" value="${build_src}/batik/xml-batik"/>
+
+		<mkdir dir="${build_src}/batik"/>
+
+		<!-- unpack the source files -->
+		<unzip src="${sources}/batik-src-1.6.zip" 
            dest="${build_src}/batik/"/>
-    
-    <!-- Apply the dacapo patch -->
-    <fixcrlf srcdir="${batik-top}/sources" includes="**/*.java"/>
-    <patch patchfile="${patches}/batik.patch" 
+
+		<!-- Apply the dacapo patch -->
+		<fixcrlf srcdir="${batik-top}/sources" includes="**/*.java"/>
+		<patch patchfile="${patches}/batik.patch" 
            dir="${build_src}"
            strip="0" ignorewhitespace="yes"/>
-    
-     <!-- Build using the supplied build.xml -->
-    <ant antfile="${batik-top}/build.xml" dir="${batik-top}" 
+
+		<!-- Build using the supplied build.xml -->
+		<ant antfile="${batik-top}/build.xml" dir="${batik-top}" 
          target="compiletest" inheritall="false">
-      <property name="dacapo.classes" location="${build}"/>
-    </ant>
-    
-     <!-- Copy the batik class files -->
-     <copy todir="${build}">
-       <fileset dir="${batik-top}/classes">
-         <include name="**/*.class"/>
-       </fileset>
-     </copy>
-  
-     <!-- Copy the batik resource files -->
-    <copy todir="${build}">
-      <fileset dir="${batik-top}/resources" excludes="${batik-top}/resources/**/CVS">
-        <include name="**"/>
-      </fileset>
-    </copy>
-  </target>
-    
-  <!-- ================================= 
+			<property name="dacapo.classes" location="${build}"/>
+		</ant>
+
+		<!-- Copy the batik class files -->
+		<copy todir="${build}">
+			<fileset dir="${batik-top}/classes">
+				<include name="**/*.class"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy the batik resource files -->
+		<copy todir="${build}">
+			<fileset dir="${batik-top}/resources" excludes="${batik-top}/resources/**/CVS">
+				<include name="**"/>
+			</fileset>
+		</copy>
+
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+         includes="batik/**"
+         destfile="${zipdata}/batik.zip"/>
+
+	</target>
+
+	<!-- ================================= 
         target: bloat 
        ================================= -->
-   <target name="bloat" description="Build bloat" depends="harness">
-    <property name="bloat-top" value="${build_src}/bloat"/>
-     <mkdir dir="${bloat-top}"/>
-    
-    <!-- Un-tar the source distribution -->
-    <untar src="${sources}/bloat-1.0-src.tar.gz" 
+	<target name="bloat" description="Build bloat" depends="harness">
+		<property name="bloat-top" value="${build_src}/bloat"/>
+		<mkdir dir="${bloat-top}"/>
+
+		<!-- Un-tar the source distribution -->
+		<untar src="${sources}/bloat-1.0-src.tar.gz" 
            dest="${bloat-top}"
 	       compression="gzip"/>
-     
-    <!-- Extract some files from bloat's examples.jar -->
-    <unjar src="${sources}/bloat-1.0-examples.jar" dest="${bloat-top}">
-      <patternset>
-        <include name="bloat/TraceMethods.java"/>
-      </patternset>
-    </unjar>
-    
-    <!-- Apply the dacapo patch -->
-    <patch patchfile="${patches}/bloat.patch" 
+
+		<!-- Extract some files from bloat's examples.jar -->
+		<unjar src="${sources}/bloat-1.0-examples.jar" dest="${bloat-top}">
+			<patternset>
+				<include name="bloat/TraceMethods.java"/>
+			</patternset>
+		</unjar>
+
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/bloat.patch" 
                dir="${bloat-top}"
                strip="0" ignorewhitespace="yes"/>
 
-    <!-- Build bloat -->
-    <exec executable="${make}"
+		<!-- Build bloat -->
+		<exec executable="${make}"
       dir="${bloat-top}/src/EDU/purdue/cs/bloat/"/>
-    <javac srcdir="${bloat-top}/bloat" classpath="${bloat-top}/src/"/>
-    
-    <!-- Copy the class files into the build directory -->
-    <copy todir="${build}">
-      <fileset dir="${bloat-top}/src" excludes="${bloat-top}/resources/**/CVS">
-        <include name="**/*.class"/>
-      </fileset>
-    </copy>
-    <mkdir dir="${build}/bloat"/>
-    <copy todir="${build}/bloat">
-	  <fileset dir="${bloat-top}/bloat">
-        <include name="*.class"/>
-	  </fileset>
-	</copy>
-  </target>
-  
-  
-    <!-- ================================= 
+		<javac srcdir="${bloat-top}/bloat" classpath="${bloat-top}/src/"/>
+
+		<!-- Copy the class files into the build directory -->
+		<copy todir="${build}">
+			<fileset dir="${bloat-top}/src" excludes="${bloat-top}/resources/**/CVS">
+				<include name="**/*.class"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${build}/bloat"/>
+		<copy todir="${build}/bloat">
+			<fileset dir="${bloat-top}/bloat">
+				<include name="*.class"/>
+			</fileset>
+		</copy>
+	</target>
+
+
+	<!-- ================================= 
           target: chart              
          ================================= -->
-    <target name="chart" depends="init" description="--> build the jFreeChart benchmark">
-      <property name="chart-top" value="${build_src}/chart/jfreechart-1.0.0"/>
-      
-      <!-- Un-tar the source distribution -->
-      <mkdir dir="${build_src}/chart/"/>
-      <untar src="${sources}/jfreechart-1.0.0.tar.gz" 
+	<target name="chart" depends="init" description="--> build the jFreeChart benchmark">
+		<property name="chart-top" value="${build_src}/chart/jfreechart-1.0.0"/>
+
+		<!-- Un-tar the source distribution -->
+		<mkdir dir="${build_src}/chart/"/>
+		<untar src="${sources}/jfreechart-1.0.0.tar.gz" 
              dest="${build_src}/chart/"
   	         compression="gzip"/>
-      
-      <!-- Apply the dacapo patch -->
-      <patch patchfile="${patches}/chart.patch" 
-                 dir="${build_src}"
-                 strip="0" ignorewhitespace="yes"/> 
-       
-      <!-- Build it using jfreechart's build.xml -->
-      <ant antfile="${chart-top}/ant/build.xml" dir="${chart-top}" 
+
+		<!-- Build it using jfreechart's build.xml -->
+		<ant antfile="${chart-top}/ant/build.xml" dir="${chart-top}" 
            target="compile" inheritall="false"/>
 
-      <!-- Build the chart test harness -->
-      <javac srcdir="${build_src}/chart/dacapo">
-        <classpath>
-          <pathelement location="${chart-top}/jfreechart-1.0.0.jar"/>
-          <pathelement location="${chart-top}/lib/jcommon-1.0.0.jar"/>
-          <pathelement location="${sources}/itext-1.02b.jar"/>
-        </classpath>
-      </javac>
-      
-      <!-- Copy files to the build directory -->
-      <unjar src="${chart-top}/jfreechart-1.0.0.jar" dest="${build}"/>
-      <unjar src="${chart-top}/lib/jcommon-1.0.0.jar" dest="${build}"/>
-      <unjar src="${sources}/itext-1.02b.jar" dest="${build}"/>
-      <copy todir="${build}/dacapo/">
-  	    <fileset dir="${build_src}/chart/dacapo/">
-          <include name="*.class"/>
-  	    </fileset>
-  	  </copy>
+		<!-- Copy files to the build directory -->
+		<unjar src="${chart-top}/jfreechart-1.0.0.jar" dest="${build}"/>
+		<unjar src="${chart-top}/lib/jcommon-1.0.0.jar" dest="${build}"/>
+		<unjar src="${sources}/itext-1.02b.jar" dest="${build}"/>
 
-    </target>
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+           includes="chart/**"
+           destfile="${zipdata}/chart.zip"/>
 
-  
-    <!-- ================================= 
+	</target>
+
+
+	<!-- ================================= 
           target: fop              
          ================================= -->
-    <target name="fop" depends="harness" description="--> Build the fop benchmark">
-      <mkdir dir="${build_src}/fop"/>
-      <property name="fop-top" value="${build_src}/fop/fop-0.20.5/"/>
-      <!-- Expand the source distribution -->
-      <untar src="${sources}/fop-0.20.5-src.tar.gz" dest="${build_src}/fop" compression="gzip"/>
+	<target name="fop" depends="harness" description="--> Build the fop benchmark">
+		<mkdir dir="${build_src}/fop"/>
+		<property name="fop-top" value="${build_src}/fop/fop-0.20.5/"/>
+		<!-- Expand the source distribution -->
+		<untar src="${sources}/fop-0.20.5-src.tar.gz" 
+		       dest="${build_src}/fop" compression="gzip"/>
 
-      <!-- Apply the dacapo patch -->
-      <patch patchfile="${patches}/fop.patch" 
-                 dir="${fop-top}/src/"
-                 strip="0" ignorewhitespace="yes"/> 
-
-      <!-- Build it using fop's build.xml
+		<!-- Build it using fop's build.xml
       
            Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
            build.xml handles relative directories.  The classpath allows the patched
            sources to see the test harness code.
         -->
-      <exec executable="ant" dir="${fop-top}">
-        <env key="CLASSPATH" value="${build}"/>
-      </exec>
+		<exec executable="ant" dir="${fop-top}">
+		</exec>
 
-      <!-- Copy the build to the distribution directory -->
-      <unjar src="${fop-top}/build/fop.jar" dest="${build}"/>
-      <unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
-    </target>
+		<!-- Copy the build to the distribution directory -->
+		<unjar src="${fop-top}/build/fop.jar" dest="${build}"/>
+		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
 
-    <target name="junit" description="--> The junit library - required by some other benchmarks">
-      <!-- Install the junit jar file -->
-      <unzip src="${sources}/junit3.8.1.zip" dest="${build_src}/junit/">
-        <patternset>
-	  <include name="junit3.8.1/junit.jar"/>
-	</patternset>
-      </unzip>
-    </target>
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+           includes="fop/**"
+           destfile="${zipdata}/fop.zip"/>
 
-    <!-- ================================= 
+	</target>
+
+	<target name="junit" description="--> The junit library - required by some other benchmarks">
+		<!-- Install the junit jar file -->
+		<unzip src="${sources}/junit3.8.1.zip" dest="${build_src}/junit/">
+			<patternset>
+				<include name="junit3.8.1/junit.jar"/>
+			</patternset>
+		</unzip>
+	</target>
+
+	<!-- ================================= 
           target: hsqldb              
          ================================= -->
-    <target name="hsqldb" depends="harness,junit" description="--> The hsqldb benchmark">
-      <mkdir dir="${build_src}/hsqldb"/>
-      <property name="hsqldb-top" value="${build_src}/hsqldb/"/>
-      <!-- Expand the source distribution -->
-      <unzip src="${sources}/hsqldb_1_7_1.zip" dest="${hsqldb-top}"/>
+	<target name="hsqldb" depends="harness,junit" description="--> The hsqldb benchmark">
+		<mkdir dir="${build_src}/hsqldb"/>
+		<property name="hsqldb-top" value="${build_src}/hsqldb/"/>
+		<!-- Expand the source distribution -->
+		<unzip src="${sources}/hsqldb_1_7_1.zip" dest="${hsqldb-top}"/>
 
-      <!-- Apply the dacapo patch -->
-      <patch patchfile="${patches}/hsqldb.patch" 
-                 dir="${build_src}"
-                 strip="0" ignorewhitespace="yes"/> 
-
-      <copy file="${build_src}/junit/junit3.8.1/junit.jar"
+		<copy file="${build_src}/junit/junit3.8.1/junit.jar"
             todir="${hsqldb-top}/hsqldb/lib/"/>
 
-      <!-- Build it using hsqldb's build.xml
+		<!-- Build it using hsqldb's build.xml
       
            Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
            build.xml handles relative directories.  The classpath allows the patched
            sources to see the test harness code.
         -->
-      <ant antfile="${hsqldb-top}/hsqldb/build/build.xml" dir="${hsqldb-top}/hsqldb" 
+		<ant antfile="${hsqldb-top}/hsqldb/build/build.xml" dir="${hsqldb-top}/hsqldb" 
            target="jartest" inheritall="false"/>
-	   
-      <!-- Build the daCapo test harness -->
-      <javac srcdir="${build_src}/hsqldb/dacapo">
-      </javac>
-      
-      <!-- Copy the build to the distribution directory -->
-      <unjar src="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" dest="${build}"/>
-      <copy todir="${build}/dacapo/">
-        <fileset dir="${hsqldb-top}/dacapo/">
-          <include name="*.class"/>
-        </fileset>
-      </copy>
-   </target>
+
+		<!-- Copy the build to the distribution directory -->
+		<unjar src="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" dest="${build}"/>
+	</target>
 
 
-    <!-- ================================= 
+	<!-- ================================= 
           target: jython	              
          ================================= -->
-    <target name="jython" depends="harness" description="--> Build the Jython benchmark">
-      <mkdir dir="${build_src}/jython"/>
-      <property name="jython-top" value="${build_src}/jython/"/>
-      
-      <!-- Expand the jython distribution class -->
-      <untar src="${sources}/jython-2.1.tgz" dest="${jython-top}" compression="gzip"/>
+	<target name="jython" depends="harness" description="--> Build the Jython benchmark">
+		<mkdir dir="${build_src}/jython"/>
+		<property name="jython-top" value="${build_src}/jython/"/>
 
-      <!-- Apply the dacapo patch -->
-      <patch patchfile="${patches}/jython.patch" 
+		<!-- Expand the jython distribution class -->
+		<untar src="${sources}/jython-2.1.tgz" dest="${jython-top}" compression="gzip"/>
+
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/jython.patch" 
                  dir="${build_src}"
-                 strip="0" ignorewhitespace="yes"/> 
-      
-      <!-- Build jython -->
-      <ant antfile="${jython-top}/jython/build.xml" dir="${jython-top}/jython" inheritall="false">
-        <property name="javaccHome2" location="/usr/share/javacc/lib"/>
-        <property name="dacapo.classes" location="${build}"/>
-      </ant>
+                 strip="0" ignorewhitespace="yes"/>
 
-      <!-- Build the jython test harness -->
-      <javac srcdir="${jython-top}/dacapo">
-        <classpath>
-          <pathelement location="${jython-top}/jython/jython.jar"/>
-        </classpath>
-      </javac>
+		<!-- Build jython -->
+		<ant antfile="${jython-top}/jython/build.xml" dir="${jython-top}/jython" inheritall="false">
+			<property name="javaccHome2" location="${javacchome}"/>
+		</ant>
 
-      <!-- Copy files to the distribution directory -->
-      <unjar src="${jython-top}/jython/jython.jar" dest="${build}"/>
-      <copy todir="${build}/dacapo/">
-  	    <fileset dir="${jython-top}/dacapo/">
-          <include name="*.class"/>
-  	    </fileset>
-  	  </copy>
-    </target>
+		<!-- Copy files to the distribution directory -->
+		<unjar src="${jython-top}/jython/jython.jar" dest="${build}"/>
+
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+           includes="jython/**"
+           destfile="${zipdata}/jython.zip"/>
+
+	</target>
 
 
-  
-    <!-- ================================= 
+	<!-- ================================= 
+          target: lucene    
+         ================================= -->
+	<target name="lucene" depends="harness" description="--> Build the lucene benchmark">
+		<property name="lucene-top" value="${build_src}/lucene"/>
+		<mkdir dir="${lucene-top}"/>
+		<untar src="${sources}/lucene-1.9.1-src.tar.gz" 
+             dest="${lucene-top}"
+	     compression="gzip"/>
+
+		<!-- Build using Ant -->
+		<ant antfile="${lucene-top}/lucene-1.9.1/build.xml"
+           target="jar-core"
+           dir="${lucene-top}/lucene-1.9.1"
+           inheritall="false">
+		</ant>
+
+		<!-- Build using Ant -->
+		<ant antfile="${lucene-top}/lucene-1.9.1/build.xml"
+           target="jar-demo"
+           dir="${lucene-top}/lucene-1.9.1"
+           inheritall="false">
+		</ant>
+
+		<!-- Install the lucene classes in the build directory -->
+		<unjar src="${lucene-top}/lucene-1.9.1/build/lucene-core-1.9.2-dev.jar" 
+             dest="${build}"/>
+		<unjar src="${lucene-top}/lucene-1.9.1/build/lucene-demos-1.9.2-dev.jar" 
+             dest="${build}"/>
+
+		<!-- Install the test data -->
+		<zip basedir="${data}" 
+           includes="lucene-index/**"
+           destfile="${zipdata}/lucene-index.zip"/>
+
+		<!-- Install the test data -->
+		<zip basedir="${data}" 
+           includes="lucene-search/**"
+           destfile="${zipdata}/lucene-search.zip"/>
+	</target>
+
+	<!-- ================================= 
           target: pmd    
          ================================= -->
-    <target name="pmd" depends="harness,xerces,junit" description="--> Build the pmd benchmark">
-      <mkdir dir="${build_src}/pmd"/>
-      <property name="pmd-top" value="${build_src}/pmd/pmd-1.8"/>
-      
-      <!-- Expand the pmd distribution zipfile -->
-      <unzip src="${sources}/pmd-src-1.8.zip" dest="${build_src}/pmd"/>
-      
-      <!-- Apply the dacapo patch -->
-      <patch patchfile="${patches}/pmd.patch" 
+	<target name="pmd" depends="harness,xerces,junit" description="--> Build the pmd benchmark">
+		<mkdir dir="${build_src}/pmd"/>
+		<property name="pmd-top" value="${build_src}/pmd/pmd-1.8"/>
+
+		<!-- Expand the pmd distribution zipfile -->
+		<unzip src="${sources}/pmd-src-1.8.zip" dest="${build_src}/pmd"/>
+
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/pmd.patch" 
              dir="${build_src}"
-             strip="0" ignorewhitespace="yes"/> 
-      
-      <!-- Install the junit jar file -->
-      <copy file="${build_src}/junit/junit3.8.1/junit.jar"
+             strip="0" ignorewhitespace="yes"/>
+
+		<!-- Install the junit jar file -->
+		<copy file="${build_src}/junit/junit3.8.1/junit.jar"
             todir="${pmd-top}/lib/"/>
 
-      <!-- Build using Ant -->
-      <ant antfile="${pmd-top}/etc/build.xml"
+		<!-- Build using Ant -->
+		<ant antfile="${pmd-top}/etc/build.xml"
            dir="${pmd-top}"
            inheritall="false">
-        <property name="dacapo.classes" location="${build}"/>
-      </ant>
-      
-      <!-- Copy the classfiles to the dist directory -->
-      <copy todir="${build}">
-        <fileset dir="${pmd-top}/build">
-	  <include name="net/**/*.class"/>
-        </fileset>
-      </copy>
-      <unjar src="${pmd-top}/lib/xmlParserAPIs-2.0.2.jar" dest="${build}">
-        <patternset>
-          <include name="org/w3c/dom/**/*.class"/>
-        </patternset>
-      </unjar>
-      <unjar src="${pmd-top}/lib/jaxen-core-1.0-fcs.jar" dest="${build}"/>
-      <unjar src="${pmd-top}/lib/junit.jar" dest="${build}"/>
-      <unjar src="${pmd-top}/lib/saxpath-1.0-fcs.jar" dest="${build}">
-        <patternset>
-          <include name="org/saxpath/**/*.class"/>
-          <include name="com/werken/**/*.class"/>
-        </patternset>
-      </unjar>
-    </target>
+			<property name="dacapo.classes" location="${build}"/>
+		</ant>
+
+		<!-- Copy the classfiles to the dist directory -->
+		<copy todir="${build}">
+			<fileset dir="${pmd-top}/build">
+				<include name="net/**/*.class"/>
+			</fileset>
+		</copy>
+		<unjar src="${pmd-top}/lib/xmlParserAPIs-2.0.2.jar" dest="${build}">
+			<patternset>
+				<include name="org/w3c/dom/**/*.class"/>
+			</patternset>
+		</unjar>
+		<unjar src="${pmd-top}/lib/jaxen-core-1.0-fcs.jar" dest="${build}"/>
+		<unjar src="${pmd-top}/lib/junit.jar" dest="${build}"/>
+		<unjar src="${pmd-top}/lib/saxpath-1.0-fcs.jar" dest="${build}">
+			<patternset>
+				<include name="org/saxpath/**/*.class"/>
+				<include name="com/werken/**/*.class"/>
+			</patternset>
+		</unjar>
+
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+           includes="pmd/**"
+           destfile="${zipdata}/pmd.zip"/>
+	</target>
 
 
-  
-    <!-- ================================= 
+
+	<!-- ================================= 
           target: ps              
          ================================= -->
-    <target name="ps" depends="harness" description="--> Build the ps benchmark">
-      <property name="ps-top" location="${build_src}/ps"/>
-      <mkdir dir="${ps-top}"/>
-      
-      <!-- untar the source distribution --> 
-      <untar src="${sources}/ps.tgz" dest="${ps-top}" compression="gzip"/>
-      
-      <!-- Apply the dacapo patch -->
-      <patch patchfile="${patches}/ps.patch" 
-                 dir="${ps-top}"
-                 strip="0" ignorewhitespace="yes"/> 
-      
-      <!-- Build using Javac -->
-      <javac srcdir="${ps-top}" classpath="${build}"
-             destdir="${build}"/>
-      
-    </target>
+	<target name="ps" depends="harness" description="--> Build the ps benchmark">
+		<property name="ps-top" location="${build_src}/ps"/>
+		<mkdir dir="${ps-top}/ps"/>
 
-  <!-- ================================= 
+		<!-- untar the source distribution -->
+		<untar src="${sources}/ps.tgz" dest="${ps-top}/ps" compression="gzip"/>
+
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/ps.patch" 
+                 dir="${ps-top}/ps"
+                 strip="0" ignorewhitespace="yes"/>
+
+		<!-- Build using Javac -->
+		<javac srcdir="${ps-top}/ps" classpath="${build}"
+             destdir="${build}"/>
+
+		<javac srcdir="${bmsrc}" classpath="${build}"
+    	     destdir="${build}"
+          includes="dacapo/ps/*"/>
+
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+           includes="ps/**"
+           destfile="${zipdata}/ps.zip"/>
+
+	</target>
+
+	<!-- ================================= 
         target: xalan 
        ================================= -->
-   <target name="xalan" description="Build xalan" depends="harness,xerces">
-    <property name="xalan-top" value="${build_src}/xalan/"/>    
-    <property name="xalan-v" value="2_4_1"/>
-    <mkdir dir="${xalan-top}"/>
-     
-     <!-- Unpack the source distribution -->
-    <untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" 
-           dest="${xalan-top}" compression="gzip"/>
-    
-    <!-- Apply the patch -->
-    <patch patchfile="${patches}/xalan.patch" 
-           dir="${build_src}"
-           strip="0" ignorewhitespace="yes"/>
-    
-     <!-- Build using the supplied build.xml -->
-    <ant antfile="${xalan-top}/xalan-j_${xalan-v}/build.xml" dir="${xalan-top}/xalan-j_${xalan-v}" 
-         inheritall="false"/>
-    
-     <!-- Build the xalan test harness directly into the dacapo build directory -->
-     <javac srcdir="${build_src}/xalan/dacapo" destdir="${build}">
-       <classpath>
-         <pathelement location="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar"/>
-       </classpath>
-     </javac>
-     
-     <!-- Grap the xalan class files from the built jar files -->
-     <unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
-     <!-- Only required for xalan 2_7_0 (which doesn't work with classpath 0.18)
-     <unjar src="${xalan-top}/xalan-j_${xalan-v}/build/serializer.jar" dest="${build}"/> -->
-  </target>
+	<target name="xalan-241" description="Build xalan" depends="harness,xerces">
+		<property name="xalan-top" value="${build_src}/xalan/"/>
+		<property name="xalan-v" value="2_4_1"/>
+		<mkdir dir="${xalan-top}"/>
 
-  
-  <!-- ================================= 
+		<!-- Unpack the source distribution -->
+<!--		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" 
+           dest="${xalan-top}" compression="gzip"/>
+-->
+		<!-- Build using the supplied build.xml -->
+		<ant antfile="${xalan-top}/xalan-j_${xalan-v}/build.xml" dir="${xalan-top}/xalan-j_${xalan-v}" 
+         inheritall="false"/>
+
+		<!-- Grap the xalan class files from the built jar files -->
+		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
+		<!-- Only required for xalan 2_7_0 (which doesn't work with classpath 0.18)
+     <unjar src="${xalan-top}/xalan-j_${xalan-v}/build/serializer.jar" dest="${build}"/> -->
+
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+           includes="xalan/**"
+           destfile="${zipdata}/xalan.zip"/>
+	</target>
+
+	<!-- ================================= 
+        target: xalan-latest 
+       ================================= -->
+	<target name="xalan" description="Build xalan" depends="harness,xerces">
+		<property name="xalan-top" value="${build_src}/xalan/"/>
+		<property name="xalan-v" value="2_7_0"/>
+		<mkdir dir="${xalan-top}"/>
+
+		<!-- Unpack the source distribution -->
+		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" 
+           dest="${xalan-top}" compression="gzip"/>
+
+		<!-- Build using the supplied build.xml -->
+		<ant antfile="${xalan-top}/xalan-j_${xalan-v}/build.xml" dir="${xalan-top}/xalan-j_${xalan-v}" 
+         inheritall="false"/>
+
+		<!-- Grap the xalan class files from the built jar files -->
+		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
+		<!-- Only required for xalan 2_7_0 (which doesn't work with classpath 0.18) -->
+     <unjar src="${xalan-top}/xalan-j_${xalan-v}/build/serializer.jar" dest="${build}"/> 
+
+		<!-- Install the test data -->
+		<zip basedir="${data}"
+           includes="xalan/**"
+           destfile="${zipdata}/xalan.zip"/>
+	</target>
+
+
+	<!-- ================================= 
         target: xerces 
 
 	Not a benchmark in its own right, but a library that several of
 	the benchmarks rely on.
        ================================= -->
-   <target name="xerces" description="Build xerces">
-    <property name="xerces-top" value="${build_src}/xerces/"/>    
-    <mkdir dir="${xerces-top}"/>
-     
-     <!-- Unpack the source distribution -->
-    <untar src="${sources}/Xerces-J-bin.2.5.0.tar.gz" 
+	<target name="xerces" description="Build xerces">
+		<property name="xerces-top" value="${build_src}/xerces/"/>
+		<mkdir dir="${xerces-top}"/>
+
+		<!-- Unpack the source distribution -->
+		<untar src="${sources}/Xerces-J-bin.2.8.0.tar.gz" 
            dest="${xerces-top}" compression="gzip"/>
-    
-    <unjar src="${xerces-top}/xerces-2_5_0/xercesImpl.jar" dest="${build}"/>
-   </target>
+
+		<unjar src="${xerces-top}/xerces-2_8_0/xercesImpl.jar" dest="${build}"/>
+	</target>
 </project>
