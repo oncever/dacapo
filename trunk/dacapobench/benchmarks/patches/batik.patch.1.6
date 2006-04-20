@@ -21,6 +21,125 @@ diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.ori
      }
  
      //
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java
+--- batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java	2006-02-10 15:33:22.000000000 +1100
++++ batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java	2006-02-10 16:32:59.000000000 +1100
+@@ -37,6 +37,10 @@
+ import org.apache.batik.transcoder.image.JPEGTranscoder;
+ import org.apache.batik.transcoder.image.PNGTranscoder;
+ 
++//-#if GCBM
++import dacapo.TestHarness;
++//-#endif
++
+ /**
+  * This application can be used to convert SVG images to raster images.
+  * <br />
+@@ -764,7 +768,11 @@
+         for (int i=0; i<n; i++){
+             String sourceString = (String)(this.sources.elementAt(i));
+             File file = new File(sourceString);
+-            if (file.exists()) {
++            //-#if GCBM
++            if (TestHarness.exists(file)) {
++            //-#else
++            //if (file.exists()) {
++            //-#endif
+                 sources.addElement(new SVGConverterFileSource(file));
+             } else {
+                 String[] fileNRef = getFileNRef(sourceString);
+@@ -921,23 +929,32 @@
+                 throw new SVGConverterException(ERROR_SOURCE_SAME_AS_DESTINATION,
+                                                  true /* fatal error */);
+             }
+-            
+-            // Compute transcoder input.
+-            if (!inputFile.isReadable()) {
+-                throw new SVGConverterException(ERROR_CANNOT_READ_SOURCE,
+-                                                 new Object[]{inputFile.getName()});
+-            }
+-
++            //-#if GCBM
+             try {
+-                InputStream in = inputFile.openStream();
+-                in.close();
+-            } catch(IOException ioe) {
+-                throw new SVGConverterException(ERROR_CANNOT_OPEN_SOURCE,
+-                                                 new Object[] {inputFile.getName(),
+-                                                               ioe.toString()});
++              input = new TranscoderInput((inputFile.openStream()));
++            }
++            catch (Exception fnfe){
++                throw new SVGConverterException(ERROR_CANNOT_READ_SOURCE,
++                                                true);
+                                                                } 
++            //-#else
++//             // Compute transcoder input.
++//             if (!inputFile.isReadable()) {
++//                 throw new SVGConverterException(ERROR_CANNOT_READ_SOURCE,
++//                                                  new Object[]{inputFile.getName()});
++//             }
++
++//             try {
++//                 InputStream in = inputFile.openStream();
++//                 in.close();
++//             } catch(IOException ioe) {
++//                 throw new SVGConverterException(ERROR_CANNOT_OPEN_SOURCE,
++//                                                  new Object[] {inputFile.getName(),
++//                                                                ioe.toString()});
++//                                                                } 
+             
+-            input = new TranscoderInput(inputFile.getURI());
++//             input = new TranscoderInput(inputFile.getURI());
++            //-#endif
+ 
+             // Compute transcoder output.
+             if (!isWriteable(outputFile)) {
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java
+--- batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java	2006-02-10 15:33:22.000000000 +1100
++++ batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java	2006-02-10 16:32:59.000000000 +1100
+@@ -23,6 +23,10 @@
+ import java.io.InputStream;
+ import java.net.MalformedURLException;
+ 
++//-#if GCBM
++import dacapo.TestHarness;
++//-#endif
++
+ /**
+  * Describes a file source for the <tt>SVGConverter</tt>
+  *
+@@ -79,7 +83,11 @@
+     }
+ 
+     public InputStream openStream() throws FileNotFoundException{
+-        return new FileInputStream(file);
++      //-#if GCBM
++      return TestHarness.getInputStream(file);
++      //-#else
++      //return new FileInputStream(file);
++      //-#endif
+     }
+ 
+     public boolean isSameAs(String srcStr){
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' batik.orig/xml-batik/sources/org/apache/batik/dom/AbstractNode.java batik/xml-batik/sources/org/apache/batik/dom/AbstractNode.java
+--- batik.orig/xml-batik/sources/org/apache/batik/dom/AbstractNode.java	2006-02-10 15:33:22.000000000 +1100
++++ batik/xml-batik/sources/org/apache/batik/dom/AbstractNode.java	2006-02-10 16:41:13.000000000 +1100
+@@ -551,4 +551,14 @@
+                                  new Object[] { new Integer(getNodeType()),
+                                                 getNodeName() });
+     }
++
++    private boolean isReadonlyAttr = true;
++    public boolean isReadonly() {
++      return isReadonlyAttr;
++    }
++    public void setReadonly(boolean isReadonly) {
++      isReadonlyAttr = isReadonly;
++    }
++
++
+ }
 diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' batik.orig/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java batik/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java
 --- batik.orig/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java	2006-02-10 15:33:22.000000000 +1100
 +++ batik/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java	2006-02-10 16:32:59.000000000 +1100
