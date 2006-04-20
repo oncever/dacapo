@@ -1,12 +1,37 @@
-EDU.purdue.cs.bloat.optimize.Main main
+benchmark bloat
+  class dacapo.bloat.Harness;
+/*
+ * Standard output has the temp directory name in it, so we can't use 
+ * its digest to validate.
+ */
+size small args "-f","bloat.TraceMethods","compiledcode"
+  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-small "-f" "bloat.TraceMethods" "scratch/compiledcode"
-default "-f" "-closure" "-only" "EDU/purdue/cs/bloat/trans" "bloat.TraceMethods" "scratch/compiledcode"
-large "-f" "-closure" "-only" "EDU/purdue/cs/bloat/tree" "bloat.TraceMethods" "scratch/compiledcode"
-huge "-f" "-closure" "-only" "EDU" "bloat.TraceMethods" "scratch/compiledcode"
+/* Output and error should be empty */
+size default args "-f","-closure",
+                  "-only","EDU/purdue/cs/bloat/trans",
+		  "bloat.TraceMethods",
+		  "compiledcode"
+  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-desc-short	"A Bytecode-level optimization and analysis tool for Java"
-desc-long	"BLOAT analyizes a series of class files"
-desc-copyright	"Copyright (c) 1997-2001 Purdue Research Foundation of Purdue University"
-desc-url    	"http://www.cs.purdue.edu/s3/projects/bloat/"
-desc-version	"1.0"
+size large args "-f","-closure",
+                "-only","EDU/purdue/cs/bloat/tree",
+		"bloat.TraceMethods",
+                "compiledcode"
+  output "$stdout" digest 0x0,
+         "$stderr" digest 0x0;
+
+size huge args "-f","-closure",
+               "-only","EDU",
+	       "bloat.TraceMethods",
+	       "compiledcode"
+  output "$stdout" digest 0x0,
+         "$stderr" digest 0x0;
+
+description
+  short	"A Bytecode-level optimization and analysis tool for Java",
+  long	"BLOAT analyzes a series of class files",
+  copyright	"Copyright (c) 1997-2001 Purdue Research Foundation of Purdue University",
+  url    	"http://www.cs.purdue.edu/s3/projects/bloat/",
+  version	"1.0";

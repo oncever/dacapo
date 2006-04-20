@@ -1,11 +1,13 @@
-edu.unm.cs.oal.DaCapo.JavaPostScript.Red.executive main
+benchmark ps
+  class dacapo.ps.PsHarness;
 
-small           "dat/ps/snowflakes.ps"
-default		"dat/ps/dragon2.ps"
-large		"dat/ps/fibonacci20.ps"
-huge            "dat/ps/bifur.ps"
+size small   args  "ps/snowflakes.ps";
+size default args  "ps/dragon2.ps";
+size large   args  "ps/fibonacci20.ps";
+size huge    args  "ps/bifur.ps";
 
-desc-short	"A postscript interpreter"
-desc-long	"A postscript file is read and interpreted"
-desc-copright	"Copyright (c) 2003 Michael Usner, Tuan Bui, Kade Elkins"
-desc-version	""
+description
+  short	"A postscript interpreter",
+  long	"A postscript file is read and interpreted",
+  copyright	"Copyright (c) 2003 Michael Usner, Tuan Bui, Kade Elkins",
+  version	"";

@@ -17,12 +17,10 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
 
+import dacapo.parser.Config;
+
 public class TestHarness {
-  String className;
-  String methodName;
-  String methodSignature;
-  Hashtable configurations = new Hashtable();
-  private final static int QUOTE = (int)'\"';
+  private final Config config;
   
   private static boolean verbose = false;
   
@@ -62,7 +60,6 @@ public class TestHarness {
     try {
       if (verbose)
         System.out.println("Extracting f="+fn+" from jar.");
-      InputStream is = null;
       java.net.URL sourceURL = getURL(fn);
       if (sourceURL != null) {
         InputStream ios = sourceURL.openStream();
@@ -84,7 +81,8 @@ public class TestHarness {
   public static void main(String[] args) {
     try {
       InputStream ins = System.in;
-      String config = "default";
+      String size = "default";
+      String scratchDir = "./scratch";
       Callback callback = null;
       int iterations = 1;
       boolean info = false;
@@ -100,7 +98,7 @@ public class TestHarness {
       for (; i < args.length; i++) {
         if (args[i].equals("-s")) {
           // size name name
-          config = args[++i];
+          size = args[++i];
         } else if (args[i].equals("-i")) {
           // display benchmark information
           info = true;
@@ -125,15 +123,20 @@ public class TestHarness {
           } else {
             callback = (Callback) cls.newInstance();
           }
-        } else if (args[i].equals("-F")) {
-          // display detailed information
-          allowOpenFromFileSystem = true;
         } else if (args[i].equals("-two")) {
           // Run twice, showing the second iteration
           iterations = 2;
         } else if (args[i].equals("-n")) {
-          // Run twice, showing the second iteration
+          // Run n times, showing the last iteration
           iterations = Integer.parseInt(args[++i]);
+        } else if (args[i].equals("-debug")) {
+          Benchmark.verbose = true;
+        } else if (args[i].equals("-preserve")) {
+          Benchmark.preserve = true;
+        } else if (args[i].equals("-noDigestOutput")) {
+          Benchmark.digestOutput = false;
+        } else if (args[i].equals("-scratch")) {
+          scratchDir = args[++i];
         } else
           break;
       }
@@ -141,9 +144,9 @@ public class TestHarness {
         callback = new Callback();
       }
       
-      File scratchDir = new File("scratch");
-      rmdir(scratchDir);
-      scratchDir.mkdir();
+      File scratch = new File(scratchDir);
+      rmdir(scratch);
+      scratch.mkdir();
       
       // now get the benchmark names and run them
       for (; i < args.length; i++) {
@@ -168,36 +171,47 @@ public class TestHarness {
           Class c = harness.findClass();
           
           if (dacapo.Benchmark.class.isAssignableFrom(c)) {
-            Constructor cons = c.getConstructor(new Class[] {String.class,File.class});
+            Constructor cons = c.getConstructor(new Class[] {Config.class,File.class});
             
-            Benchmark b = (Benchmark) cons.newInstance(new Object[] {bm,scratchDir});
-            String[] bmArgs = (String[])((Vector)(harness.configurations.get(config))).toArray(new String[0]);
+            Benchmark b = (Benchmark) cons.newInstance(new Object[] {harness.config,scratch});
             
+            boolean valid = true;
             for (; iterations > 1; iterations--) {
-              b.preIteration(bmArgs);
+              b.preIteration(size);
               callback.startWarmup(bm);
-              b.iterate(bmArgs);
+              b.startIteration();
+              b.iterate(size);
+              b.stopIteration();
               callback.stopWarmup(bm);
-              b.postIteration(bmArgs);
+              valid = b.validate(size) && valid;
+              b.postIteration(size);
            }
 
-            b.preIteration(bmArgs);
+            b.preIteration(size);
             callback.start(bm);
-            b.iterate(bmArgs);
+            b.startIteration();
+            b.iterate(size);
+            b.stopIteration();
             callback.stop(bm);
-            b.postIteration(bmArgs);
+            valid = b.validate(size) && valid;
+            b.postIteration(size);
             b.cleanup();
+            
+            if (!valid) {
+              System.err.println("Validation FAILED for "+bm+" "+size);
+              System.exit(-2);
+            }
           } else {
             Method m = harness.findMethod();
 
             for (; iterations > 1; iterations--) {
               callback.startWarmup(bm);
-              harness.invokeConfiguration(m, config);
+              harness.invokeConfiguration(m, size);
               callback.stopWarmup(bm);
             }
 
             callback.start(bm);
-            harness.invokeConfiguration(m, config);
+            harness.invokeConfiguration(m, size);
             callback.stop(bm);
           }
         }
@@ -216,10 +230,12 @@ public class TestHarness {
   private static void printUsage() {
     System.out.println("Usage: java Harness [options ...] [benchmarks ...]");
     System.out.println("    -c <callback>           Use class <callback> to bracket benchmark runs");
-    System.out.println("    -F                      Allow input data from filesystem");
+    System.out.println("    -debug                  Verbose debugging information");
     System.out.println("    -h                      Print this help");
     System.out.println("    -i                      Display benchmark information");
     System.out.println("    -n <iter>               Run the benchmark <iter> times");
+    System.out.println("    -noDigestOutput         Turn off SHA1 digest of stdout/stderr");
+    System.out.println("    -preserve               Preserve output files (debug)");
     System.out.println("    -s small|default|large  Size of input data");
     System.out.println("    -two                    Run the benchmark twice (equivalent to -n 2)");
     System.out.println("    -v                      Verbose output");
@@ -245,128 +261,26 @@ public class TestHarness {
   }
   
   private void bmInfo() {
-    for (Enumeration e = configurations.keys() ; e.hasMoreElements()  ;) {
-      String v = (String)e.nextElement();
-      if (v.startsWith("desc-")) {
-        System.err.print(v+" ");
-        Vector args = (Vector)configurations.get(v);
-        for (Enumeration a = args.elements() ; a.hasMoreElements() ;) {
-          System.err.print(" "+a.nextElement());
-        }
-        System.err.println();
-      }
-    }
+    config.describe(System.err);
   }
   
   private void dump() {
-    System.err.println("Class name: "+className);
-    System.err.println("Method name: "+methodName);
+    System.err.println("Class name: "+config.className);
+    System.err.println("Method name: "+config.methodName);
     
     System.err.println("Configurations:");
-    for (Enumeration e = configurations.keys() ; e.hasMoreElements()  ;) {
-      String v = (String)e.nextElement();
-      if (!v.startsWith("desc")) {
-        System.err.print(v+" -");
-        Vector args = (Vector)configurations.get(v);
-        for (Enumeration a = args.elements() ; a.hasMoreElements() ;) {
-          System.err.print(" "+a.nextElement());
-        }
-        System.err.println();
-      }
-    }
+    config.describe(System.err);
   }
   
   private TestHarness(InputStream stream) {
-    try {
-      Reader r = new BufferedReader(new InputStreamReader(stream));
-      StreamTokenizer tokenizer = new StreamTokenizer(r);
-      int tokenType;
-      
-      tokenizer.eolIsSignificant(true);
-      tokenizer.wordChars('_', '_');
-      tokenizer.wordChars('.', ',');
-      tokenizer.wordChars('$', '$');
-      tokenizer.wordChars('-', '-');
-      
-      tokenType = tokenizer.nextToken();
-      if (tokenType == QUOTE || tokenType == StreamTokenizer.TT_WORD)
-        className = tokenizer.sval;
-      else {
-        System.err.println("Unexpected token type for className:  "+tokenType);
-        System.exit(-1);
-      }
-      
-      tokenType = tokenizer.nextToken();
-      if (tokenType == QUOTE || tokenType == StreamTokenizer.TT_WORD)
-        methodName = tokenizer.sval;
-      else {
-        System.err.println("Unexpected token type for methodName:  "+tokenType);
-        System.err.println(" className: "+className);
-        System.exit(-1);
-      }
-      
-      tokenType = tokenizer.nextToken();
-      if (tokenType == QUOTE || tokenType == StreamTokenizer.TT_WORD)
-        methodSignature = tokenizer.sval;
-      
-      String configuration = null;
-      
-      
-      configLoop:
-        do {
-          Vector args = new Vector();
-          
-          do {
-            tokenType = tokenizer.nextToken();
-            if (tokenType == StreamTokenizer.TT_EOF)
-              break configLoop;
-          } while (tokenType == StreamTokenizer.TT_EOL);
-          
-          if (tokenType == StreamTokenizer.TT_WORD) {
-            configuration = tokenizer.sval;
-          }
-          else {
-            System.err.println("Unexpected token type for arg:  "+tokenType);
-            System.exit(-1);
-          }
-          
-          argLoop:
-            while (tokenType != StreamTokenizer.TT_EOF ) {
-              tokenType = tokenizer.nextToken();
-              switch (tokenType) {
-                case QUOTE:
-                  args.addElement(tokenizer.sval);
-                  break;
-                case StreamTokenizer.TT_WORD:
-                  args.addElement(tokenizer.sval);
-                  break;
-                case StreamTokenizer.TT_NUMBER:
-                  args.addElement(new Double(tokenizer.nval));
-                  break;
-                case StreamTokenizer.TT_EOL:
-                  break argLoop;
-                case StreamTokenizer.TT_EOF:
-                  break;
-                default:
-                  System.err.println("Unexpected token type for arg:  "+tokenType);
-                System.exit(-1);
-                break;
-              }
-            }
-          
-          configurations.put(configuration, args);
-        } while (tokenType != StreamTokenizer.TT_EOF);
-    }
-    catch(IOException e) {
-      System.err.println(e);
-      e.printStackTrace();
+    config = Config.parse(stream);
+    if (config == null)
       System.exit(-1);
-    }
   }
   
   private Class findClass() {
     try {
-      return Class.forName(className);
+      return Class.forName(config.className);
     }
     catch (ClassNotFoundException e) {
       System.err.println(e);
@@ -377,7 +291,7 @@ public class TestHarness {
   }
   
   private Method findMethod() {
-    return findMethod(methodName);
+    return findMethod(config.methodName);
   }
   
   private Method findMethod(String methodName) {
@@ -394,9 +308,16 @@ public class TestHarness {
     return null;
   }
   
+  private static Vector vectorise(String[] s) {
+    Vector result = new Vector(s.length);
+    for (int i=0; i < s.length; i++)
+      result.add(s[i]);
+    return result;
+  }
+  
   private void invokeConfiguration(Method m, String configuration) {
     try {
-      Vector configArgs = (Vector) configurations.get(configuration);
+      Vector configArgs = vectorise(config.getArgs(configuration));
       if (configArgs == null) {
         System.err.println("Can't find configuration "+ configuration);
         System.exit(-1);

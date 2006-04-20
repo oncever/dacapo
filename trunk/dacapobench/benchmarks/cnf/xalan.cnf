@@ -1,11 +1,28 @@
-dacapo.XalanHarness main
+benchmark xalan
+  class dacapo.xalan.XalanHarness;
 
-small "2" "1"
-default "2" "2"
-large "8" "2"
+size small args "2","1"
+  output "xalan.out.0" digest 0x5d006cf6f6c1d5d77d03b77ab78d30e99f5b3202,
+         "xalan.out.1" digest 0x5d006cf6f6c1d5d77d03b77ab78d30e99f5b3202;
 
-desc-short	"An XSLT processor for transforming XML documents"
-desc-long	"Xalan transforms an XML document (either an test case or the works of Shakespeare) and transforms the document into html"
-desc-copyright	"Copyright (C) 1999-2003 The Apache Software Foundation"
-desc-url	"http://xml.apache.org/xalan-j/"
-desc-version	"2.4.1"
+size default args "2","2"
+  output "xalan.out.0" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.1" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec;
+
+size large args "8","2"
+  output "xalan.out.0" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.1" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.2" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.3" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.4" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.5" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.6" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
+         "xalan.out.7" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec;
+        
+
+description
+  short	"An XSLT processor for transforming XML documents",
+  long	"Xalan transforms an XML document (either a test case or the works of Shakespeare) and transforms the document into html",
+  copyright	"Copyright (C) 1999-2003 The Apache Software Foundation",
+  url	"http://xml.apache.org/xalan-j/",
+  version	"2.4.1";

@@ -1,13 +1,33 @@
-org.apache.fop.apps.Fop main
+benchmark fop
+  class dacapo.fop.FopHarness;
 
-small "-d" "dat/fop/readme.fo" "scratch/readme.pdf"
-default "dat/fop/test.fo" "scratch/test.pdf"
-large "dat/fop/test.fo" "scratch/test.pdf"
-largeX "dat/fop/extensive.fo" "scratch/test.pdf"
-largeY "dat/fop/embedding.fo" "scratch/test.pdf"
+/*
+ * 'small' uses debug mode ("-d"), which puts current stats in the output,
+ * so we don't use "$stdout" to validate small.
+ */
+size small args "-d","fop/readme.fo","-c","fop/conf/config.xml","readme.pdf"
+  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "readme.pdf" digest 0x68ece6f8016d5988d2ded9b47c75b289b9b4d411;
 
-desc-short	"An output independant print formatter"
-desc-long	"fop takes an XSL-FO file, parses it and formats it, generating a pdf file"
-desc-copyright	"Copyright (C) 1999-2003 The Apache Software Foundation"
-desc-url        "http://xml.apache.org/fop/"
-desc-version	"0.20.5"
+size default args "fop/test.fo","-c","fop/conf/config.xml","test.pdf"
+  output "$stdout" digest 0x8ba1a598763537814fe6c26fe36708c465d9d17b,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "test.pdf" digest 0x97f805583aacbd49d2508dd62289c2bae5893fac;
+
+size large args "fop/test.fo","-c","fop/conf/config.xml","test.pdf"
+  output "$stdout" digest 0x8ba1a598763537814fe6c26fe36708c465d9d17b,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "test.pdf" digest 0x97f805583aacbd49d2508dd62289c2bae5893fac;
+
+size largeX args "fop/extensive.fo","-c","fop/conf/config.xml","test.pdf"
+  output "test.pdf" digest 0x0 bytes 0;
+
+size largeY args "fop/embedding.fo","-c","fop/conf/config.xml","test.pdf"
+  output "test.pdf" digest 0x0 bytes 0;
+
+description
+  short	"An output independant print formatter",
+  long	"fop takes an XSL-FO file, parses it and formats it, generating a pdf file",
+  copyright	"Copyright (C) 1999-2003 The Apache Software Foundation",
+  url        "http://xml.apache.org/fop/",
+  version	"0.20.5";
