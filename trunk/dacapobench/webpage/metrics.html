@@ -80,5 +80,77 @@ in the heap.
 <h2 id=pointer-target>Pointer target</h2>
 Pointer target measures where objects that are pointed to are located
 in the heap.
+
+<h1>Object size metrics</h1>
+
+This class of metrics looks at the distribution of object sizes.  The distribution
+is measured in two ways: at the time of allocation, measuring how many objects 
+of a given size were actually allocated; and via the garbage collector (run at
+regular frequent intervals), measuring the distribution of live objects in the heap.
+The difference between these two measurement methods indicates how short- or long-lived
+objects of a particular size are.
+<p>
+Objects are divided into two classes, scalars and arrays.  Results reported as 'object'
+statistics include both classes.
+<p>
+Statistics are graphed as histograms (behaviour summarised over the whole program run)
+and time-series graphs, where a line on the graph corresponds to a column in the 
+histogram.
+
+<h2 id=object-size-alloc>Allocated object sizes</h2>
+  The distribution of object sizes at time of allocation.
+<h2 id=object-size-live>Live object sizes</h2>
+  The distribution of object sizes as measured by the garbage collector
+  at regular(frequent) intervals.
+<h2 id=array-size-alloc>Allocated array sizes</h2>
+  The distribution of array sizes at time of allocation
+<h2 id=array-size-live>Live array sizes</h2>
+  The distribution of array sizes as measured by the garbage collector
+  at regular(frequent) intervals.
+<h2 id=scalar-size-alloc>Allocated scalar object sizes</h2>
+  The distribution of scalar (non-array) object sizes at time of allocation
+<h2 id=scalar-size-live>Live scalar object sizes</h2>
+  The distribution of scalar (non-array) object sizes as measured by the garbage collector
+  at regular(frequent) intervals.
+
+<h1>Object pointer metrics</h1>
+
+This class of metrics looks at the distribution of  
+pointer fields in objects. The distribution
+is measured in two ways: at the time of allocation, measuring how many objects 
+with a given number of pointers were actually allocated; and via the garbage collector (run at
+regular frequent intervals), measuring the distribution of live objects 
+with a given number of pointer fields in the heap.
+The difference between these two measurement methods indicates how short- or long-lived
+objects with a given number of pointers are.
+
+<h2 id=scalar-ptrs-alloc>Pointers in allocated scalar objects</h2>
+  The distribution of pointer fields in scalar objects at time of allocation.
+<h2 id=scalar-ptrs-live>Pointers in live scalar objects</h2>
+  The distribution of pointer fields in scalar objects that are live in the heap (as 
+  measured by the garbage collector).
+<h2 id=array-ptrs-alloc>Pointers in allocated array objects</h2>
+  The distribution of pointer fields in array objects at time of allocation.
+<h2 id=array-ptrs-live>Pointers in live array objects</h2>
+  The distribution of pointer fields in array objects that are live in the heap (as 
+  measured by the garbage collector).
+
+<h1>Heap composition</h1>
+
+These graphs track the composition of the heap by grouping allocated objects into <i>cohorts</i>,
+objects allocated within a particular period of time.  For these statistics we choose a cohort size
+in bytes (eg 8mb), and group objects accordingly.  The measurement process 
+performs frequent garbage collections, and at each collection it records the 
+volume of live objects in each cohort.  The resulting graphs draw one line for each
+cohort, tracking its survival rate over time.
+<p>
+Two styles of graph are shown, standard (where the top line of the graph is the oldest cohort),
+and inverted (the oldest cohort is at the bottom).
+<p>
+The x-axis of the graph is given in either allocations or mutations.
+
+<h2 id=heap-comp>Heap composition</h2>
+  Composition  of the heap, one line per cohort, indicating how much data from
+  each allocation cohort is live at the given time.
 </body>
 </html>
