@@ -9,13 +9,13 @@
 <body>
 <h2>Running benchmarks</h2>
 To run one of the benchmarks, use the command
-<pre>java -jar dacapo-beta&lt;date&gt;.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-F] [-h] [-i] [-v] &lt;bm&gt; [&lt;bm2&gt;, ...]</pre>
+<pre>java -jar dacapo-beta&lt;date&gt;.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-<flags>] &lt;bm&gt; [&lt;bm2&gt;, ...]</pre>
 <pre><br>where:</pre>
-<table cellpadding="2" cellspacing="2" border="1" style="text-align: left; width: 100%;">
+<table cellpadding="2" cellspacing="2" border="0" style="text-align: left; width: 100%;">
   <tbody>
     <tr>
       <td style="vertical-align: top;">
-      <pre>-s</pre>
+      <pre><b>-s</pre>
       </td>
       <td style="vertical-align: top;">
       <pre>specifies the workload size (small, default, large)</pre>
@@ -23,15 +23,16 @@ To run one of the benchmarks, use the command
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>-c</pre>
+      <pre><b>-c</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>specifies the name of a callback class which extends dacapo.Callback, allowing hooks for benchmark start, end, warmup start, and warm up end</pre>
+      <pre>specifies the name of a callback class which extends dacapo.Callback, 
+allowing hooks for benchmark start, end, warmup start, and warm up end</pre>
       </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>-h</pre>
+      <pre><b>-h</pre>
       </td>
       <td style="vertical-align: top;">
       <pre>prints a usage message</pre>
@@ -39,23 +40,66 @@ To run one of the benchmarks, use the command
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>-F</pre>
+      <pre><b>-n &lt;num></pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>Forces test input from the filesystem rather than the jar file</pre>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>-i</pre>
-      </td>
-      <td style="vertical-align: top;">
-      <pre>print information on the benchmark(s), including brief description, urls, copyright and version</pre>
+      <pre>Number of iterations.  The first (n-1) are warmup iterations, 
+and the last one is timed.</pre>
       </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>-v</pre>
+      <pre><b>-two</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>Synonym for '-n 2', provided for backward compatibility.</pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-i</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>print information on the benchmark(s), including brief description, urls,
+copyright and version</pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-scratch scratch-dir</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>Specify a scratch directory for temporary output files.  If it exists, the harness
+will delete and re-create it.</pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-debug</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>debugging output (probably only of interest to maintainers)</pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-noDigestOutput</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>Disable digest validation of standard output and error streams.</pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-preserve</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>preserve output files (probably only of interest to maintainers)</pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-v</pre>
       </td>
       <td style="vertical-align: top;">
       <pre>verbose output (probably only of interest to maintainers)</pre>
@@ -63,10 +107,11 @@ To run one of the benchmarks, use the command
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>&lt;bm&gt;</pre>
+      <pre><b>&lt;bm&gt;</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>a list of benchmarks to execute {antlr, batik, bloat, chart, fop, hsqldb, jython, pmd, ps, xalan}</pre>
+      <pre>a list of benchmarks to execute {antlr, batik, bloat, chart, fop, hsqldb, jython, 
+lucene-search, lucene-index, pmd, ps, xalan}</pre>
       </td>
     </tr>
   </tbody>
