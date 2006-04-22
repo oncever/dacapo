@@ -7,19 +7,19 @@ size small args "-index","lucene-search/index-default",
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "lucene-search.out" digest 0xb75758edb39d402de17aa43f6bfd2bae9484216e;
 
-size default args "-index","lucene-search/index-default",
+size olddefault args "-index","lucene-search/index-default",
                 "-queries","lucene-search/queries-default.txt"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "lucene-search.out" digest 0xd88f15f0ae2e8d6ac0383f5aba39aeb85d7129e1;
 
-size large args "-index","lucene-search/index-default",
+size large args "-index","lucene-search/index-large",
                 "-queries","lucene-search/queries-large.txt"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "lucene-search.out" digest 0x89208a7bee3bab91d4dc808a1cf648202130f47a;
+	 "lucene-search.out" digest 0x0;
 
-size large2 args "-index","lucene-search/index-large",
+size default args "-index","lucene-search/index-large",
                 "-queries","lucene-search/queries-default.txt"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,

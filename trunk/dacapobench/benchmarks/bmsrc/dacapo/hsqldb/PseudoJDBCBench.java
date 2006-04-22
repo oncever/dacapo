@@ -75,6 +75,7 @@ public class PseudoJDBCBench {
 
   /* Debugging - number of clients currently active */
   volatile static int     runningClients = 0;
+  final static boolean    debug = false;
 
   /* main program,    creates a 1-tps database:  i.e. 1 branch, 10 tellers,...
    *                    runs one TPC BM B transaction
@@ -259,10 +260,10 @@ public class PseudoJDBCBench {
        while (e.hasMoreElements()) {
          Client = (Thread) e.nextElement();
 
-         if (verbose) System.out.println("Active client threads: "+runningClients);
+         if (debug) System.out.println("Active client threads: "+runningClients);
          Client.join();
        }
-       System.out.println("All clients exited");
+       if (debug) System.out.println("All clients exited");
 
        vClient.removeAllElements();
        reportDone();
@@ -287,10 +288,10 @@ public class PseudoJDBCBench {
         while (e.hasMoreElements()) {
           Client = (Thread) e.nextElement();
 
-          System.out.println("Active client threads: "+runningClients);
+          if (debug) System.out.println("Active client threads: "+runningClients);
           Client.join();
         }
-        System.out.println("All clients exited");
+        if (debug) System.out.println("All clients exited");
 
         vClient.removeAllElements();
         reportDone();
@@ -315,10 +316,10 @@ public class PseudoJDBCBench {
         while (e.hasMoreElements()) {
           Client = (Thread) e.nextElement();
 
-          System.out.println("Active client threads: "+runningClients);
+          if (debug) System.out.println("Active client threads: "+runningClients);
           Client.join();
         }
-        System.out.println("All clients exited");
+        if (debug) System.out.println("All clients exited");
 
         vClient.removeAllElements();
         reportDone();
@@ -343,10 +344,10 @@ public class PseudoJDBCBench {
         while (e.hasMoreElements()) {
           Client = (Thread) e.nextElement();
 
-          System.out.println("Active client threads: "+runningClients);
+          if (debug) System.out.println("Active client threads: "+runningClients);
           Client.join();
         }
-        System.out.println("All clients exited");
+        if (debug) System.out.println("All clients exited");
 
         vClient.removeAllElements();
         reportDone();
@@ -374,7 +375,9 @@ public class PseudoJDBCBench {
         if (TabFile != null) {
           TabFile.close();
         }
-      } catch (Exception E1) {}
+      } catch (Exception E1) {
+        E1.printStackTrace();
+      }
       //DS. Disable System.exit(0) so that benchmark can be invoked twice from harness.
       //System.out.println ("-" + " PseudoJDBCBench.PseudoJDBCBench " + "calling System.exit(0)");
       //System.exit(0);
@@ -507,7 +510,7 @@ public class PseudoJDBCBench {
 
         return;
       }
-    } catch (Exception E) {}
+    } catch (Exception E) { E.printStackTrace(); }
 
     System.out.println("Drop old tables if they exist");
 
@@ -540,7 +543,7 @@ public class PseudoJDBCBench {
       }
 
       Stmt.close();
-    } catch (Exception E) {}
+    } catch (Exception E) { E.printStackTrace(); }
 
     System.out.println("Creates tables");
 
@@ -626,7 +629,7 @@ public class PseudoJDBCBench {
       }
 
       Stmt.close();
-    } catch (Exception E) {}
+    } catch (Exception E) { E.printStackTrace(); }
 
     System.out.println(
     "Delete elements in table in case Drop didn't work");
