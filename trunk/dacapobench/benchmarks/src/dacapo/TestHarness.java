@@ -176,25 +176,11 @@ public class TestHarness {
             Benchmark b = (Benchmark) cons.newInstance(new Object[] {harness.config,scratch});
             
             boolean valid = true;
-            for (; iterations > 1; iterations--) {
-              b.preIteration(size);
-              callback.startWarmup(bm);
-              b.startIteration();
-              b.iterate(size);
-              b.stopIteration();
-              callback.stopWarmup(bm);
-              valid = b.validate(size) && valid;
-              b.postIteration(size);
-           }
+            for (; iterations > 1; iterations--) 
+              valid = b.run(callback,size,false) && valid;   // beware order of evaluation!
 
-            b.preIteration(size);
-            callback.start(bm);
-            b.startIteration();
-            b.iterate(size);
-            b.stopIteration();
-            callback.stop(bm);
-            valid = b.validate(size) && valid;
-            b.postIteration(size);
+            valid = b.run(callback,size,true) && valid;   // beware order of evaluation!
+
             b.cleanup();
             
             if (!valid) {

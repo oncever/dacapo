@@ -52,6 +52,24 @@ public abstract class Benchmark {
   
   private String lastOutDigest, lastErrDigest;
   
+  public boolean run(Callback callback, String size, boolean timing) throws Exception {
+    preIteration(size);
+    if (timing)
+      callback.start(config.name);
+    else
+      callback.startWarmup(config.name);
+    startIteration();
+    iterate(size);
+    stopIteration();
+    if (timing)
+      callback.stop(config.name);
+    else
+      callback.stopWarmup(config.name);
+    boolean valid = validate(size);
+    postIteration(size);
+    return valid;
+  }
+  
   /**
    * When an instance of a Benchmark is created, it is expected to prepare 
    * its scratch directory, unloading files from the jar file if required.
