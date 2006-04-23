@@ -27,6 +27,8 @@ public class HsqldbHarness extends Benchmark {
   /**
    * hsqldb produces no output files and its stdout is full of
    * dates and times.  Need to find another way to validate. 
+   * 
+   * FIXME
    */
   public boolean validate(String size) {
     return true;
