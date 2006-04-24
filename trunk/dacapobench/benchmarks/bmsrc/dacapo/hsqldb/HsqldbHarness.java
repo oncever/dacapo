@@ -23,15 +23,4 @@ public class HsqldbHarness extends Benchmark {
     deleteFile(new File(scratch,"hsqldb.properties"));
     deleteFile(new File(scratch,"hsqldb.script"));
   }
-
-  /**
-   * hsqldb produces no output files and its stdout is full of
-   * dates and times.  Need to find another way to validate. 
-   * 
-   * FIXME
-   */
-  public boolean validate(String size) {
-    return true;
-  }
-
 }
