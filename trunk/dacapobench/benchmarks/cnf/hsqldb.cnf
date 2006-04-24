@@ -6,37 +6,49 @@ size small args "-driver","org.hsqldb.jdbcDriver",
 		"-user","sa","-init",
 		"-clients","1",
 		"-tpc", "1",
-		"-tps","1","-v";
+		"-tps","1","-v"
+  output "$stdout" digest 0x1127e66a443f3b2d92110cbb2f4542bc51a6c0d8,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size smallmem args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:mem:hsqldb",
 		"-user","sa","-init",
 		"-clients","1",
 		"-tpc", "1",
-		"-tps","1","-v";
+		"-tps","1","-v"
+  output "$stdout" digest 0xb889564808ee5e2ccdd52e9af1d631a22c856d77,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size default args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:scratch/hsqldb",
 		  "-user","sa","-init",
 		  "-clients","20",
 		  "-tpc","2",
-		  "-tps","2","-v";
+		  "-tps","2","-v"
+  output "$stdout" digest 0xb0f957f614df624011beaf48e35e82ff7cbf9785,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size defaultmem args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:mem:hsqldb",
 		  "-user","sa","-init",
 		  "-clients","20",
 		  "-tpc","2",
-		  "-tps","2","-v";
+		  "-tps","2","-v"
+  output "$stdout" digest 0x6f080549e69a5a9aba56ea6be2478ae0aba8ecac,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size large args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:scratch/hsqldb",
 		"-user","sa","-init",
 		"-clients","20",
 		"-tpc","5",
-		"-tps","15","-v";
+		"-tps","15","-v"
+  output "$stdout" digest 0x435383b07a2da1e6d44b1ee195322c564bbe00c7,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size largemem args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:mem:hsqldb",
 		"-user","sa","-init",
 		"-clients","20",
 		"-tpc","5",
-		"-tps","15","-v";
+		"-tps","15","-v"
+  output "$stdout" digest 0x0,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	"An SQL relational database engine written in Java",
