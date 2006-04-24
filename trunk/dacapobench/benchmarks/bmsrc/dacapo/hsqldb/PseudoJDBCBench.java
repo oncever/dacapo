@@ -211,7 +211,7 @@ public class PseudoJDBCBench {
     try {
       Class.forName(DriverName);
 
-      PseudoJDBCBench Me = new PseudoJDBCBench(DBUrl, DBUser, DBPassword,
+      new PseudoJDBCBench(DBUrl, DBUser, DBPassword,
               initialize_dataset);
     } catch (Exception E) {
       System.out.println(E.getMessage());
@@ -232,13 +232,13 @@ public class PseudoJDBCBench {
 
     try {
       if (init) {
-        System.out.println("Start: "
-                + (new java.util.Date()).toString());
+        //System.out.println("Start: "
+        //        + (new java.util.Date()).toString());
         System.out.print("Initializing dataset...");
         createDatabase(url, user, password);
         System.out.println("done.\n");
-        System.out.println("Complete: "
-                + (new java.util.Date()).toString());
+        //System.out.println("Complete: "
+        //        + (new java.util.Date()).toString());
       }
 
       System.out.println("* Starting Benchmark Run *");
@@ -437,18 +437,18 @@ public class PseudoJDBCBench {
     }
 
     System.out.println("\n--------------------");
-    System.out.println("Time to execute " + transaction_count
-            + " transactions: " + completion_time
-            + " seconds.");
-    System.out.println("Max/Min memory usage: " + MemoryWatcher.max
-            + " / " + MemoryWatcher.min + " kb");
+    //System.out.println("Time to execute " + transaction_count
+    //        + " transactions: " + completion_time
+    //        + " seconds.");
+    //System.out.println("Max/Min memory usage: " + MemoryWatcher.max
+    //        + " / " + MemoryWatcher.min + " kb");
     System.out.println(failed_transactions + " / " + transaction_count
             + " failed to complete.");
 
     double rate = (transaction_count - failed_transactions)
     / completion_time;
 
-    System.out.println("Transaction rate: " + rate + " txn/sec.");
+    //System.out.println("Transaction rate: " + rate + " txn/sec.");
 
     if (TabFile != null) {
       TabFile.print(MemoryWatcher.max + ";" + MemoryWatcher.min + ";"

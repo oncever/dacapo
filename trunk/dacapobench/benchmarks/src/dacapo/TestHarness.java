@@ -26,11 +26,11 @@ public class TestHarness {
   
   private static boolean allowOpenFromFileSystem = false;
   
-  public static URL getURL(File f) {
+  private static URL getURL(File f) {
     return getURL(f.getPath());
   }
   
-  public static URL getURL(String fn) {
+  private static URL getURL(String fn) {
     ClassLoader cl = TestHarness.class.getClassLoader();
     if (verbose)
       System.out.println("TestHarness.getURL: returns "+cl.getResource(fn));
@@ -52,11 +52,11 @@ public class TestHarness {
     return result;
   }
   
-  public static InputStream getInputStream(File f) throws FileNotFoundException {
+  private static InputStream getInputStream(File f) throws FileNotFoundException {
     return getInputStream(f.getPath());
   }
   
-  public static InputStream getInputStream(String fn) throws FileNotFoundException {
+  private static InputStream getInputStream(String fn) throws FileNotFoundException {
     try {
       if (verbose)
         System.out.println("Extracting f="+fn+" from jar.");
@@ -153,7 +153,7 @@ public class TestHarness {
         // check if it is a benchmark name
         // name of file containing configurations
         String bm = args[i];
-        String cnf = "dacapo/"+bm+".cnf";
+        String cnf = "cnf/"+bm+".cnf";
         ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
         if (ins == null) {
           System.err.println("Unknown benchmark: "+args[i]);
