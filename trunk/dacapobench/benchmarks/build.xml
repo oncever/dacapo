@@ -544,13 +544,13 @@
 
 		<!-- Install the test data -->
 		<zip basedir="${data}" 
-           includes="lucene-index/**"
-           destfile="${zipdata}/lucene-index.zip"/>
+           includes="luindex/**"
+           destfile="${zipdata}/luindex.zip"/>
 
 		<!-- Install the test data -->
 		<zip basedir="${data}" 
-           includes="lucene-search/**"
-           destfile="${zipdata}/lucene-search.zip"/>
+           includes="lusearch/**"
+           destfile="${zipdata}/lusearch.zip"/>
 	</target>
 
 	<!-- ================================= 
