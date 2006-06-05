@@ -46,7 +46,7 @@ public class LuceneIndex extends Benchmark {
   
   public void cleanup() {
     if (!preserve) {
-      deleteTree(new File(scratch,"lucene-index"));
+      deleteTree(new File(scratch,"luindex"));
     }
   }
   

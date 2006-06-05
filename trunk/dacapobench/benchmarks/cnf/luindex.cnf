@@ -1,0 +1,34 @@
+benchmark luindex
+  class dacapo.lucene.LuceneIndex;
+
+size small args "luindex/william/poetry" 
+  output "$stdout"         digest 0x74f3a8b379674cffb8a364d5010d370f05ef7ea0,
+         "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+	 "index/_5.cfs"    bytes 124666,
+	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
+	 "index/segments"  bytes 27;
+
+size default args "luindex/william","luindex/kjv"
+  output "$stdout"         digest 0x5e625e2ed8ab85fed9ce4eccd221bb20149c3f2c,
+         "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+	 "index/_3g.cfs"   bytes 1700261,
+	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
+	 "index/segments"  bytes 28;
+
+/*
+ * The input sets for 'large' are the same as for 'default', but
+ * chopped into multiple overlapping files
+ */
+size large args "luindex/william4" ,"luindex/kjv4"
+  output "$stdout" digest 0x3c0c32a5665ef3721c3edfb311056b5d484fb796,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+	 "index/_y3.cfs"   bytes 10760858 ,
+	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
+	 "index/segments"  bytes 28;
+
+description
+  short	"A text indexing tool",
+  long	"Indexes a set of documents, the works of Shakespeare and the King James bible",
+  copyright	"Copyright (C) The Apache Software Foundation",
+  url        "http://lucene.apache.org/",
+  version	"1.9.1";
