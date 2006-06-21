@@ -1,0 +1,13 @@
+benchmark eclipse class dacapo.eclipse.EclipseHarness;
+
+size small   args "0";
+size default args "1";
+size large   args "2";
+
+description
+  short "",
+  long  "",
+  copyright     "",
+  url           "http://www.eclipse.org/",
+  version       "3.1.2";
+
