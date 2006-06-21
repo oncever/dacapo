@@ -19,9 +19,10 @@ public class AntlrHarness extends Benchmark {
   }
   
   /** After each iteration, delete the output files */
-  public void postIteration(String size) {
+  public void postIteration(String size) throws Exception {
     super.postIteration(size);
-    //deleteTree(new File(scratch,"antlr/output"));
+    if (!preserve)
+      deleteTree(new File(scratch,"antlr/output"));
   }
   
   public void iterate(String size) {
