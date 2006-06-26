@@ -95,7 +95,7 @@ public abstract class Benchmark {
    * 
    * @param size
    */
-  public void preIteration(String size) {
+  public void preIteration(String size) throws Exception {
     if (verbose) {
       String[] args = config.getArgs(size);
       for (int i=0; i < args.length; i++)
@@ -244,7 +244,7 @@ public abstract class Benchmark {
    * 
    * @param size Argument to the benchmark iteration.
    */
-  public void postIteration(String size) {
+  public void postIteration(String size) throws Exception {
     if (!preserve) {
       for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
         String file = (String)v.next();
@@ -305,6 +305,11 @@ public abstract class Benchmark {
     return (new File(scratch,name)).getPath();
   }
 
+  public static void unpackZipFile(String name, File destination) throws Exception {
+    BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(name));
+    unpackZipStream(inputStream, destination);
+  }
+
   /**
    * Unpack a zip file resource into the specified directory.  The directory structure
    * of the zip archive is preserved.
@@ -318,7 +323,18 @@ public abstract class Benchmark {
     if (resource == null)
       throw new DacapoException("No such zip file, "+name);
     
-    ZipInputStream input = new ZipInputStream(new BufferedInputStream(resource.openStream()));
+    BufferedInputStream inputStream = new BufferedInputStream(resource.openStream());
+    unpackZipStream(inputStream, destination);
+  }
+
+  /**
+   * @param inputStream
+   * @param destination
+   * @throws IOException
+   * @throws FileNotFoundException
+   */
+  private static void unpackZipStream(BufferedInputStream inputStream, File destination) throws IOException, FileNotFoundException {
+    ZipInputStream input = new ZipInputStream(inputStream);
     ZipEntry entry;
     while((entry = input.getNextEntry()) != null) {
       if (verbose)
