@@ -15,7 +15,9 @@ public class EclipseHarness extends Benchmark {
     super.preIteration(size);
     if (preserve)
       deleteTree(new File(scratch,"eclipse/test-workspace"));
-    unpackZipFileResource(fileInScratch("eclipse/download/workspace.zip"),new File(scratch,"eclipse/test-workspace"));
+    File wsdir = new File(scratch,"eclipse/test-workspace");
+    wsdir.mkdir();
+    unpackZipFileResource(fileInScratch("eclipse/workspace.zip"),wsdir);
   }
 
   public void iterate(String size) throws Exception {
@@ -32,17 +34,16 @@ public class EclipseHarness extends Benchmark {
       System.out.println("Running eclipse benchmark");
       String[] cmdArgs = new String[] {
               "-data",fileInScratch("eclipse/test-workspace"),
-              "-application","org.dacapo.dacapoHarness",args[0]};
+              "-application","dacapo.eclipse.dacapoHarness",args[0]};
       for (int i=0; i < cmdArgs.length; i++)
         System.out.print(cmdArgs[i]+" ");
       System.out.println();
-      org.eclipse.core.launcher.Main.main(cmdArgs);
+      new org.eclipse.core.launcher.Main().run(cmdArgs);
       System.out.println("Eclipse benchmark complete");
     } finally {
-      System.out.println("Eclipse FINALLY block executing");
-      System.setProperty("osgi.os",oldOsgiOs);
-      System.setProperty("osgi.os",oldOsgiWs);
-      System.setProperty("osgi.os",oldOsgiArch);
+      if (oldOsgiOs != null) System.setProperty("osgi.os",oldOsgiOs);
+      if (oldOsgiWs != null) System.setProperty("osgi.ws",oldOsgiWs);
+      if (oldOsgiArch != null) System.setProperty("osgi.arch",oldOsgiArch);
     }
   }
 

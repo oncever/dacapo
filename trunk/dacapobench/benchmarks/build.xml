@@ -24,8 +24,9 @@
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
   <description>Dacapo benchmarks</description>
-  <property name="javacchome" location="/usr/share/javacc/lib"/>
+  <property name="javacchome" location="/usr/share/java"/>
   <property name="src" location="src"/>
+  <property name="extra" location="../extra"/>
   <property name="bmsrc" location="bmsrc"/>
   <property name="patches" location="patches"/>
   <property name="build_src" location="build_src"/>
@@ -51,7 +52,7 @@
   </target>
 
 
-  <target name="compile" depends="lucene,antlr,batik,bloat,chart,fop,hsqldb,jython,pmd,ps,xalan"
+  <target name="compile" depends="lucene,antlr,batik,bloat,chart,eclipse,fop,hsqldb,jython,pmd,ps,xalan"
           description="compile the sources for all benchmarks" >
   </target>
 
@@ -70,7 +71,8 @@
          ================================= -->
   <target name="bms" depends="compile" description="compile the benchmarks">
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="${bmsrc}" destdir="${build}"/>
+    <javac srcdir="${bmsrc}" destdir="${build}" excludes="${bmsrc}/dacapo/eclipse/src/**/*"/>
+ 
   </target>
 
 
@@ -123,11 +125,12 @@
     <delete dir="${build_src}/bloat/bloat"/>
     <delete dir="${build_src}/chart/jfreechart-1.0.0"/>
     <delete dir="${build_src}/fop/fop-0.20.5"/>
+    <delete dir="${build_src}/eclipse/"/>
     <delete dir="${build_src}/hsqldb/hsqldb"/>
     <delete dir="${build_src}/junit"/>
     <delete dir="${build_src}/jython/jython"/>
     <delete dir="${build_src}/lucene/lucene-1.9.1"/>
-    <delete dir="${build_src}/pmd/pmd-1.8"/>
+    <delete dir="${build_src}/pmd/pmd-3.7"/>
     <delete dir="${build_src}/ps/edu"/>
     <delete dir="${build_src}/xalan/xalan-j_2_4_1"/>
     <delete dir="${build_src}/xalan/xalan-j_2_7_0"/>
@@ -172,7 +175,7 @@
 
   <target name="sources" 
     description="Download sources from their original locations"
-    depends="antlr-source,batik-source,bloat-source,chart-source,fop-source,hsqldb-source,jython-source,lucene-source,pmd-source,ps-source,xalan-source,xerces-source">
+    depends="antlr-source,batik-source,bloat-source,chart-source,eclipse-source,fop-source,hsqldb-source,jython-source,lucene-source,pmd-source,ps-source,xalan-source,xerces-source">
   </target>
 
   <target name="antlr-source" depends="init-sources">
@@ -203,7 +206,16 @@
        usetimestamp="true"/>
   </target>
 
-  <target name="fop-source" depends="init-sources">
+  <target name="eclipse-source" depends="init-sources">
+	<get src="http://download2.eclipse.org/eclipse/downloads/drops/R-3.1.2-200601181600/eclipse-SDK-3.1.2-linux-gtk.tar.gz"
+	     dest="${sources}/eclipse-SDK-3.1.2-linux.gtk.tar.gz"
+	     usetimestamp="true"/>
+	<get src="http://download2.eclipse.org/eclipse/downloads/drops/R-3.1.2-200601181600/eclipse-Automated-Tests-3.1.2.zip"
+		 dest="${sources}/eclipse-Automated-Tests-3.1.2.zip"
+		 usetimestamp="true"/>
+    </target>
+
+	<target name="fop-source" depends="init-sources">
     <get src="http://archive.apache.org/dist/xml/fop/fop-0.20.5-src.tar.gz"
          dest="${sources}/fop-0.20.5-src.tar.gz"
        usetimestamp="true"/>
@@ -215,9 +227,14 @@
        usetimestamp="true"/>
   </target>
 
+ 
   <target name="jython-source" depends="init-sources">
-    <mkdir dir="${sources}/jython-2.1/"/>
-    <cvs cvsRoot=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython"
+  	<!--
+  		<get dest="${sources}/jython-2.1.zip"
+  		src="http://superb-east.dl.sourceforge.net/sourceforge/jython/jython-21.class"
+    usetimestamp="true"/>-->
+  	<mkdir dir="${sources}/jython-2.1/"/>
+    <cvs cvsRoot=":pserver:anonymous@jython.cvs.sourceforge.net:/cvsroot/jython"
          package="jython"
          tag="Release_2_1"
          dest="${sources}/jython-2.1/"/>
@@ -235,13 +252,13 @@
 
   <target name="lucene-source" depends="init-sources">
     <get dest="${sources}/lucene-1.9.1-src.tar.gz"
-         src="http://apache.mirror.pacific.net.au/lucene/java/lucene-1.9.1-src.tar.gz"
+         src="http://archive.apache.org/dist/lucene/java/lucene-1.9.1-src.tar.gz"
    usetimestamp="true"/>
   </target>
 
   <target name="pmd-source" depends="init-sources">
-    <get src="http://easynews.dl.sourceforge.net/sourceforge/pmd/pmd-src-1.8.zip"
-         dest="${sources}/pmd-src-1.8.zip"
+    <get src="http://easynews.dl.sourceforge.net/sourceforge/pmd/pmd-src-3.7.zip"
+         dest="${sources}/pmd-src-3.7.zip"
        usetimestamp="true"/>
   </target>
 
@@ -267,7 +284,6 @@
          dest="${sources}/Xerces-J-bin.2.6.2.tar.gz"
        usetimestamp="true"/>
   </target>
-
 
   <!-- *************************************************************************** -->
   <!--                            Build                                            -->
@@ -431,15 +447,36 @@
   <target name="eclipse" depends="init" description="--> build the eclipse benchmark">
     <property name="eclipse-top" value="${build_src}/eclipse/eclipse"/>
 
-          <zip destfile="${zipdata}/eclipse.zip"
-               includes="eclipse/**"
-               basedir="${data}"/>
+ 	<untar src="${sources}/eclipse-SDK-3.1.2-linux.gtk.tar.gz" dest="${build_src}/eclipse/" compression="gzip"/>
+  	<unzip src="${sources}/eclipse-Automated-Tests-3.1.2.zip" dest="${build_src}/eclipse/">
+   		<patternset>
+  			<include name="eclipse-testing/eclipse-junit-tests-M20060118-1600.zip"/>
+  		</patternset>
+  	</unzip>
+ 	<unzip src="${build_src}/eclipse/eclipse-testing/eclipse-junit-tests-M20060118-1600.zip" dest="${build_src}/eclipse/"/>
+    <delete dir="${build_src}/eclipse/eclipse-testing"/>
+  	<copy file="${data}/eclipse/workspace.zip" todir="${build_src}/eclipse/eclipse"/>
+ <!-- 	<unzip src="originals/dacapo-plugin.zip" dest="${build_src}/eclipse/eclipse"/> -->
+	<!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
+  	<ant antfile="${extra}/eclipse-plugin/build.xml" dir="${extra}/eclipse-plugin" 
+           target="build.update.jar" inheritall="false">
+    	<property name="eclipsesrc.home" location="${build_src}/eclipse"/>
+    	<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
+    </ant>
+ <!--   <copy file="${bmsrc}/dacapo/eclipse/dacapo.eclipse_1.0.0.jar" todir="${build_src}/eclipse/eclipse/plugins"/> -->
+   	<copy file="${data}/eclipse/workspace.zip" todir="${build_src}/eclipse/eclipse"/>
+ 	
+    <!-- Install the test data -->
+   <zip destfile="${zipdata}/eclipse.zip"
+         includes="eclipse/**"
+         basedir="${build_src}/eclipse"/>
+ 
+  	<!--
+          <unjar src="${data}/eclipse/eclipse/startup.jar" dest="${build}"/>-->
 
-          <unjar src="${data}/eclipse/eclipse/startup.jar" dest="${build}"/>
-
-    <javac srcdir="${bmsrc}" classpath="${build}"
-               destdir="${build}"
-                 includes="dacapo/eclipse/*"/>
+  	<!-- Build the eclipse dacapo harness -->
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/eclipse/EclipseHarness.java"/>
+                 
   </target>
 
 
@@ -471,10 +508,14 @@
            includes="fop/**"
            destfile="${zipdata}/fop.zip"/>
 
-          <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/fop/*"/>
+  	<!-- Build the fop dacapo harness -->
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/fop/*"/>
   </target>
 
+	
+  <!-- ================================= 
+          target: junit             
+       ================================= -->
   <target name="junit" description="--> The junit library - required by some other benchmarks">
     <!-- Install the junit jar file -->
     <unzip src="${sources}/junit3.8.1.zip" dest="${build_src}/junit/">
@@ -484,9 +525,10 @@
     </unzip>
   </target>
 
+	
   <!-- ================================= 
           target: hsqldb              
-         ================================= -->
+       ================================= -->
   <target name="hsqldb" depends="harness,junit" description="--> The hsqldb benchmark">
     <mkdir dir="${build_src}/hsqldb"/>
     <property name="hsqldb-top" value="${build_src}/hsqldb/"/>
@@ -508,8 +550,8 @@
     <!-- Copy the build to the distribution directory -->
     <unjar src="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" dest="${build}"/>
 
-          <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/hsqldb/*"/>
+  	<!-- Build the hsqldb dacapo harness -->
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/hsqldb/*"/>
   </target>
 
 
@@ -521,7 +563,8 @@
     <property name="jython-top" value="${build_src}/jython/"/>
 
     <!-- Expand the jython distribution class -->
-    <untar src="${sources}/jython-2.1.tgz" dest="${jython-top}" compression="gzip"/>
+  	 <!-- <unzip src="${sources}/jython-2.1.zip" dest="${jython-top}"/>-->
+   <untar src="${sources}/jython-2.1.tgz" dest="${jython-top}" compression="gzip"/>
 
     <!-- Apply the dacapo patch -->
     <patch patchfile="${patches}/jython.patch" 
@@ -593,7 +636,8 @@
           target: pmd    
          ================================= -->
   <target name="pmd" depends="harness,xerces,junit" description="--> Build the pmd benchmark">
-    <mkdir dir="${build_src}/pmd"/>
+  	
+  	<mkdir dir="${build_src}/pmd"/>
     <property name="pmd-top" value="${build_src}/pmd/pmd-3.7"/>
 
     <!-- Expand the pmd distribution zipfile -->
@@ -605,18 +649,17 @@
              strip="0" ignorewhitespace="yes"/> -->
 
     <!-- Install the junit jar file -->
-    <copy file="${build_src}/junit/junit3.8.1/junit.jar"
-            todir="${pmd-top}/lib/"/>
+    <!-- <copy file="${build_src}/junit/junit3.8.1/junit.jar"
+            todir="${pmd-top}/lib/"/> -->
 
-    <!-- Build using Ant -->
-    <ant antfile="${pmd-top}/bin/build.xml"
-           dir="${pmd-top}"
-           target="compile"
-           inheritall="false">
-      <property name="dacapo.classes" location="${build}"/>
-    </ant>
-
-    <!-- Copy the classfiles to the dist directory -->
+  	<!-- Build using Ant, setting the classpath appropriately -->
+  	<exec dir="${pmd-top}/bin" executable="ant">
+        <arg value="compile"/>
+        <env key="CLASSPATH" value=".:${build_src}/junit/junit3.8.1/junit.jar"/>
+        <env key="ANT_HOME" value="${ant.install}"/>
+    </exec>		
+ 
+  	<!-- Copy the classfiles to the dist directory -->
     <copy todir="${build}">
       <fileset dir="${pmd-top}/build">
         <include name="net/**/*.class"/>
@@ -637,7 +680,7 @@
 
     <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build}"/> 
     <!-- <unjar src="${pmd-top}/lib/jaxen-core-1.0-fcs.jar" dest="${build}"/> -->
-    <unjar src="${pmd-top}/lib/junit.jar" dest="${build}"/>
+    <unjar src="${build_src}/junit/junit3.8.1/junit.jar" dest="${build}"/>
 <!--
     <unjar src="${pmd-top}/lib/saxpath-1.0-fcs.jar" dest="${build}">
       <patternset>
