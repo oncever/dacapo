@@ -5,7 +5,7 @@ import java.io.File;
 import dacapo.Benchmark;
 import dacapo.parser.Config;
 
-public class Harness extends Benchmark {
+public class BloatHarness extends Benchmark {
 
   public Harness(Config config, File scratch) throws Exception {
     super(config, scratch);
