@@ -5,29 +5,23 @@ benchmark fop
  * 'small' uses debug mode ("-d"), which puts current stats in the output,
  * so we don't use "$stdout" to validate small.
  */
-size small args "-d","fop/readme.fo","-c","fop/conf/config.xml","readme.pdf"
+size small args "-q", "fop/readme.fo", "-pdf", "readme.pdf"
   output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "readme.pdf" digest 0x68ece6f8016d5988d2ded9b47c75b289b9b4d411;
+         "readme.pdf" digest 0x75f7444c92a7fa8f3bb379ed93239e5f5675a6f5;
 
-size default args "fop/test.fo","-c","fop/conf/config.xml","test.pdf"
-  output "$stdout" digest 0x8ba1a598763537814fe6c26fe36708c465d9d17b,
+size default args "-q", "fop/test.fo", "-ps", "test.ps"
+  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "test.pdf" digest 0x97f805583aacbd49d2508dd62289c2bae5893fac;
+         "test.ps" digest 0x17988bca80abf07f545c3a6d416e4e4dd26e632d;
 
-size large args "fop/test.fo","-c","fop/conf/config.xml","test.pdf"
-  output "$stdout" digest 0x8ba1a598763537814fe6c26fe36708c465d9d17b,
+size large args "-q", "fop/test.fo", "-ps", "test.ps"
+  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "test.pdf" digest 0x97f805583aacbd49d2508dd62289c2bae5893fac;
-
-size largeX args "fop/extensive.fo","-c","fop/conf/config.xml","test.pdf"
-  output "test.pdf" digest 0x0 bytes 0;
-
-size largeY args "fop/embedding.fo","-c","fop/conf/config.xml","test.pdf"
-  output "test.pdf" digest 0x0 bytes 0;
+         "test.ps" digest 0x17988bca80abf07f545c3a6d416e4e4dd26e632d;
 
 description
-  short	"An output independant print formatter",
-  long	"fop takes an XSL-FO file, parses it and formats it, generating a pdf file",
+  short	"An output-independant print formatter",
+  long	"fop takes an XSL-FO file, parses it and formats it, generating an encrypted pdf file",
   copyright	"Copyright (C) 1999-2003 The Apache Software Foundation",
   url        "http://xml.apache.org/fop/",
   version	"0.20.5";

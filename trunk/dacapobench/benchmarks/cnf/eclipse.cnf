@@ -1,12 +1,21 @@
-benchmark eclipse class dacapo.eclipse.EclipseHarness;
+benchmark eclipse
+  class dacapo.eclipse.EclipseHarness;
 
-size small   args "0";
-size default args "1";
-size large   args "2";
+size small   args "-level", "0", "-ast"
+  output "$stdout" digest 0xef94b8ccd442a269bfc45498041c8205ae08a317,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size default args "-level", "0"
+  output "$stdout" digest 0xfe9b9670adc39d3a44ab82a35d88d53f7dc936c4,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size large   args "-level", "1"
+  output "$stdout" digest 0x0,
+         "$stderr" digest 0x0;
 
 description
-  short "",
-  long  "",
+  short "Eclipse is a integrated development environment",
+  long  "Run a series of eclipse jdt (non-gui) performance tests",
   copyright     "",
   url           "http://www.eclipse.org/",
   version       "3.1.2";

@@ -98,6 +98,10 @@
     <javacc javacchome="${javacchome}" target="${src}/dacapo/parser/ConfigFile.jj"/>
     <!-- Compile the java code from ${src} into ${build} -->
     <javac srcdir="${src}" destdir="${build}" sourcepath="${stub}"/>
+    <!-- Test data and configuration files -->
+    <copy todir="${build}/cnf">
+      <fileset dir="${config}"/>
+    </copy>
   </target>
 
   <!-- ================================= 
@@ -132,10 +136,6 @@
        ================================= -->
   <target name="jar" depends="harness,init"
           description="generate the distribution jar file" >
-    <!-- Test data and configuration files -->
-    <copy todir="${build}/cnf">
-      <fileset dir="${config}"/>
-    </copy>
     <copy todir="${build}/META-INF" overwrite="true">
       <fileset dir="${src}/META-INF"/>
     </copy>
@@ -485,7 +485,7 @@
          ================================= -->
   <target name="eclipse" depends="eclipse.benchmark,eclipse.harness" description="--> build the eclipse benchmark"/>
   <!-- Build the eclipse dacapo harness -->
-  <target name="eclipse.harness" depends="init" description="--> build the eclipse harness">
+  <target name="eclipse.harness" depends="init,harness" description="--> build the eclipse harness">
     <javac srcdir="${bmsrc}" classpath="${build}:${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar" destdir="${build}" includes="dacapo/eclipse/EclipseHarness.java"/>                 
   </target>
   <!-- Build the eclipse benchmark -->
@@ -515,7 +515,13 @@
   <!-- ================================= 
           target: fop              
          ================================= -->
-  <target name="fop" depends="harness" description="--> Build the fop benchmark">
+  <target name="fop" depends="fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
+  <!-- Build the fop dacapo harness -->
+  <target name="fop.harness" depends="harness" description="--> Build the fop harness">
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/fop/*"/>
+  </target>
+  <!-- Build the fop benchmark -->
+  <target name="fop.benchmark" depends="init" description="--> Build the fop benchmark">
     <mkdir dir="${build_src}/fop"/>
     <property name="fop-top" value="${build_src}/fop/fop-${fop.version}/"/>
     <!-- Expand the source distribution -->
@@ -528,17 +534,14 @@
            build.xml handles relative directories.  The classpath allows the patched
            sources to see the test harness code.
         -->
-    <exec executable="ant" dir="${fop-top}">
-    </exec>
+    <exec executable="ant" dir="${fop-top}"/>
 
     <!-- Copy the build to the distribution directory -->
     <unjar src="${fop-top}/build/fop.jar" dest="${build}"/>
     <unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
 
     <!-- Install the test data -->
-    <zip basedir="${data}"
-           includes="fop/**"
-           destfile="${zipdata}/fop.zip"/>
+    <zip basedir="${data}" includes="fop/**" destfile="${zipdata}/fop.zip"/>
 
   	<!-- Build the fop dacapo harness -->
     <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/fop/*"/>
@@ -561,7 +564,13 @@
   <!-- ================================= 
           target: hsqldb              
        ================================= -->
-  <target name="hsqldb" depends="harness,junit" description="--> The hsqldb benchmark">
+  <target name="hsqldb" depends="hsqldb.benchmark,hsqldb.harness" description="--> build the hsqldb benchmark"/>
+  <!-- Build the hsqldb dacapo harness -->
+  <target name="hsqldb.harness" depends="harness" description="--> The hsqldb dacapo harness">
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/hsqldb/*"/>
+  </target>  
+  <!-- Build the hsqldb benchmark -->
+  <target name="hsqldb.benchmark" depends="harness,junit" description="--> The hsqldb benchmark">
     <mkdir dir="${build_src}/hsqldb"/>
     <property name="hsqldb-top" value="${build_src}/hsqldb/"/>
     <!-- Expand the source distribution -->
@@ -581,11 +590,7 @@
 
     <!-- Copy the build to the distribution directory -->
     <unjar src="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" dest="${build}"/>
-
-  	<!-- Build the hsqldb dacapo harness -->
-    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/hsqldb/*"/>
   </target>
-
 
   <!-- ================================= 
           target: jython                
@@ -624,12 +629,17 @@
   <!-- ================================= 
           target: lucene    
          ================================= -->
-  <target name="lucene" depends="harness" description="--> Build the lucene benchmark">
+  <target name="lucene" depends="lucene.benchmark,lucene.harness" description="--> build the lucene benchmark"/>
+  <!-- Build the lucene dacapo harness -->
+  <target name="lucene.harness" depends="harness" description="--> Build the lucene dacapo harness">
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/lucene/*"/>
+  </target>
+  <!-- Build the lucene benchmark -->
+  <target name="lucene.benchmark" depends="init" description="--> Build the lucene benchmark">
     <property name="lucene-top" value="${build_src}/lucene"/>
     <mkdir dir="${lucene-top}"/>
-    <untar src="${sources}/lucene-${lucene.version}-src.tar.gz" 
-             dest="${lucene-top}"
-       compression="gzip"/>
+    <untar src="${sources}/lucene-${lucene.version}-src.tar.gz" dest="${lucene-top}"
+    	compression="gzip"/>
 
     <!-- Build using Ant -->
     <ant antfile="${lucene-top}/lucene-${lucene.version}/build.xml"
@@ -651,38 +661,29 @@
     <unjar src="${lucene-top}/lucene-${lucene.version}/build/lucene-demos-1.9.2-dev.jar" 
              dest="${build}"/>
 
-    <!-- Install the test data -->
-    <zip basedir="${data}" 
-           includes="luindex/**"
-           destfile="${zipdata}/luindex.zip"/>
+    <!-- Install the luindex test data -->
+    <zip basedir="${data}" includes="luindex/**" destfile="${zipdata}/luindex.zip"/>
 
-    <!-- Install the test data -->
-    <zip basedir="${data}" 
-           includes="lusearch/**"
-           destfile="${zipdata}/lusearch.zip"/>
-         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/lucene/*"/>
-       </target>
+    <!-- Install the lusearch test data -->
+    <zip basedir="${data}" includes="lusearch/**" destfile="${zipdata}/lusearch.zip"/>
+  </target>
 
   <!-- ================================= 
           target: pmd    
          ================================= -->
-  <target name="pmd" depends="harness,xerces,junit" description="--> Build the pmd benchmark">
+  <target name="pmd" depends="pmd.benchmark,pmd.harness" description="--> build the pmd benchmark"/>
+  <!-- Build the pmd dacapo harness -->
+  <target name="pmd.harness" depends="harness" description="--> Build the pmd dacapo harness">
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/pmd/*"/>
+  </target>
+  <!-- Build the pmd benchmark -->
+  <target name="pmd.benchmark" depends="xerces,junit" description="--> Build the pmd benchmark">
   	
   	<mkdir dir="${build_src}/pmd"/>
     <property name="pmd-top" value="${build_src}/pmd/pmd-${pmd.version}"/>
 
     <!-- Expand the pmd distribution zipfile -->
     <unzip src="${sources}/pmd-src-${pmd.version}.zip" dest="${build_src}/pmd"/>
-
-    <!-- Apply the dacapo patch -->
-    <!-- <patch patchfile="${patches}/pmd.patch" 
-             dir="${build_src}"
-             strip="0" ignorewhitespace="yes"/> -->
-
-    <!-- Install the junit jar file -->
-    <!-- <copy file="${build_src}/junit/junit${junit.version}/junit.jar"
-            todir="${pmd-top}/lib/"/> -->
 
   	<!-- Build using Ant, setting the classpath appropriately -->
   	<exec dir="${pmd-top}/bin" executable="ant">
@@ -697,37 +698,30 @@
         <include name="net/**/*.class"/>
       </fileset>
     </copy>
-<!--
-    <unjar src="${pmd-top}/lib/xmlParserAPIs-${xerces.version}.jar" dest="${build}">
-      <patternset>
-        <include name="org/w3c/dom/**/*.class"/>
-      </patternset>
-    </unjar> 
-    <unjar src="${pmd-top}/lib/xercesImpl-${xerces.version}.jar" dest="${build}">
-      <patternset>
-        <include name="org/w3c/dom/**/*.class"/>
-      </patternset>
-    </unjar>  
--->
 
     <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build}"/> 
-    <!-- <unjar src="${pmd-top}/lib/jaxen-core-1.0-fcs.jar" dest="${build}"/> -->
     <unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${build}"/>
-<!--
-    <unjar src="${pmd-top}/lib/saxpath-1.0-fcs.jar" dest="${build}">
-      <patternset>
-        <include name="org/saxpath/**/*.class"/>
-        <include name="com/werken/**/*.class"/>
-      </patternset>
-    </unjar> 
--->
-    <!-- Install the test data -->
-    <zip basedir="${data}"
-           includes="pmd/**"
-           destfile="${zipdata}/pmd.zip"/>
 
-          <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/pmd/*"/>
+    <!-- Construct the test data -->
+    <property name="pmd-data" value="${pmd-top}/data/pmd"/>
+  	<mkdir dir="${pmd-data}"/>
+    <copy todir="${pmd-data}">
+      <fileset dir="${pmd-top}/src">
+        <include name="net/**/*.java"/>
+      </fileset>
+    </copy>
+    <copy todir="${pmd-data}">
+      <fileset dir="${pmd-top}">
+        <include name="rulesets/**/*"/>
+      </fileset>
+    </copy>
+    <copy todir="${pmd-data}" >
+      <fileset dir="${data}/pmd"><include name="*.lst"/></fileset>
+    </copy>
+ 	
+    <!-- Install the test data -->
+    <zip basedir="${pmd-top}/data" includes="pmd/**" destfile="${zipdata}/pmd.zip"/>
+    <delete dir="${pmd-top}/data"/>
   </target>
 
 
@@ -797,7 +791,13 @@
   <!-- ================================= 
         target: xalan
        ================================= -->
-  <target name="xalan" description="Build xalan" depends="harness,xerces">
+  <target name="xalan" depends="xalan.benchmark,xalan.harness" description="--> build the xalan benchmark"/>
+  <!-- Build the xalan dacapo harness -->
+  <target name="xalan.harness" depends="harness" description="Build xalan">
+    <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/xalan/*"/>
+  </target>
+  <!-- Build the xalan benchmark -->
+  <target name="xalan.benchmark" depends="xerces" description="Build xalan">
     <property name="xalan-top" value="${build_src}/xalan/"/>
     <property name="xalan-v" value="${xalan.version}"/>
     <mkdir dir="${xalan-top}"/>
