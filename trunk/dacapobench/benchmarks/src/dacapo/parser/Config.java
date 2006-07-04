@@ -69,7 +69,7 @@ public class Config {
   private Size getSize(String size) {
     Size s = (Size)sizes.get(size);
     if (s == null) {
-      System.err.println("No such size, "+size+" in this configuration");
+      System.err.println("No such size: \""+size+"\" in this configuration");
     }
     return s; 
   }

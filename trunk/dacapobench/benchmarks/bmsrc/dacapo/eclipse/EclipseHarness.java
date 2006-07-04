@@ -37,10 +37,19 @@ public class EclipseHarness extends Benchmark {
       System.setProperty("osgi.os","linux");
       System.setProperty("osgi.ws","gtk");
       System.setProperty("osgi.arch","x86");
-      
-      String[] cmdArgs = new String[] {
-              "-data",fileInScratch(wsDirectory),
-              "-application","dacapo.eclipse.dacapoHarness",args[0]};
+
+      String[] cmdArgs = new String[4 + args.length];
+      cmdArgs[0] = "-data";
+      cmdArgs[1] = fileInScratch(wsDirectory);
+      cmdArgs[2] = "-application";
+      cmdArgs[3] = "dacapo.eclipse.dacapoHarness";
+      for (int i = 0; i < args.length; i++)
+         cmdArgs[4+i] = args[i];
+/* */
+      for (int i = 0; i < cmdArgs.length; i++) {
+        System.out.print(cmdArgs[i]+" ");
+      }
+      System.out.println();
       new org.eclipse.core.launcher.Main().run(cmdArgs);
     } finally {
       if (oldOsgiOs != null) System.setProperty("osgi.os",oldOsgiOs);

@@ -7,7 +7,7 @@ import dacapo.parser.Config;
 
 public class BloatHarness extends Benchmark {
 
-  public Harness(Config config, File scratch) throws Exception {
+  public BloatHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
   }
   

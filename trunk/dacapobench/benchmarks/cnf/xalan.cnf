@@ -2,23 +2,36 @@ benchmark xalan
   class dacapo.xalan.XalanHarness;
 
 size small args "2","1"
-  output "xalan.out.0" digest 0x5d006cf6f6c1d5d77d03b77ab78d30e99f5b3202,
-         "xalan.out.1" digest 0x5d006cf6f6c1d5d77d03b77ab78d30e99f5b3202;
+  output "xalan.out.0" digest 0x2ac8a909863ae05e14d4012fc5066c840cb01773,
+         "xalan.out.1" digest 0x2ac8a909863ae05e14d4012fc5066c840cb01773;
 
-size default args "2","2"
-  output "xalan.out.0" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.1" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec;
+size default args "8","2"
+  output "xalan.out.0" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.1" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.2" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.3" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.4" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.5" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.6" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.7" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
 
-size large args "8","2"
-  output "xalan.out.0" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.1" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.2" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.3" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.4" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.5" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.6" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec,
-         "xalan.out.7" digest 0xff5c6a0bb90288cd06c8717c4629576cf9e4e3ec;
-        
+size large args "16","2"
+  output "xalan.out.0" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.1" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.2" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.3" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.4" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.5" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.6" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275,
+         "xalan.out.7" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.8" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.9" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.10" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.11" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.12" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.13" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.14" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;
+         "xalan.out.15" digest 0x7f475c7568d33bde58cb1f7841abca90c6818275;        
 
 description
   short	"An XSLT processor for transforming XML documents",

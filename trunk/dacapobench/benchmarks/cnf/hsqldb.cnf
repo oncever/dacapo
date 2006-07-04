@@ -21,9 +21,9 @@ size default args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:scratch/hsqldb",
 		  "-user","sa","-init",
 		  "-clients","20",
-		  "-tpc","2",
-		  "-tps","2","-v"
-  output "$stdout" digest 0xb0f957f614df624011beaf48e35e82ff7cbf9785,
+		  "-tpc","5",
+		  "-tps","8","-v"
+  output "$stdout" digest 0x9f1b83df6d2e9918a1ae17bf6c0e09ce88c1407d,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size defaultmem args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:mem:hsqldb",

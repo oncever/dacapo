@@ -321,7 +321,7 @@ public abstract class Benchmark {
   public static void unpackZipFileResource(String name, File destination) throws Exception {
     URL resource = getURL(name);
     if (resource == null)
-      throw new DacapoException("No such zip file, "+name);
+      throw new DacapoException("No such zip file: \""+name+"\"");
     
     BufferedInputStream inputStream = new BufferedInputStream(resource.openStream());
     unpackZipStream(inputStream, destination);

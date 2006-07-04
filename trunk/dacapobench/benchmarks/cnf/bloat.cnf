@@ -1,37 +1,40 @@
 benchmark bloat
-  class dacapo.bloat.Harness;
+  class dacapo.bloat.BloatHarness;
 /*
  * Standard output has the temp directory name in it, so we can't use 
  * its digest to validate.
  */
-size small args "-f","bloat.TraceMethods","compiledcode"
-  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-
-/* Output and error should be empty */
-size default args "-f","-closure",
-                  "-only","EDU/purdue/cs/bloat/trans",
-		  "bloat.TraceMethods",
-		  "compiledcode"
-  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+size small args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
+  "-f",
+  	      "EDU.purdue.cs.bloat.trans.ValueNumbering",
+          "optimizedcode"
+  output "$stdout" digest 0xec8f1e0b00ea6cbc2b05ccb5d0d6d641562a53c0,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "-f","-closure",
-                "-only","EDU/purdue/cs/bloat/tree",
-		"bloat.TraceMethods",
-                "compiledcode"
-  output "$stdout" digest 0x0,
-         "$stderr" digest 0x0;
+size default args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
+  "-f",
+		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer",
+		  "optimizedcode"
+  output "$stdout" digest 0x3d05f39fca73f44dfc41a32f4f9197226e646301,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size huge args "-f","-closure",
-               "-only","EDU",
-	       "bloat.TraceMethods",
-	       "compiledcode"
-  output "$stdout" digest 0x0,
-         "$stderr" digest 0x0;
+size large args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
+  "-f",
+		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.SSAPRE",
+		  "optimizedcode"
+  output "$stdout" digest 0xd6a40827323fbd20832c546ee2f6585d6042aa27,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size huge args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
+  "-f",
+		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.StackPRE", "EDU.purdue.cs.bloat.trans.SSAPRE",
+		  "optimizedcode"
+  output "$stdout" digest 0xb0e53a201d2454102bbed3c3da74afff1b2c918a,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	"A Bytecode-level optimization and analysis tool for Java",
-  long	"BLOAT analyzes a series of class files",
+  long	"BLOAT analyzes and optimizes some of its own class files",
   copyright	"Copyright (c) 1997-2001 Purdue Research Foundation of Purdue University",
   url    	"http://www.cs.purdue.edu/s3/projects/bloat/",
   version	"1.0";
