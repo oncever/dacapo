@@ -1,6 +1,9 @@
 package dacapo.eclipse;
 
 import java.io.File;
+import java.net.*;
+import java.io.*;
+import java.lang.reflect.Method;
 
 import dacapo.Benchmark;
 import dacapo.parser.Config;
@@ -29,7 +32,24 @@ public class EclipseHarness extends Benchmark {
     System.out.println("Eclipse benchmark complete");
   }
 
-  private void invokePlugin(String[] args) throws Exception {
+  private void invokePlugin(String[] pluginArgs) throws Exception {
+    String[] eclipseArgs = new String[4 + pluginArgs.length];
+    eclipseArgs[0] = "-data";
+    eclipseArgs[1] = fileInScratch(wsDirectory);
+    eclipseArgs[2] = "-application";
+    eclipseArgs[3] = "dacapo.eclipse.dacapoHarness";
+    for (int i = 0; i < pluginArgs.length; i++)
+      eclipseArgs[4+i] = pluginArgs[i];
+/* */
+    for (int i = 0; i < eclipseArgs.length; i++) {
+      System.out.print(eclipseArgs[i]+" ");
+    }
+    System.out.println();
+    invokeEclipse(eclipseArgs); 
+  }
+  
+  /* we need to invoke Eclipse reflectively because we have to add startup.jar to the classpath */
+  private void invokeEclipse(String[] eclipseArgs) throws Exception {
     String oldOsgiOs = System.getProperty("osgi.os");
     String oldOsgiWs = System.getProperty("osgi.ws");
     String oldOsgiArch = System.getProperty("osgi.arch");
@@ -37,25 +57,20 @@ public class EclipseHarness extends Benchmark {
       System.setProperty("osgi.os","linux");
       System.setProperty("osgi.ws","gtk");
       System.setProperty("osgi.arch","x86");
-
-      String[] cmdArgs = new String[4 + args.length];
-      cmdArgs[0] = "-data";
-      cmdArgs[1] = fileInScratch(wsDirectory);
-      cmdArgs[2] = "-application";
-      cmdArgs[3] = "dacapo.eclipse.dacapoHarness";
-      for (int i = 0; i < args.length; i++)
-         cmdArgs[4+i] = args[i];
-/* */
-      for (int i = 0; i < cmdArgs.length; i++) {
-        System.out.print(cmdArgs[i]+" ");
-      }
-      System.out.println();
-      new org.eclipse.core.launcher.Main().run(cmdArgs);
+      URL startupjar = new File(fileInScratch("eclipse/startup.jar")).toURL();
+      URL[] url = {startupjar};
+      URLClassLoader ulc = new URLClassLoader(url);
+      Class launcher = Class.forName("org.eclipse.core.launcher.Main", true, ulc);
+      System.out.println(launcher.getName());
+      Class[] sig = {Class.forName("[Ljava.lang.String;")};
+      Method m = launcher.getMethod("run", sig);
+      Object[] args = {eclipseArgs};
+      m.invoke(launcher.newInstance(),args);
     } finally {
       if (oldOsgiOs != null) System.setProperty("osgi.os",oldOsgiOs);
       if (oldOsgiWs != null) System.setProperty("osgi.ws",oldOsgiWs);
       if (oldOsgiArch != null) System.setProperty("osgi.arch",oldOsgiArch);
-    }  
+    }
   }
   
   public void postIteration(String size) throws Exception {
