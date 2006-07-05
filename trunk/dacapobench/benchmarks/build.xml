@@ -47,7 +47,8 @@
   <property name="fop.version" value="0.20.5"/>
   <property name="hsqldb.version" value="1_7_1"/>
 <!--  <property name="jython.version" value="2.1"/> <property name="jython.cvstag" value="Release_2_1"/> -->
-  <property name="jython.version" value="2.2a1"/> <property name="jython.cvstag" value="Release_2_2alpha1"/>
+<!--  <property name="jython.version" value="2.2a1"/> <property name="jython.cvstag" value="Release_2_2alpha1"/> -->
+  <property name="jython.version" value="Release_2_2alpha1"/>
   <property name="lucene.version" value="1.9.1"/>
   <property name="pmd.version" value="3.7"/>
   <property name="xalan.version" value="2_7_0"/>
@@ -65,7 +66,8 @@
   <property name="eclipse.url" value="http://download2.eclipse.org/eclipse/downloads/drops/R-3.1.2-200601181600"/>	
   <property name="fop.url" value="http://archive.apache.org/dist/xml/fop"/>	
   <property name="hsqldb.url" value="http://easynews.dl.sourceforge.net/sourceforge/hsqldb"/>	
-  <property name="jython.url" value=":pserver:anonymous@jython.cvs.sourceforge.net:/cvsroot/jython"/>	
+<!--  <property name="jython.url" value=":pserver:anonymous@jython.cvs.sourceforge.net:/cvsroot/jython"/> -->
+  <property name="jython.url" value="http://easynews.dl.sourceforge.net/sourceforge/jython"/>	
   <property name="lucene.url" value="http://archive.apache.org/dist/lucene/java"/>	
   <property name="pmd.url" value="http://easynews.dl.sourceforge.net/sourceforge/pmd"/>	
   <property name="xalan.url" value="http://archive.apache.org/dist/xml/xalan-j"/>	
@@ -89,7 +91,7 @@
   </target>
 
 
-  <target name="compile" depends="lucene,antlr,batik,bloat,chart,eclipse,fop,hsqldb,jython,pmd,ps,xalan"
+  <target name="compile" depends="antlr,batik,bloat,chart,eclipse,fop,hsqldb,jython,lucene,pmd,xalan"
           description="compile the sources for all benchmarks" >
   </target>
 
@@ -253,7 +255,7 @@
     </target>
 
 	<target name="fop.source" depends="init.sources">
-    <get src="{$fol.url}/fop-${fop.version}-src.tar.gz"
+    <get src="${fop.url}/fop-${fop.version}-src.tar.gz"
          dest="${sources}/fop-${fop.version}-src.tar.gz"
        usetimestamp="true"/>
   </target>
@@ -266,7 +268,7 @@
 
  
   <target name="jython.source" depends="init.sources">
-  	<mkdir dir="${sources}/jython-${jython.version}/"/>
+<!--  	<mkdir dir="${sources}/jython-${jython.version}/"/>
     <cvs cvsRoot="${jython.url}"
          package="jython"
          tag="${jython.cvstag}"
@@ -280,7 +282,10 @@
     <tar basedir="${sources}/jython-${jython.version}/" 
          destfile="${sources}/jython-${jython.version}.tgz" 
          compression="gzip"/>
-    <delete dir="${sources}/jython-${jython.version}"/>
+    <delete dir="${sources}/jython-${jython.version}"/> -->
+    <get src="${jython.url}/jython_${jython.version}.jar"
+     	dest="${sources}/jython_${jython.version}.jar"  
+        usetimestamp="true"/>
     <get src="${python.url}/Python-${python.version}.tgz"
      	dest="${sources}/Python-${python.version}.tgz"  
         usetimestamp="true"/>
@@ -611,24 +616,29 @@
   <!-- Build the jython benchmark -->
   <target name="jython.benchmark" depends="init" description="--> Build the Jython benchmark">
     <property name="jython-top" value="${build_src}/jython/"/>
-    <mkdir dir="${jython-top}"/>
+    <mkdir dir="${jython-top}/jython_${jython.version}"/>
 
-  	<untar src="${sources}/jython-${jython.version}.tgz" dest="${jython-top}" compression="gzip"/>
+<!--  	<untar src="${sources}/jython-${jython.version}.tgz" dest="${jython-top}" compression="gzip"/> -->
+    <unzip src="${sources}/jython_${jython.version}.jar" dest="${jython-top}/jython_${jython.version}"/>
 
     <!-- Apply the dacapo patch, which allows us to set the arguments -->
     <patch patchfile="${patches}/jython.patch" 
-                 dir="${jython-top}/jython-${jython.version}"
+                 dir="${jython-top}/jython_${jython.version}/src/java"
                  strip="0" ignorewhitespace="yes"/>
 
-    <!-- Build jython -->
-    <ant antfile="${jython-top}/jython-${jython.version}/build.xml" dir="${jython-top}/jython-${jython.version}" inheritall="false">
-      <property name="javaccHome2" location="${javacchome}"/>
-      <property name="python.lib" location="/home/steveb/devel/dacapo/dacapo-benchmarks/benchmarks/tmp/Lib"/>
-<!--      <property name="python.lib" location="${jython-top}/jython-${jython.version}/Lib"/> -->
-     </ant>
+    <!-- copy requisite files into place-->
+    <copy todir="${jython-top}/jython_${jython.version}/src/java">
+      <fileset file="${jython-top}/jython_${jython.version}/build.*"/>
+    </copy>
 
+    <!-- Build jython -->
+    <ant antfile="${jython-top}/jython_${jython.version}/src/java/build.xml" dir="${jython-top}/jython_${jython.version}/src/java" inheritall="false">
+      <property name="javaccHome2" location="${javacchome}"/>
+      <property name="python.lib" location="${jython-top}/jython_${jython.version}/Lib"/>
+     </ant>
+ 
     <!-- Copy files to the distribution directory -->
-    <unjar src="${jython-top}/jython-${jython.version}/dist/jython.jar" dest="${build}"/>
+    <unjar src="${jython-top}/jython_${jython.version}/src/java/dist/jython.jar" dest="${build}"/>
 
     <!-- Extract the pybench benchmark from the python sources -->
     <untar src="${sources}/Python-${python.version}.tgz" dest="${jython-top}" compression="gzip">
@@ -637,12 +647,14 @@
 	  </patternset>
 	</untar>
   	<move file="${jython-top}/Python-${python.version}/Tools/pybench" todir="${jython-top}/jython"/>
+
+
     <!-- patch the pybench benchmark to allow it to work with jython -->
     <patch patchfile="${patches}/pybench.patch" 
                  dir="${jython-top}/jython"
                  strip="0" ignorewhitespace="yes"/>
     <copy todir="${jython-top}/jython/Lib">
-      <fileset dir="${jython-top}/jython-${jython.version}/dist/Lib"/>
+      <fileset dir="${jython-top}/jython_${jython.version}/Lib"/>
     </copy>
 
 
