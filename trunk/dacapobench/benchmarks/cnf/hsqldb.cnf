@@ -17,6 +17,7 @@ size smallmem args "-driver","org.hsqldb.jdbcDriver",
 		"-tps","1","-v"
   output "$stdout" digest 0xb889564808ee5e2ccdd52e9af1d631a22c856d77,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
 size default args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:scratch/hsqldb",
 		  "-user","sa","-init",
@@ -25,6 +26,7 @@ size default args "-driver","org.hsqldb.jdbcDriver",
 		  "-tps","8","-v"
   output "$stdout" digest 0x9f1b83df6d2e9918a1ae17bf6c0e09ce88c1407d,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
 size defaultmem args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:mem:hsqldb",
 		  "-user","sa","-init",
@@ -33,6 +35,7 @@ size defaultmem args "-driver","org.hsqldb.jdbcDriver",
 		  "-tps","2","-v"
   output "$stdout" digest 0x6f080549e69a5a9aba56ea6be2478ae0aba8ecac,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
 size large args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:scratch/hsqldb",
 		"-user","sa","-init",
@@ -41,6 +44,7 @@ size large args "-driver","org.hsqldb.jdbcDriver",
 		"-tps","15","-v"
   output "$stdout" digest 0x435383b07a2da1e6d44b1ee195322c564bbe00c7,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
 size largemem args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:mem:hsqldb",
 		"-user","sa","-init",
