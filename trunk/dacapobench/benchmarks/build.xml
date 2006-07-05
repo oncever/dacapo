@@ -46,13 +46,15 @@
   <property name="eclipse.version" value="3.1.2"/>
   <property name="fop.version" value="0.20.5"/>
   <property name="hsqldb.version" value="1_7_1"/>
-  <property name="jython.version" value="2.1"/> <property name="jython.cvstag" value="Release_2_1"/>
+<!--  <property name="jython.version" value="2.1"/> <property name="jython.cvstag" value="Release_2_1"/> -->
+  <property name="jython.version" value="2.2a1"/> <property name="jython.cvstag" value="Release_2_2alpha1"/>
   <property name="lucene.version" value="1.9.1"/>
   <property name="pmd.version" value="3.7"/>
   <property name="xalan.version" value="2_7_0"/>
   <!-- auxilary downloads -->
   <property name="itext.version" value="1.02b"/>
   <property name="junit.version" value="3.8.1"/>
+  <property name="python.version" value="2.5b1"/>
   <property name="xerces.version" value="2.6.2"/>
 
   <!-- benchmark locations -->
@@ -70,8 +72,9 @@
   <!-- auxilary downloads -->
   <property name="itext.url" value="http://easynews.dl.sourceforge.net/sourceforge/itext"/>	
   <property name="junit.url" value="http://easynews.dl.sourceforge.net/sourceforge/junit"/>	
+  <property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>	
   <property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j"/>	
-
+	  
 	<!-- External programs -->
   <property name="make" location="/usr/bin/make"/>
 
@@ -203,35 +206,35 @@
   <!--                        Fetch sources                                        -->
   <!-- *************************************************************************** -->
 
-  <target name="init-sources" description="Prepare to download sources">
+  <target name="init.sources" description="Prepare to download sources">
     <mkdir dir="${sources}"/>
   </target>
 
   <target name="sources" 
     description="Download sources from their original locations"
-    depends="antlr-source,batik-source,bloat-source,chart-source,eclipse-source,fop-source,hsqldb-source,jython-source,lucene-source,pmd-source,ps-source,xalan-source,xerces-source">
+    depends="antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,ps.source,xalan.source,xerces.source">
   </target>
 
-  <target name="antlr-source" depends="init-sources">
+  <target name="antlr.source" depends="init.sources">
     <get src="${antlr.url}/antlr-${antlr.version}.tar.gz"
          dest="${sources}/antlr-${antlr.version}.tar.gz"
        usetimestamp="true"/>
   </target>
 
-  <target name="batik-source" depends="init-sources">
+  <target name="batik.source" depends="init.sources">
     <get src="${batik.url}/batik-src-${batik.version}.zip"
          dest="${sources}/batik-src-${batik.version}.zip"
          usetimestamp="true"/>
   </target>
 
-  <target name="bloat-source" depends="init-sources">
+  <target name="bloat.source" depends="init.sources">
     <get src="${bloat.url}/bloat-${bloat.version}-src.tar.gz"
          dest="${sources}/bloat-${bloat.version}-src.tar.gz"/>
     <get src="${bloat.url}/bloat-${bloat.version}-examples.jar"
          dest="${sources}/bloat-${bloat.version}-examples.jar"/>
   </target>
 
-  <target name="chart-source" depends="init-sources">
+  <target name="chart.source" depends="init.sources">
     <get src="${chart.url}/jfreechart-${chart.version}.tar.gz"
          dest="${sources}/jfreechart-${chart.version}.tar.gz"
        usetimestamp="true"/>
@@ -240,7 +243,7 @@
        usetimestamp="true"/>
   </target>
 
-  <target name="eclipse-source" depends="init-sources">
+  <target name="eclipse.source" depends="init.sources">
 	<get src="${eclipse.url}/eclipse-SDK-${eclipse.version}-linux-gtk.tar.gz"
 	     dest="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz"
 	     usetimestamp="true"/>
@@ -249,71 +252,76 @@
 		 usetimestamp="true"/>
     </target>
 
-	<target name="fop-source" depends="init-sources">
+	<target name="fop.source" depends="init.sources">
     <get src="{$fol.url}/fop-${fop.version}-src.tar.gz"
          dest="${sources}/fop-${fop.version}-src.tar.gz"
        usetimestamp="true"/>
   </target>
 
-  <target name="hsqldb-source" depends="init-sources,junit-source">
-    <get src="{${hsqldb.url}/hsqldb_${hsqldb.version}.zip"
+  <target name="hsqldb.source" depends="init.sources,junit.source">
+    <get src="${hsqldb.url}/hsqldb_${hsqldb.version}.zip"
     	dest="${sources}/hsqldb_${hsqldb.version}.zip"  
        usetimestamp="true"/>
   </target>
 
  
-  <target name="jython-source" depends="init-sources">
-  	<!--
-  		<get dest="${sources}/jython-${jython.version}.zip"
-  		src="http://superb-east.dl.sourceforge.net/sourceforge/jython/jython-21.class"
-    usetimestamp="true"/>-->
+  <target name="jython.source" depends="init.sources">
   	<mkdir dir="${sources}/jython-${jython.version}/"/>
     <cvs cvsRoot="${jython.url}"
          package="jython"
          tag="${jython.cvstag}"
          dest="${sources}/jython-${jython.version}/"/>
+  	<move todir="${sources}/jython-${jython.version}/jython-${jython.version}">
+  		<fileset dir="${sources}/jython-${jython.version}/jython">
+  			<include name="**/*"/>
+		</fileset>
+    </move>
+    <delete dir="${sources}/jython-${jython.version}/jython"/>
     <tar basedir="${sources}/jython-${jython.version}/" 
          destfile="${sources}/jython-${jython.version}.tgz" 
          compression="gzip"/>
     <delete dir="${sources}/jython-${jython.version}"/>
+    <get src="${python.url}/Python-${python.version}.tgz"
+     	dest="${sources}/Python-${python.version}.tgz"  
+        usetimestamp="true"/>
   </target>
 
-  <target name="junit-source" depends="init-sources">
+  <target name="junit.source" depends="init.sources">
     <get dest="${sources}/junit${junit.version}.zip"
          src="${junit.url}/junit${junit.version}.zip"
        usetimestamp="true"/>
   </target>
 
-  <target name="lucene-source" depends="init-sources">
+  <target name="lucene.source" depends="init.sources">
     <get dest="${sources}/lucene-${lucene.version}-src.tar.gz"
          src="${lucene.url}/lucene-${lucene.version}-src.tar.gz"
    usetimestamp="true"/>
   </target>
 
-  <target name="pmd-source" depends="init-sources">
+  <target name="pmd.source" depends="init.sources">
     <get src="${pmd.url}/pmd-src-${pmd.version}.zip"
          dest="${sources}/pmd-src-${pmd.version}.zip"
        usetimestamp="true"/>
   </target>
 
-  <target name="ps-source" depends="init-sources">
+  <target name="ps.source" depends="init.sources">
     <!-- ps was a student assignment - the source here is the definitive one -->
     <copy file="originals/ps.tgz" todir="${sources}"/>
   </target>
 
-  <target name="xalan-241-source" depends="init-sources">
+  <target name="xalan-241.source" depends="init.sources">
     <get src="http://archive.apache.org/dist/xml/xalan-j/xalan-j_2_4_1-src.tar.gz"
                dest="${sources}/xalan-j_2_4_1-src.tar.gz"
          usetimestamp="true"/>
   </target>
 
-  <target name="xalan-source" depends="init-sources">
+  <target name="xalan.source" depends="init.sources">
     <get src="${xalan.url}/xalan-j_${xalan.version}-src.tar.gz"
                dest="${sources}/xalan-j_${xalan.version}-src.tar.gz"
          usetimestamp="true"/>
   </target>
 
-  <target name="xerces-source" depends="init-sources">
+  <target name="xerces.source" depends="init.sources">
     <get src="${xerces.url}/Xerces-J-bin.${xerces.version}.tar.gz"
          dest="${sources}/Xerces-J-bin.${xerces.version}.tar.gz"
        usetimestamp="true"/>
@@ -595,35 +603,59 @@
   <!-- ================================= 
           target: jython                
          ================================= -->
-  <target name="jython" depends="harness" description="--> Build the Jython benchmark">
-    <mkdir dir="${build_src}/jython"/>
+  <target name="jython" depends="jython.benchmark,jython.harness" description="--> build the jython benchmark"/>
+  <!-- Build the jython dacapo harness -->
+  <target name="jython.harness" depends="harness" description="--> Build the Jython dacapo harness">
+	<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/jython/*"/>
+  </target>
+  <!-- Build the jython benchmark -->
+  <target name="jython.benchmark" depends="init" description="--> Build the Jython benchmark">
     <property name="jython-top" value="${build_src}/jython/"/>
+    <mkdir dir="${jython-top}"/>
 
-    <!-- Expand the jython distribution class -->
-  	 <!-- <unzip src="${sources}/jython-${jython.version}.zip" dest="${jython-top}"/>-->
-   <untar src="${sources}/jython-${jython.version}.tgz" dest="${jython-top}" compression="gzip"/>
+  	<untar src="${sources}/jython-${jython.version}.tgz" dest="${jython-top}" compression="gzip"/>
 
-    <!-- Apply the dacapo patch -->
+    <!-- Apply the dacapo patch, which allows us to set the arguments -->
     <patch patchfile="${patches}/jython.patch" 
-                 dir="${build_src}"
+                 dir="${jython-top}/jython-${jython.version}"
                  strip="0" ignorewhitespace="yes"/>
 
     <!-- Build jython -->
-    <ant antfile="${jython-top}/jython/build.xml" dir="${jython-top}/jython" inheritall="false">
+    <ant antfile="${jython-top}/jython-${jython.version}/build.xml" dir="${jython-top}/jython-${jython.version}" inheritall="false">
       <property name="javaccHome2" location="${javacchome}"/>
-    </ant>
+      <property name="python.lib" location="/home/steveb/devel/dacapo/dacapo-benchmarks/benchmarks/tmp/Lib"/>
+<!--      <property name="python.lib" location="${jython-top}/jython-${jython.version}/Lib"/> -->
+     </ant>
 
     <!-- Copy files to the distribution directory -->
-    <unjar src="${jython-top}/jython/jython.jar" dest="${build}"/>
+    <unjar src="${jython-top}/jython-${jython.version}/dist/jython.jar" dest="${build}"/>
 
-    <!-- Install the test data -->
-    <zip basedir="${data}"
-           includes="jython/**"
-           destfile="${zipdata}/jython.zip"/>
+    <!-- Extract the pybench benchmark from the python sources -->
+    <untar src="${sources}/Python-${python.version}.tgz" dest="${jython-top}" compression="gzip">
+      <patternset>
+		<include name="Python-${python.version}/Tools/pybench/**"/>
+	  </patternset>
+	</untar>
+  	<move file="${jython-top}/Python-${python.version}/Tools/pybench" todir="${jython-top}/jython"/>
+    <!-- patch the pybench benchmark to allow it to work with jython -->
+    <patch patchfile="${patches}/pybench.patch" 
+                 dir="${jython-top}/jython"
+                 strip="0" ignorewhitespace="yes"/>
+    <copy todir="${jython-top}/jython/Lib">
+      <fileset dir="${jython-top}/jython-${jython.version}/dist/Lib"/>
+    </copy>
 
-          <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/jython/*"/>
-  </target>
+
+  	<!-- Install the test data -->
+ <!--   <zip basedir="${jython-top}/"
+    	includes="jython/pybench/**" destfile="${zipdata}/jython.zip"/> -->
+  	<zip destfile="${zipdata}/jython.zip">
+  	    <fileset dir="${data}/" includes="jython/noop.py"/>
+  	    <fileset dir="${data}/" includes="jython/sieve.py"/>
+  	    <fileset dir="${jython-top}/" includes="jython/pybench/**"/>
+  	    <fileset dir="${jython-top}/" includes="jython/Lib/**"/>
+	</zip>  	
+ </target>
 
 
   <!-- ================================= 

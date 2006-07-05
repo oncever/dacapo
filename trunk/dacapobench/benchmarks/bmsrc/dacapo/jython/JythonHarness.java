@@ -17,7 +17,9 @@ public class JythonHarness extends Benchmark {
   
   protected void prepare() throws Exception {
     super.prepare();
-    jython.main(new String[] { cacheDir(), fileInScratch("jython/noop.py")} );
+    System.setProperty("python.home",fileInScratch("jython"));
+    System.setProperty("python.cachedir",fileInScratch("cachedir"));
+    jython.main(new String[] {fileInScratch("jython/noop.py")} );
   }
 
   /**
@@ -25,48 +27,17 @@ public class JythonHarness extends Benchmark {
    * Py.setArgv to allow us to reset the command line arguments that the python
    * script sees.  Hence the Py.setArgv call, followed by the jython.main call.
    */
-  public void iterate(String arg) throws Exception {
-    int size = 2;
-    if (arg.equals("small")) {
-      size = 1;
-    } else if (arg.equals("large")) {
-      size = 3;
+  public void iterate(String size) throws Exception {
+    String[] args = config.getArgs(size);
+    args[0] = new String(fileInScratch(args[0]));
+    String pyargs[] = new String[args.length - 1];
+    for (int i = 0; i < pyargs.length; i++) {
+      pyargs[i] = args[i+1];
     }
-
-    int multiplier = (size == 3) ? 5 : 1;
-    Py.setArgv(fileInScratch("jython/heapsort.py"),
-            new String[] { Integer.toString(200*multiplier) });
-    jython.main(new String[] {cacheDir(), 
-            fileInScratch("jython/heapsort.py"), 
-            Integer.toString(200*multiplier) } );
-
-    if (size == 1) return;
-
-    Py.setArgv(fileInScratch("jython/sieve.py"),
-            new String[] { Integer.toString(150*multiplier)} );
-    jython.main(new String[] {cacheDir(),
-            fileInScratch("jython/sieve.py"),
-            Integer.toString(150*multiplier)} );
-
-    Py.setArgv(fileInScratch("jython/sieve.py"), 
-            new String[] {Integer.toString(100*multiplier)});
-    jython.main(new String[] {cacheDir(), 
-            fileInScratch("jython/sieve.py"), 
-            Integer.toString(100*multiplier) });
-
-    Py.setArgv(fileInScratch("jython/objinst.py"), new String[] {Integer.toString(3500*multiplier)});
-    jython.main(new String[] {cacheDir(), 
-            fileInScratch("jython/objinst.py"), 
-            Integer.toString(3500*multiplier)});
+    Py.setArgv(args[0], pyargs);
+    jython.main(args);
   }
 
-  /**
-   * @return
-   */
-  private String cacheDir() {
-    return "-Dpython.cachedir="+fileInScratch("cachedir");
-  }
-  
   public void cleanup() {
     super.cleanup();
     deleteTree(new File(scratch,"cachedir"));
