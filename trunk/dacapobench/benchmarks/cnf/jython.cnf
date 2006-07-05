@@ -1,22 +1,22 @@
 benchmark jython
   class dacapo.jython.JythonHarness;
 
-size small args "small"
+size small args "jython/sieve.py","50"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "default"
+size default args "jython/pybench/pybench.py","-n", "2", "-C", "2", "-w", "80"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "large"
+size large args "jython/pybench/pybench.py","-n", "2", "-C", "2", "-w", "10"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
 description
   short	"A python interpreter written in Java",
-  long	"jython executes (interprets) a series of python programs",
+  long	"jython executes (interprets) the pybench benchmark or a small python",
   copyright	"Copyright (c) Python Software Foundation",
   url	"http://www.jython.org/",
   version	"2.1";
