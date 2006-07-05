@@ -238,8 +238,8 @@
     <get src="${chart.url}/jfreechart-${chart.version}.tar.gz"
          dest="${sources}/jfreechart-${chart.version}.tar.gz"
        usetimestamp="true"/>
-    <get src="${itext.url}/itext-{$itext.version}.jar"
-         dest="${sources}/itext-{$itext.version}.jar"
+    <get src="${itext.url}/itext-${itext.version}.jar"
+         dest="${sources}/itext-${itext.version}.jar"
        usetimestamp="true"/>
   </target>
 
