@@ -16,7 +16,7 @@ size large args "jython/pybench/pybench.py","-n", "2", "-C", "2", "-w", "10"
 
 description
   short	"A python interpreter written in Java",
-  long	"jython executes (interprets) the pybench benchmark or a small python",
+  long	"jython executes (interprets) the pybench benchmark or a small python program",
   copyright	"Copyright (c) Python Software Foundation",
   url	"http://www.jython.org/",
   version	"2.1";
