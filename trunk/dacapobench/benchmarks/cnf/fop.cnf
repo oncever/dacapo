@@ -6,18 +6,16 @@ benchmark fop
  * so we don't use "$stdout" to validate small.
  */
 size small args "-q", "fop/readme.fo", "-pdf", "readme.pdf"
-  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "readme.pdf" digest 0x75f7444c92a7fa8f3bb379ed93239e5f5675a6f5;
+  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-q", "fop/test.fo", "-ps", "test.ps"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "test.ps" digest 0x17988bca80abf07f545c3a6d416e4e4dd26e632d;
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-q", "fop/test.fo", "-ps", "test.ps"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "test.ps" digest 0x17988bca80abf07f545c3a6d416e4e4dd26e632d;
+         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	"An output-independant print formatter",

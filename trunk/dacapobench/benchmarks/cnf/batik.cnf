@@ -2,24 +2,18 @@ benchmark batik
   class dacapo.batik.BatikHarness;
 
 size small args "-scriptSecurityOff","batik/mapWaadt.svg"
-  output "mapWaadt.png" digest 0x83c94f538bd2b6adbdda3fd021638ac8c41f7d87;
-  
+  output "$stdout" digest 0xd3457d97eef4e5460eb5168133ed78711808a457,
+    	 "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-scriptSecurityOff","batik/mapWaadt.svg","batik/mapSpain.svg","batik/sydney.svg"
-  output "mapWaadt.png" digest 0x83c94f538bd2b6adbdda3fd021638ac8c41f7d87,
-         "mapSpain.png" digest 0x4052d8a5e265b6a7148c5c99dfaacc86e37b3236,
-         "sydney.png"   digest 0x5df94935b89e1934d047cedca5039e6e012d5a32;
+  output "$stdout" digest 0xd0b519bfb7de14f18924f733157f0ae0dfb40725,
+    	 "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-scriptSecurityOff","batik/mapWaadt.svg","batik/mapSpain.svg","batik/sydney.svg",
                 "batik/asf-logo.svg","batik/moonPhases.svg","batik/batik3D.svg",
 		"batik/strokeFont.svg"
-  output "mapWaadt.png"   digest 0x83c94f538bd2b6adbdda3fd021638ac8c41f7d87,
-         "mapSpain.png"   digest 0x4052d8a5e265b6a7148c5c99dfaacc86e37b3236,
-         "sydney.png"     digest 0x5df94935b89e1934d047cedca5039e6e012d5a32;
-         "asf-logo.png"   digest 0xb19da891b59cad1a2c5b4a16c5f37b19dda5643f,
-	 	 "moonPhases.png" digest 0xd7a5e93d24d38eb78b589e406f96630e5ba80532,
-	     "batik3D.png"    digest 0xbecbfce9988411f13481356abe5d0565d4eae84a,
-	     "strokeFont.png" digest 0x7f3dcd24b85392e95753ba42ebb88de39dbde303;
+  output "$stdout" digest 0x37cc834eeeba6fcde03021e9bbc69945584d43e8,
+    	 "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	"An Scalable Vector Graphics (SVG) toolkit",
