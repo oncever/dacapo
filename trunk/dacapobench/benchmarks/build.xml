@@ -46,8 +46,6 @@
   <property name="eclipse.version" value="3.1.2"/>
   <property name="fop.version" value="0.20.5"/>
   <property name="hsqldb.version" value="1_7_1"/>
-<!--  <property name="jython.version" value="2.1"/> <property name="jython.cvstag" value="Release_2_1"/> -->
-<!--  <property name="jython.version" value="2.2a1"/> <property name="jython.cvstag" value="Release_2_2alpha1"/> -->
   <property name="jython.version" value="Release_2_2alpha1"/>
   <property name="lucene.version" value="1.9.1"/>
   <property name="pmd.version" value="3.7"/>
@@ -66,7 +64,6 @@
   <property name="eclipse.url" value="http://download2.eclipse.org/eclipse/downloads/drops/R-3.1.2-200601181600"/>	
   <property name="fop.url" value="http://archive.apache.org/dist/xml/fop"/>	
   <property name="hsqldb.url" value="http://easynews.dl.sourceforge.net/sourceforge/hsqldb"/>	
-<!--  <property name="jython.url" value=":pserver:anonymous@jython.cvs.sourceforge.net:/cvsroot/jython"/> -->
   <property name="jython.url" value="http://easynews.dl.sourceforge.net/sourceforge/jython"/>	
   <property name="lucene.url" value="http://archive.apache.org/dist/lucene/java"/>	
   <property name="pmd.url" value="http://easynews.dl.sourceforge.net/sourceforge/pmd"/>	
@@ -268,21 +265,6 @@
 
  
   <target name="jython.source" depends="init.sources">
-<!--  	<mkdir dir="${sources}/jython-${jython.version}/"/>
-    <cvs cvsRoot="${jython.url}"
-         package="jython"
-         tag="${jython.cvstag}"
-         dest="${sources}/jython-${jython.version}/"/>
-  	<move todir="${sources}/jython-${jython.version}/jython-${jython.version}">
-  		<fileset dir="${sources}/jython-${jython.version}/jython">
-  			<include name="**/*"/>
-		</fileset>
-    </move>
-    <delete dir="${sources}/jython-${jython.version}/jython"/>
-    <tar basedir="${sources}/jython-${jython.version}/" 
-         destfile="${sources}/jython-${jython.version}.tgz" 
-         compression="gzip"/>
-    <delete dir="${sources}/jython-${jython.version}"/> -->
     <get src="${jython.url}/jython_${jython.version}.jar"
      	dest="${sources}/jython_${jython.version}.jar"  
         usetimestamp="true"/>
@@ -618,7 +600,6 @@
     <property name="jython-top" value="${build_src}/jython/"/>
     <mkdir dir="${jython-top}/jython_${jython.version}"/>
 
-<!--  	<untar src="${sources}/jython-${jython.version}.tgz" dest="${jython-top}" compression="gzip"/> -->
     <unzip src="${sources}/jython_${jython.version}.jar" dest="${jython-top}/jython_${jython.version}"/>
 
     <!-- Apply the dacapo patch, which allows us to set the arguments -->
@@ -659,8 +640,6 @@
 
 
   	<!-- Install the test data -->
- <!--   <zip basedir="${jython-top}/"
-    	includes="jython/pybench/**" destfile="${zipdata}/jython.zip"/> -->
   	<zip destfile="${zipdata}/jython.zip">
   	    <fileset dir="${data}/" includes="jython/noop.py"/>
   	    <fileset dir="${data}/" includes="jython/sieve.py"/>
