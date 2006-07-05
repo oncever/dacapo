@@ -39,10 +39,10 @@ public class EclipseBuildTests extends EclipseTests {
 		 * dependencies, so if you need to prune the list, do it bottom up...
 		 */
 		buildDefault(getProject("org.apache.ant"));
-		buildDefault(getProject("org.apache.lucene"));
+//		buildDefault(getProject("org.apache.lucene"));
 		buildDefault(getProject("org.junit"));
-		if (level > 0) {
-			buildDefault(getProject("org.eclipse.osgi"));
+		buildDefault(getProject("org.eclipse.osgi"));
+    if (level > 1) {
 			buildDefault(getProject("org.eclipse.core.runtime"));
 			buildDefault(getProject("org.eclipse.update.configurator"));
 			buildDefault(getProject("org.eclipse.core.runtime.compatibility"));
@@ -54,12 +54,12 @@ public class EclipseBuildTests extends EclipseTests {
 			buildDefault(getProject("org.eclipse.text"));
 			buildDefault(getProject("org.eclipse.core.filebuffers"));
 			buildDefault(getProject("org.eclipse.debug.core"));
-			if (level > 1) {
+			if (level > 2) {
 				buildDefault(getProject("org.eclipse.help"));
 				buildDefault(getProject("org.eclipse.swt"));
 				buildDefault(getProject("org.eclipse.jface"));
 				buildDefault(getProject("org.eclipse.jface.text"));
-				if (level > 2) {
+				if (level > 3) {
 					buildDefault(getProject("org.eclipse.ui.workbench"));
 					buildDefault(getProject("org.eclipse.ui"));
 					buildDefault(getProject("org.eclipse.ui.workbench.texteditor"));

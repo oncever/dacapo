@@ -21,15 +21,15 @@ public class EclipseHarness extends Benchmark {
 
 /*    if (!preserve)
       deleteTree(new File(scratch, wsDirectory));
-*/    File wsdir = new File(scratch, wsDirectory);
-    wsdir.mkdir();
-     unpackZipFileResource(fileInScratch("eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip"),wsdir); 
+*//*    File wsdir = new File(scratch, wsDirectory);
+        wsdir.mkdir();
+	unpackZipFileResource(fileInScratch("eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip"),wsdir); */
   }
 
   public void iterate(String size) throws Exception {
-    System.out.println("Running eclipse benchmark");
+    //    System.out.println("Running eclipse benchmark");
     invokePlugin(config.getArgs(size));
-    System.out.println("Eclipse benchmark complete");
+    //    System.out.println("Eclipse benchmark complete");
   }
 
   private void invokePlugin(String[] pluginArgs) throws Exception {
@@ -41,10 +41,10 @@ public class EclipseHarness extends Benchmark {
     for (int i = 0; i < pluginArgs.length; i++)
       eclipseArgs[4+i] = pluginArgs[i];
 /* */
-    for (int i = 0; i < eclipseArgs.length; i++) {
+/*    for (int i = 0; i < eclipseArgs.length; i++) {
       System.out.print(eclipseArgs[i]+" ");
     }
-    System.out.println();
+    System.out.println();*/
     invokeEclipse(eclipseArgs); 
   }
   
@@ -61,11 +61,13 @@ public class EclipseHarness extends Benchmark {
       URL[] url = {startupjar};
       URLClassLoader ulc = new URLClassLoader(url);
       Class launcher = Class.forName("org.eclipse.core.launcher.Main", true, ulc);
-      System.out.println(launcher.getName());
+      /*      System.out.println(launcher.getName()); */
       Class[] sig = {Class.forName("[Ljava.lang.String;")};
       Method m = launcher.getMethod("run", sig);
       Object[] args = {eclipseArgs};
       m.invoke(launcher.newInstance(),args);
+    } catch (Exception e) {
+      e.printStackTrace();
     } finally {
       if (oldOsgiOs != null) System.setProperty("osgi.os",oldOsgiOs);
       if (oldOsgiWs != null) System.setProperty("osgi.ws",oldOsgiWs);

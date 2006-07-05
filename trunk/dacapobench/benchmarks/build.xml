@@ -502,8 +502,13 @@
     	<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
     </ant>
 	
-    <!-- Install the test data -->
-    <zip destfile="${zipdata}/eclipse.zip" includes="eclipse/**" basedir="${build_src}/eclipse"/>
+    <!-- Install the test data --> 
+    <mkdir dir="${build_src}/eclipse/workspace"/>
+    <unzip src="${build_src}/eclipse/eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip" dest="${build_src}/eclipse/workspace"/>
+    <zip destfile="${zipdata}/eclipse.zip">
+      <fileset dir="${build_src}/eclipse/" includes="workspace/**"/>
+      <fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> 
+    </zip>
   </target>
 
 
