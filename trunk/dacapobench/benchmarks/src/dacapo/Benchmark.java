@@ -62,10 +62,14 @@ public abstract class Benchmark {
     iterate(size);
     stopIteration();
     if (timing)
-      callback.stop(config.name);
+      callback.stop();
     else
-      callback.stopWarmup(config.name);
+      callback.stopWarmup();
     boolean valid = validate(size);
+    if (timing)
+      callback.complete(config.name, valid);
+    else
+      callback.completeWarmup(config.name, valid);
     postIteration(size);
     return valid;
   }

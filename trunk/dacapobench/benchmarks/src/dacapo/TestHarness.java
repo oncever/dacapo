@@ -193,12 +193,14 @@ public class TestHarness {
             for (; iterations > 1; iterations--) {
               callback.startWarmup(bm);
               harness.invokeConfiguration(m, size);
-              callback.stopWarmup(bm);
+              callback.stopWarmup();
+              callback.completeWarmup(bm, true);
             }
 
             callback.start(bm);
             harness.invokeConfiguration(m, size);
-            callback.stop(bm);
+            callback.stop();
+            callback.complete(bm, true);
           }
         }
       }
