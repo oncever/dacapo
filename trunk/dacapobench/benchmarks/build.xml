@@ -478,10 +478,20 @@
   <!-- ================================= 
           target: eclipse              
          ================================= -->
-  <target name="eclipse" depends="eclipse.benchmark,eclipse.harness" description="--> build the eclipse benchmark"/>
+  <target name="eclipse" depends="eclipse.plugin,eclipse.benchmark,eclipse.harness" description="--> build the eclipse benchmark"/>
   <!-- Build the eclipse dacapo harness -->
   <target name="eclipse.harness" depends="init,harness" description="--> build the eclipse harness">
-    <javac srcdir="${bmsrc}" classpath="${build}:${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar" destdir="${build}" includes="dacapo/eclipse/EclipseHarness.java"/>                 
+    <javac srcdir="${bmsrc}" classpath="${build}:${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar" destdir="${build}" includes="dacapo/eclipse/*.java"/>                 
+  </target>
+  <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
+  <mkdir dir="${build_src}/eeclipse/eclipse/plugins/"/>
+  <target name="eclipse.plugin" depends="eclipse.harness" description="--> build the eclipse harness">
+   	<ant antfile="${extra}/eclipse-plugin/build.xml" dir="${extra}/eclipse-plugin" 
+           target="build.update.jar" inheritall="false">
+    	<property name="eclipsesrc.home" location="${build_src}/eclipse"/>
+    	<property name="harness.home" location="${build}"/>
+    	<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
+    </ant>
   </target>
   <!-- Build the eclipse benchmark -->
   <target name="eclipse.benchmark" depends="init" description="--> build the eclipse benchmark">
@@ -495,12 +505,6 @@
   	</unzip>
  	<unzip src="${build_src}/eclipse/eclipse-testing/eclipse-junit-tests-M20060118-1600.zip" dest="${build_src}/eclipse/"/>
     <delete dir="${build_src}/eclipse/eclipse-testing"/>
-	<!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
-   	<ant antfile="${extra}/eclipse-plugin/build.xml" dir="${extra}/eclipse-plugin" 
-           target="build.update.jar" inheritall="false">
-    	<property name="eclipsesrc.home" location="${build_src}/eclipse"/>
-    	<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
-    </ant>
 	
     <!-- Install the test data --> 
     <mkdir dir="${build_src}/eclipse/workspace"/>
