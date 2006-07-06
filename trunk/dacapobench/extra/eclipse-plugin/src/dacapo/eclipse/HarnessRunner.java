@@ -7,45 +7,19 @@ import java.net.URLClassLoader;
 import org.eclipse.core.runtime.IPlatformRunnable;
 
 public class HarnessRunner implements IPlatformRunnable {
-  /**
-   * The main entrypoint into this class.
-   * 
-   * @param args The commandline arguments for running this class
-   * @see org.eclipse.core.runtime.IPlatformRunnable
+  /*
+   * The following are used to allow us to reflectively access a lock
+   * in the default class loader so we can synchronize with the harness.
+   * The problem is that eclipse can only be invoked once, so we have
+   * to run it in a thread which polls for iterations.  To do this we
+   * need synchronization with the harness, which runs in a different
+   * classloader.
    */
-  public Object run(Object args) throws Exception {
-    System.err.print(ClassLoader.getSystemClassLoader().hashCode());
-    System.err.println(" " + ClassLoader.getSystemClassLoader());
-    System.err.print(Thread.currentThread().getContextClassLoader().hashCode());
-    System.err.println(" " + Thread.currentThread().getContextClassLoader());
-    System.err.print(Thread.currentThread().getContextClassLoader().getParent().hashCode());
-    System.err.println(" " + Thread.currentThread().getContextClassLoader().getParent());
-    System.err.print(Thread.currentThread().getContextClassLoader().getParent().getParent().hashCode());
-    System.err.println(" " + Thread.currentThread().getContextClassLoader().getParent().getParent());
-    
-    try {
-      do {
-        System.err.println("Starting an iteration!");
-        EclipseTests.initialize();
-        EclipseTests.runtests((String[]) args);
-        System.err.println("Finishing an iteration!");
-        finish();
-        System.err.println("XX Finished!");
-      } while (waitToRun() != null);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    System.err.println("finished all iterations!");
-    return null; 
-  }
-  
-  
   static Class lock;
   static Method startMethod;
   static Method finishMethod;
   static Method waitMethod;
   static Method cleanupMethod;
-  
   static {
     try {
     lock = Class.forName("dacapo.eclipse.EclipseHarnessLock", true, ClassLoader.getSystemClassLoader());
@@ -56,14 +30,40 @@ public class HarnessRunner implements IPlatformRunnable {
     cleanupMethod = lock.getMethod("cleanup", (Class[]) null);
     } catch (Exception ex){ ex.printStackTrace(); }
   }
+
+
+  /**
+   * The main entrypoint into this class.
+   * 
+   * @param args The commandline arguments for running this class
+   * @see org.eclipse.core.runtime.IPlatformRunnable
+   */
+  public Object run(Object args) throws Exception {
+    try {
+      do {
+        EclipseTests.initialize();
+        EclipseTests.runtests((String[]) args);
+        finish();
+      } while (waitToRun() != null);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null; 
+  }
   
-  public static void finish() {
+  /**
+   * Signal to the harness that an iteration has finished
+   */ 
+  private static void finish() {
     try {
       finishMethod.invoke(null,(Object[]) null);
     } catch (Exception e) { e.printStackTrace(); }
   }
   
-  public static String[] waitToRun() {
+  /**
+   * Wait for the harness to tell us that we need to run another iteration.
+   */ 
+  private static String[] waitToRun() {
     String[] rtn = null;
     try {
       rtn = (String[]) waitMethod.invoke(null,(Object[]) null);

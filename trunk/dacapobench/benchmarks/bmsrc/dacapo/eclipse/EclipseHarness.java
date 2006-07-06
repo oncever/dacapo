@@ -19,25 +19,19 @@ public class EclipseHarness extends Benchmark {
   
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
+    File wsdir = new File(scratch, wsDirectory);
+    wsdir.mkdir();
+    unpackZipFile(fileInScratch("eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip"),wsdir); 
+
     if (eclipseThread == null) {
       eclipseThread = new EclipseHarnessThread(this, "EclipseThread");
       eclipseThread.start();
     }
-    /*    if (!preserve)
-     deleteTree(new File(scratch, wsDirectory));
-     *//*    File wsdir = new File(scratch, wsDirectory);
-     wsdir.mkdir();
-     unpackZipFileResource(fileInScratch("eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip"),wsdir); */
   }
   
   public void iterate(String size) throws Exception {
     EclipseHarnessLock.start(config.getArgs(size));
-//    System.out.println("Running eclipse benchmark");
-   // eclipseThread.startBenchmark(config.getArgs(size));
- //   System.out.println("Eclipse benchmark complete");
   }
-  
-  
   
   public void postIteration(String size) throws Exception {
     super.postIteration(size);
@@ -47,6 +41,5 @@ public class EclipseHarness extends Benchmark {
   
   public void cleanup() {
     EclipseHarnessLock.cleanup();
-    //eclipseThread.cleanupBenchmark();
   }
 }

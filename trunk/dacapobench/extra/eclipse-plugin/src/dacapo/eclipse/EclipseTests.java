@@ -115,6 +115,17 @@ public class EclipseTests {
       System.err.println("Exception while running benchmarks!"+e);
       e.printStackTrace();
     }
+
+    /* we've finished the tests, so kill off the environment */
+    try {
+      int length = ALL_PROJECTS.length;
+      for (int i = 0; i < length; i++) {
+	ALL_PROJECTS[i].getProject().delete(false, true, null);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    env = null;
   }
   
   
