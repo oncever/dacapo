@@ -144,8 +144,14 @@ public class EclipseBuildTests extends EclipseTests {
 			System.out.println("\tBuilding: full workspace");
 			env.fullBuild();
 		} else {
-			System.out.println("\tBuilding: "+project.toString());
+			System.out.print("\t"+project.toString());
+			System.out.print(" opening");
+			project.getProject().open(null);
+			System.out.print(" cleaning");
+			project.getProject().build(IncrementalProjectBuilder.CLEAN_BUILD, null);
+			System.out.print(" building");
 			project.getProject().build(IncrementalProjectBuilder.FULL_BUILD, null);
+			System.out.println();
 		}
 		
 		if (VERIFY) {
