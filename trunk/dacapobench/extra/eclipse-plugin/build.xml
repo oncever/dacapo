@@ -6,6 +6,7 @@
 	<property name="basearch" value="${arch}"/>
 	<property name="basenl" value="${nl}"/>
 	<property name="eclipsesrc.home" value="../../tmp/eclipsebm"/>
+	<property name="harness.home" value="../benchmarks/bmsrc"/>
 
 	<!-- Compiler settings. -->
 	<property name="javacFailOnError" value="false"/>
@@ -57,6 +58,7 @@
 		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
 			<compilerarg line="${compilerArg}"/>
 			<classpath>
+				<pathelement path="${harness.home}"/>
 				<pathelement path="${eclipsesrc.home}/eclipse/plugins/org.eclipse.core.runtime_3.1.2.jar"/>
 				<pathelement path="${eclipsesrc.home}/eclipse/plugins/org.eclipse.osgi_3.1.2.jar"/>
 				<pathelement path="${eclipsesrc.home}/eclipse/plugins/org.eclipse.core.resources_3.1.2.jar"/>
