@@ -5,14 +5,15 @@ public class Callback {
   
   /* Start the timer and announce the begining of an iteration */
   public void start(String benchmark) {
-    start(benchmark, "");
+    start(benchmark, false);
   };
   public void startWarmup(String benchmark) {
-    start(benchmark, "Warmup ");
+    start(benchmark, true);
   };
-  private void start(String benchmark, String description) {
+  private void start(String benchmark, boolean warmup) {
     timer = System.currentTimeMillis();
-    System.err.println("===== DaCapo "+ benchmark + " Starting " + description + "=====");
+    System.err.print("===== DaCapo "+ benchmark + " starting ");
+    System.err.println((warmup ? "warmup " : "") + "=====");
     System.err.flush();
   }
   /* Stop the timer */
@@ -24,15 +25,18 @@ public class Callback {
   }
   /* Announce completion of the benchmark (pass or fail) */
   public void complete(String benchmark, boolean valid) {
-    complete(benchmark, valid, "");
+    complete(benchmark, valid, false);
   };
   public void completeWarmup(String benchmark, boolean valid) {
-    complete(benchmark, valid, "Warmup ");
+    complete(benchmark, valid, true);
   };
-  private void complete(String benchmark, boolean valid, String description) {
-    System.err.print("===== DaCapo "+ benchmark + (valid ? " PASSED " : " FAILED ") + description);
+  private void complete(String benchmark, boolean valid, boolean warmup) {
+    System.err.print("===== DaCapo "+ benchmark);
     if (valid) {
+      System.err.print(warmup ? " completed warmup " : " PASSED ");
       System.err.print("in " + timer + " msec ");   
+    } else {
+      System.err.print(" FAILED " + (warmup ? "warmup " : ""));
     }
     System.err.println("=====");
     System.err.flush();

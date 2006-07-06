@@ -5,11 +5,11 @@ size small args "jython/sieve.py","50"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "jython/pybench/pybench.py","-n", "2", "-C", "2", "-w", "80"
+size default args "jython/pybench/pybench.py", "--debug", "-n", "1", "-C", "2", "-w", "40"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "jython/pybench/pybench.py","-n", "2", "-C", "2", "-w", "10"
+size large args "jython/pybench/pybench.py", "--debug","-n", "2", "-C", "2", "-w", "10"
   output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
