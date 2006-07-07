@@ -115,12 +115,12 @@ public class EclipseTests {
       System.err.println("Exception while running benchmarks!"+e);
       e.printStackTrace();
     }
-
+    
     /* we've finished the tests, so kill off the environment */
     try {
       int length = ALL_PROJECTS.length;
       for (int i = 0; i < length; i++) {
-	ALL_PROJECTS[i].getProject().delete(false, true, null);
+        ALL_PROJECTS[i].getProject().delete(false, true, null);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -136,7 +136,7 @@ public class EclipseTests {
     IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IWorkspaceRoot workspaceRoot = workspace.getRoot();
     if (workspaceRoot.getProjects().length == 0) {
-       createWorkspaceProjects(workspace, workspaceRoot);
+      createWorkspaceProjects(workspace, workspaceRoot);
       //throw new IOException("Could not open workspace: "+workspaceRoot.getLocation().toFile().getCanonicalPath());
       //unzipWorkspace(workspace, workspaceRoot);
     }
@@ -164,7 +164,7 @@ public class EclipseTests {
     if (DEBUG) System.out.println("done!");
     
     createWorkspaceProjects(workspace, workspaceRoot);
-
+    
   }
   
   private static void createWorkspaceProjects(IWorkspace workspace, final IWorkspaceRoot workspaceRoot) throws IOException, CoreException {
