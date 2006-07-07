@@ -8,22 +8,19 @@ size small args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "
   "-f",
   	      "EDU.purdue.cs.bloat.trans.ValueNumbering",
           "optimizedcode"
-  output "$stdout" digest 0xec8f1e0b00ea6cbc2b05ccb5d0d6d641562a53c0,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
   "-f",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer",
 		  "optimizedcode"
-  output "$stdout" digest 0x3d05f39fca73f44dfc41a32f4f9197226e646301,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
   "-f",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.SSAPRE",
 		  "optimizedcode"
-  output "$stdout" digest 0xd6a40827323fbd20832c546ee2f6585d6042aa27,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
   "-f",

@@ -5,6 +5,16 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+/*
+ * This class exists because of two problematic properties of eclipse:
+ * 1. org.eclipse.core.launcher.Main may only be called once from within
+ *    a single jvm run, so we construct a thread and leave it running
+ *    across iterations.
+ * 2. Eclipse has its own classloading world, and establishes this on
+ *    the basis of the location of the jar from which it starts (startup.jar).
+ *    But this jar is not visible in our classpath, so we need to extend
+ *    the classpath.  We do this by using a new classloader. 
+ */
 public class EclipseHarnessThread extends Thread {
   private EclipseHarness parent;
   URLClassLoader ulc;
