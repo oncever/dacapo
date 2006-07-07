@@ -42,7 +42,7 @@
 	<property name="j9" value="/opt/ibm-java2-i386-50"/>
 	<property name="jrockit" value="/opt/jrockit-R26.3.0-jdk1.5.0_06"/>
 	<property name="sun" value="/opt/jdk1.5.0_07"/>
-	<property name="blackdown" value="/usr/lib/j2se"/>
+	<property name="blackdown" value="/usr/lib/j2se/1.4"/>
 
 	<!-- benchmark versions -->
 	<property name="antlr.version" value="2.7.2"/>
