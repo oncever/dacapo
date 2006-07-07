@@ -6,7 +6,7 @@ size small args "-scriptSecurityOff","batik/mapWaadt.svg"
     	 "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-scriptSecurityOff","batik/mapWaadt.svg","batik/mapSpain.svg","batik/sydney.svg"
-  output "$stdout" digest 0xd0b519bfb7de14f18924f733157f0ae0dfb40725,
+  output "$stdout" digest 0x42db25238ff216cf725b4a36f78f745424988d91,
     	 "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-scriptSecurityOff","batik/mapWaadt.svg","batik/mapSpain.svg","batik/sydney.svg",

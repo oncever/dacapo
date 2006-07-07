@@ -92,6 +92,9 @@ public abstract class Benchmark {
    */
   protected void prepare() throws Exception {
     unpackZipFileResource("data/"+config.name+".zip", scratch);
+    try {
+      new File(fileInScratch("prepare.timestamp")).createNewFile();
+    } catch (Exception e) {};
   }
   
   /**
@@ -110,7 +113,7 @@ public abstract class Benchmark {
   
   /**
    * Per-iteration setup, inside the timing loop.  Nothing comes between this and
-   * the call to 'iterate' - its porpose is to start collection of the input
+   * the call to 'iterate' - its purpose is to start collection of the input
    * and output streams.  stopIteration() should be its inverse.
    */
   public final void startIteration() {

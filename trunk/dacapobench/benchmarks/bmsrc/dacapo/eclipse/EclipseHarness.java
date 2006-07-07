@@ -22,7 +22,7 @@ public class EclipseHarness extends Benchmark {
     File wsdir = new File(scratch, wsDirectory);
     wsdir.mkdir();
     unpackZipFile(fileInScratch("eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip"),wsdir); 
-
+    
     if (eclipseThread == null) {
       eclipseThread = new EclipseHarnessThread(this, "EclipseThread");
       eclipseThread.start();
