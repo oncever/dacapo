@@ -839,8 +839,8 @@
 		<!-- Install the luindex test data -->
 		<!--		<zip basedir="${data}" includes="luindex/**" destfile="${zipdata}/luindex.zip"/> -->
 		<zip destfile="${zipdata}/luindex.zip">
-			<fileset dir="${data}/luindex/kjv"/>
-			<fileset dir="${data}/luindex/william"/>
+			<fileset dir="${data}/luindex/" includes="kjv/**/*"/>
+			<fileset dir="${data}/luindex/" includes="william/**/*"/>
 		</zip>
 
 		<!-- Install the lusearch test data -->
