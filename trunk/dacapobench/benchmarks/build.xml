@@ -214,7 +214,7 @@
 	<target name="run.eclipse" description="prune out the eclipse zip file">
 		<java classname="Harness" fork="yes" jvm="${j9}/bin/java" newenvironment="true">
 			<env key="JAVA_HOME" value="${j9}"/>
-			<arg line="-preserve -scratch ${prune.scratch} -s ${size} eclipse" />
+			<arg line="-scratch ${prune.scratch} -s ${size} eclipse" />
 			<classpath>
 				<pathelement path="${prune}/full" />
 			</classpath>
@@ -839,8 +839,8 @@
 		<!-- Install the luindex test data -->
 		<!--		<zip basedir="${data}" includes="luindex/**" destfile="${zipdata}/luindex.zip"/> -->
 		<zip destfile="${zipdata}/luindex.zip">
-			<fileset dir="${data}/luindex/" includes="kjv/**/*"/>
-			<fileset dir="${data}/luindex/" includes="william/**/*"/>
+			<fileset dir="${data}/" includes="luindex/kjv/**/*"/>
+			<fileset dir="${data}/" includes="luindex/william/**/*"/>
 		</zip>
 
 		<!-- Install the lusearch test data -->
