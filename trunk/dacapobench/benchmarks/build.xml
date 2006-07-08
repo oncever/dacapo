@@ -528,6 +528,7 @@
 		<ant antfile="${batik-top}/build.xml" dir="${batik-top}" 
          target="compiletest" inheritall="false">
 			<property name="dacapo.classes" location="${build}"/>
+			<property name="build.compiler" value="classic"/>
 		</ant>
 
 		<!-- Copy the batik class files -->
