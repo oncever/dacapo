@@ -49,7 +49,7 @@
 	<property name="batik.version" value="1.6"/>
 	<property name="bloat.version" value="1.0"/>
 	<property name="chart.version" value="1.0.0"/>
-	<property name="eclipse.version" value="3.1.2"/>
+	<property name="eclipse.version" value="3.1.2"/> <property name="eclipse.drop" value="200601181600"/>
 	<property name="fop.version" value="0.20.5"/>
 	<property name="hsqldb.version" value="1_7_1"/>
 	<property name="jython.version" value="Release_2_2alpha1"/>
@@ -67,7 +67,7 @@
 	<property name="batik.url" value="http://archive.apache.org/dist/xml/batik"/>
 	<property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
 	<property name="chart.url" value="http://easynews.dl.sourceforge.net/sourceforge/jfreechart"/>
-	<property name="eclipse.url" value="http://download2.eclipse.org/eclipse/downloads/drops/R-3.1.2-200601181600"/>
+	<property name="eclipse.url" value="http://download2.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
 	<property name="fop.url" value="http://archive.apache.org/dist/xml/fop"/>
 	<property name="hsqldb.url" value="http://easynews.dl.sourceforge.net/sourceforge/hsqldb"/>
 	<property name="jython.url" value="http://easynews.dl.sourceforge.net/sourceforge/jython"/>
@@ -136,6 +136,27 @@
 	</target>
 
 
+	<!-- ================================= 
+         target: srczip              
+         ================================= -->
+	<target name="srczip" depends="init,clean" description="--> Creates a source zip">
+	    <zip destfile="dacapo-${DSTAMP}-src.zip">
+	    	<fileset dir=".." includes="extra/eclipse-plugin/*" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="extra/eclipse-plugin/src/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="extra/eclipse-plugin/META-INF/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="benchmarks/LICENSE-2.0.txt"/>
+	    	<fileset dir=".." includes="benchmarks/README.txt"/>
+	    	<fileset dir=".." includes="benchmarks/bmsrc/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="benchmarks/build.xml"/>
+	    	<fileset dir=".." includes="benchmarks/cnf/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="benchmarks/originals/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
+	    	<fileset dir=".." includes="benchmarks/stub/**" excludes="**/CVS"/>
+		</zip>		
+	</target>
+
 
 	<!-- ================================= 
          target: sourcedist              
@@ -183,7 +204,7 @@
 			<fileset dir="${prune}/full"/>
 		</touch>
 		<touch file="${prune.timestamp}"/>
-		<antcall target="prune.eclipse"/>
+<!--		<antcall target="prune.eclipse"/> -->
 		<antcall target="fullrun"/>
 		<exec dir="${prune}/full" executable="find">
 			<arg line="${prune}/full/ ! -anewer ../timestamp -delete"/>
@@ -194,31 +215,6 @@
 		<jar jarfile="dacapo-${DSTAMP}.jar" basedir="${prune}/full" index="true"
          manifest="${prune}/full/META-INF/MANIFEST.MF"/>
 		<!--	<delete dir="${prune}"/> -->
-	</target>
-	<!-- ================================= 
-          target: prune.eclipse            
-         ================================= -->
-	<!-- target name="prune" depends="init,jar" description="prune out the jar file">-->
-	<target name="prune.eclipse" description="prune out the eclipse zip file">
-		<delete dir="${prune.scratch}"/>
-		<antcall target="run.eclipse">
-			<param name="size" value="large"/>
-		</antcall>
-		<!-- prune the result -->
-		<exec dir="${prune.scratch}/eclipse" executable="find">
-			<arg line="${prune.scratch} ! -anewer ${prune.scratch}/prepare.timestamp -delete"/>
-		</exec>
-		<!-- create the pruned zip -->
-		<zip basedir="${prune.scratch}" includes="eclipse/**" destfile="${prune}/full/data/eclipse.zip"/>
-	</target>
-	<target name="run.eclipse" description="prune out the eclipse zip file">
-		<java classname="Harness" fork="yes" jvm="${j9}/bin/java" newenvironment="true">
-			<env key="JAVA_HOME" value="${j9}"/>
-			<arg line="-scratch ${prune.scratch} -s ${size} eclipse" />
-			<classpath>
-				<pathelement path="${prune}/full" />
-			</classpath>
-		</java>
 	</target>
 
 	<!-- ================================= 
@@ -276,7 +272,7 @@
 			<param name="bm" value="eclipse" />
 		</antcall>
 		<antcall target="run">
-			<param name="bm" value="fop" />
+		<param name="bm" value="fop" />
 		</antcall>
 		<antcall target="run">
 			<param name="bm" value="hsqldb" />
@@ -636,10 +632,14 @@
 		<untar src="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz" dest="${build_src}/eclipse/" compression="gzip"/>
 		<unzip src="${sources}/eclipse-Automated-Tests-${eclipse.version}.zip" dest="${build_src}/eclipse/">
 			<patternset>
-				<include name="eclipse-testing/eclipse-junit-tests-M20060118-1600.zip"/>
+				<include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
 			</patternset>
 		</unzip>
-		<unzip src="${build_src}/eclipse/eclipse-testing/eclipse-junit-tests-M20060118-1600.zip" dest="${build_src}/eclipse/"/>
+		<unzip dest="${build_src}/eclipse/">
+			<fileset dir="${build_src}/eclipse/eclipse-testing/">
+				<include name="eclipse-junit-tests-M*.zip"/>
+			</fileset>
+		</unzip>
 		<delete dir="${build_src}/eclipse/eclipse-testing"/>
 	</target>
 	<!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
@@ -655,7 +655,31 @@
 	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin" description="--> build the eclipse data file">
 		<!-- Install the test data -->
 		<zip destfile="${zipdata}/eclipse.zip">
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> 
+<!--			<fileset dir="${build_src}/eclipse/" includes="eclipse/*"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/about_files/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/configuration/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/features/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/readme/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/dacapo.eclipse_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.apache.ant_*/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.expressions_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.resources_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime.compatibility_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.variables_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.debug.core_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.builder_*/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.compiler_*/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.performance_*/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.launching_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.debug_*/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.osgi_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.test.performance_*/**"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.text_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.update.configurator_*.jar"/>
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/> -->
 		</zip>
 	</target>
 
