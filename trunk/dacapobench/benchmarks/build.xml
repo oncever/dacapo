@@ -655,8 +655,9 @@
 	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin" description="--> build the eclipse data file">
 		<!-- Install the test data -->
 		<zip destfile="${zipdata}/eclipse.zip">
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> 
-<!--			<fileset dir="${build_src}/eclipse/" includes="eclipse/*"/>
+<!--			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> -->
+                        <!-- empirically derived list of what we really need -->
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/*"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/about_files/**"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/configuration/**"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/features/**"/>
@@ -679,7 +680,7 @@
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.test.performance_*/**"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.text_*.jar"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.update.configurator_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/> -->
+			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/>
 		</zip>
 	</target>
 
