@@ -231,7 +231,7 @@
 		<antcall target="jrerun">
 			<param name="jre" value="${j9}"/>
 		</antcall>
-		<!--		<antcall target="jrerun">
+		<antcall target="jrerun">
 			<param name="jre" value="${sun}"/>
 		</antcall>
 		<antcall target="jrerun">
@@ -239,7 +239,7 @@
 		</antcall>
 		<antcall target="jrerun">
 			<param name="jre" value="${blackdown}"/>
-		</antcall>-->
+		</antcall>
 	</target>
 
 	<!-- ================================= 

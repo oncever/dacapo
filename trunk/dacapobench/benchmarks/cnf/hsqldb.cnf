@@ -2,7 +2,7 @@ benchmark hsqldb
   class dacapo.hsqldb.HsqldbHarness;
 
 size small args "-driver","org.hsqldb.jdbcDriver",
-                "-url","jdbc:hsqldb:scratch/hsqldb",
+                "-url","jdbc:hsqldb:mem:hsqldb",
 		"-user","sa","-init",
 		"-clients","10",
 		"-tpc", "5",
@@ -11,21 +11,21 @@ size small args "-driver","org.hsqldb.jdbcDriver",
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.hsqldb.jdbcDriver",
-                  "-url","jdbc:hsqldb:scratch/hsqldb",
+                  "-url","jdbc:hsqldb:mem:hsqldb",
 		  "-user","sa","-init",
-		  "-clients","40",
-		  "-tpc","20",
-		  "-tps","32"
-  output "$stdout" digest 0xd742ecfa28f1c059ad9246182a0c8cccf762ec65,
+		  "-clients","20",
+		  "-tpc","40",
+		  "-tps","64"
+  output "$stdout" digest 0xd0bb70dcb423f75ce72d18a6db2c46f879a62b78,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.hsqldb.jdbcDriver",
-                "-url","jdbc:hsqldb:scratch/hsqldb",
+                "-url","jdbc:hsqldb:mem:hsqldb",
 		"-user","sa","-init",
-		"-clients","40",
-		"-tpc","20",
-		"-tps","64"
-  output "$stdout" digest 0xfbecc98be3c3cfa4589532d0bd6b1a01b933b538,
+		"-clients","100",
+		"-tpc","50",
+		"-tps","128"
+  output "$stdout" digest 0x287e97591f265cacf062180f484ed9cc21e6e688,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 

@@ -497,7 +497,7 @@ public class PseudoJDBCBench {
       Stmt.close();
 
       if (accountsnb == (naccounts * tps)) {
-        System.out.println("Already initialized");
+        System.out.println("Already initialized for "+naccounts+"*"+tps);
         connectClose(Conn);
 
         return;
@@ -748,7 +748,7 @@ public class PseudoJDBCBench {
           Conn.commit();
         }
 
-        if ((i > 0) && ((i % 40000) == 0)) {
+        if ((i > 0) && ((i % 80000) == 0)) {
           System.out.println("\t" + i + "\t records inserted");
         }
       }

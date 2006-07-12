@@ -3,7 +3,6 @@ benchmark antlr
 
 size small args "-o","./scratch","-grammars","antlr/java.g"
  output
-   "$stderr" digest 0x9f38f22c6d9e69348614705626e6ba8729131efe,
    "JavaLexer.java",
    "JavaRecognizer.java",
    "JavaTokenTypes.java" digest 0x8ca5f9d96ca260452900be9361ac36e718964e30,
@@ -42,9 +41,7 @@ size default args "-o","./scratch",
 		     "antlr/java/t.g", "antlr/java/TinyBasic.g",
 		     "antlr/java/TinyBasicTreeWalker.g", "antlr/java/tinyc.g",
 		     "antlr/java/track.g", "antlr/java/treewalk.g", 
-		     "antlr/java/unicode.g","antlr/java/xml.g"
-  output
-    "$stderr" digest 0x658c32900cd7b835bc862cba7462f049cf00125b;
+		     "antlr/java/unicode.g","antlr/java/xml.g";
 
 size large args "-o","./scratch",
                 "-iterations","5",
@@ -79,9 +76,7 @@ size large args "-o","./scratch",
 		   "antlr/java/TinyBasic.g","antlr/java/TinyBasicTreeWalker.g",
 		   "antlr/java/tinyc.g","antlr/java/track.g",
 		   "antlr/java/treewalk.g", "antlr/java/unicode.g",
-		   "antlr/java/xml.g"
-  output
-    "$stderr" digest 0x478f110218fe6b2ba20a9f42e4474f766b7849d5;
+		   "antlr/java/xml.g";
 
 description
     short	"A parser generator and translator generator",
