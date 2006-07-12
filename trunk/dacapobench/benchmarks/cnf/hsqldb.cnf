@@ -4,59 +4,34 @@ benchmark hsqldb
 size small args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:scratch/hsqldb",
 		"-user","sa","-init",
-		"-clients","1",
-		"-tpc", "1",
-		"-tps","1","-v"
-  output "$stdout" digest 0x1127e66a443f3b2d92110cbb2f4542bc51a6c0d8,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-size smallmem args "-driver","org.hsqldb.jdbcDriver",
-                "-url","jdbc:hsqldb:mem:hsqldb",
-		"-user","sa","-init",
-		"-clients","1",
-		"-tpc", "1",
-		"-tps","1","-v"
-  output "$stdout" digest 0xb889564808ee5e2ccdd52e9af1d631a22c856d77,
+		"-clients","20",
+		"-tpc", "5",
+		"-tps","8","-v"
+  output "$stdout" digest 0x9f1b83df6d2e9918a1ae17bf6c0e09ce88c1407d,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:scratch/hsqldb",
 		  "-user","sa","-init",
-		  "-clients","20",
-		  "-tpc","5",
-		  "-tps","8","-v"
-  output "$stdout" digest 0x9f1b83df6d2e9918a1ae17bf6c0e09ce88c1407d,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-
-size defaultmem args "-driver","org.hsqldb.jdbcDriver",
-                  "-url","jdbc:hsqldb:mem:hsqldb",
-		  "-user","sa","-init",
-		  "-clients","20",
-		  "-tpc","2",
-		  "-tps","2","-v"
-  output "$stdout" digest 0x6f080549e69a5a9aba56ea6be2478ae0aba8ecac,
+		  "-clients","40",
+		  "-tpc","20",
+		  "-tps","32"
+  output "$stdout" digest 0xba418e45b6ba5a6afbe57025007bf14a7cf23b1d,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:scratch/hsqldb",
 		"-user","sa","-init",
-		"-clients","20",
-		"-tpc","5",
-		"-tps","15","-v"
-  output "$stdout" digest 0x435383b07a2da1e6d44b1ee195322c564bbe00c7,
+		"-clients","40",
+		"-tpc","20",
+		"-tps","64"
+  output "$stdout" digest 0xc8cba6b00e65ca4edac74579f2d3ecb2af280a8d,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size largemem args "-driver","org.hsqldb.jdbcDriver",
-                "-url","jdbc:hsqldb:mem:hsqldb",
-		"-user","sa","-init",
-		"-clients","20",
-		"-tpc","5",
-		"-tps","15","-v"
-  output "$stdout" digest 0x0,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	"An SQL relational database engine written in Java",
   long	"HSQLDB executes a JDBC-like in-memory benchmark, executing a number of transactions against a model of a banking application",
   copyright	"Copyright (c) 2001-2002, The HSQL Development Group",
   url	"http://hsqldb.sourceforge.net",
-  version	"1.7.1";
+  version	"1.8.0.4";
