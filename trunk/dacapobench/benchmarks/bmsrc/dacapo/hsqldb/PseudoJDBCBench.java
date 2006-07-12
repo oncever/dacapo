@@ -91,7 +91,6 @@ public class PseudoJDBCBench {
    */
   public static void main(String[] Args) {
     //DS. Sept. 2004:
-    System.out.println ("-" + " PseudoJDBCBench.main " + (java.util.Arrays.asList (Args)).toString ());
     String  DriverName         = "";
     String  DBUrl              = "";
     String  DBUser             = "";
@@ -197,16 +196,11 @@ public class PseudoJDBCBench {
     System.out.println(
     "*********************************************************");
     System.out.println();
-    System.out.println("Driver: " + DriverName);
-    System.out.println("URL:" + DBUrl);
-    System.out.println();
     System.out.println("Scale factor value: " + tps);
     System.out.println("Number of clients: " + n_clients);
     System.out.println("Number of transactions per client: "
             + n_txn_per_client);
     System.out.println();
-
-    System.out.println ("-" + " PseudoJDBCBench.main " + "creating instance");
 
     try {
       Class.forName(DriverName);
@@ -217,14 +211,10 @@ public class PseudoJDBCBench {
       System.out.println(E.getMessage());
       E.printStackTrace();
     }
-
-    System.out.println ("-" + " PseudoJDBCBench.main " + "end");
-
   }
 
   public PseudoJDBCBench(String url, String user, String password, boolean init) {
     //DS. Sept. 2004:
-    System.out.println ("-" + " PseudoJDBCBench.PseudoJDBCBench " + url + " " + user + " " + password + " " + init);
 
     Vector      vClient = new Vector();
     Thread      Client  = null;
@@ -365,9 +355,7 @@ public class PseudoJDBCBench {
       MemoryWatcher.end();
 
       try {
-        System.out.println("Waiting for MemoryWatcher to exit");
         MemoryWatcher.join();
-        System.out.println("MemoryWatcher exited");
 
         if (ShutdownCommand.length() > 0) {
           Connection C    = connect(url, user, password);
@@ -389,9 +377,6 @@ public class PseudoJDBCBench {
       //System.out.println ("-" + " PseudoJDBCBench.PseudoJDBCBench " + "calling System.exit(0)");
       //System.exit(0);
     }
-
-    System.out.println ("-" + " PseudoJDBCBench.PseudoJDBCBench " + "end");
-
   }
 
   public void reportDone() {
@@ -519,8 +504,6 @@ public class PseudoJDBCBench {
       }
     } catch (Exception E) {}
 
-    System.out.println("Drop old tables if they exist");
-
     try {
       Statement Stmt = Conn.createStatement();
       String    Query;
@@ -552,7 +535,6 @@ public class PseudoJDBCBench {
       Stmt.close();
     } catch (Exception E) {}
 
-    System.out.println("Creates tables");
 
     try {
       Statement Stmt = Conn.createStatement();
@@ -638,9 +620,6 @@ public class PseudoJDBCBench {
       Stmt.close();
     } catch (Exception E) { E.printStackTrace(); }
 
-    System.out.println(
-    "Delete elements in table in case Drop didn't work");
-
     try {
       Statement Stmt = Conn.createStatement();
       String    Query;
@@ -682,15 +661,12 @@ public class PseudoJDBCBench {
         try {
           Query = "INSERT INTO branches(Bid,Bbalance) VALUES (?,0)";
           pstmt = Conn.prepareStatement(Query);
-
-          System.out.println("Using prepared statements");
         } catch (SQLException Epstmt) {
           pstmt         = null;
           prepared_stmt = false;
         }
       }
 
-      System.out.println("Insert data in branches table");
 
       for (int i = 0; i < nbranches * tps; i++) {
         if (prepared_stmt) {
@@ -722,8 +698,6 @@ public class PseudoJDBCBench {
           "INSERT INTO tellers(Tid,Bid,Tbalance) VALUES (?,?,0)";
         pstmt = Conn.prepareStatement(Query);
       }
-
-      System.out.println("Insert data in tellers table");
 
       for (int i = 0; i < ntellers * tps; i++) {
         if (prepared_stmt) {
@@ -757,8 +731,6 @@ public class PseudoJDBCBench {
         pstmt = Conn.prepareStatement(Query);
       }
 
-      System.out.println("Insert data in accounts table");
-
       for (int i = 0; i < naccounts * tps; i++) {
         if (prepared_stmt) {
           pstmt.setInt(1, i);
@@ -776,7 +748,7 @@ public class PseudoJDBCBench {
           Conn.commit();
         }
 
-        if ((i > 0) && ((i % 10000) == 0)) {
+        if ((i > 0) && ((i % 40000) == 0)) {
           System.out.println("\t" + i + "\t records inserted");
         }
       }
