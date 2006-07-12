@@ -1,34 +1,38 @@
+/*
+ * 
+ */
 package dacapo;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.io.BufferedReader;
-import java.net.URL;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.Reader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.StreamTokenizer;
 import java.io.InputStream;
-import java.util.Hashtable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.Vector;
-import java.util.Enumeration;
 
 import dacapo.parser.Config;
 
+/**
+ * Main class for the Dacapo benchmark suite.  Locates the configuration file 
+ * for the specified benchmark, interprets command line arguments, and invokes 
+ * the benchmark-specific harness class.
+ * 
+ * $Id$
+ * $Date$
+ * 
+ * @author Steve Blackburn
+ * @author Robin Garner
+ *
+ */
 public class TestHarness {
   private final Config config;
   
   private static boolean verbose = false;
   
   private static boolean allowOpenFromFileSystem = false;
-  
-  private static URL getURL(File f) {
-    return getURL(f.getPath());
-  }
   
   private static URL getURL(String fn) {
     ClassLoader cl = TestHarness.class.getClassLoader();
@@ -50,32 +54,6 @@ public class TestHarness {
       result =  file.exists();
     }
     return result;
-  }
-  
-  private static InputStream getInputStream(File f) throws FileNotFoundException {
-    return getInputStream(f.getPath());
-  }
-  
-  private static InputStream getInputStream(String fn) throws FileNotFoundException {
-    try {
-      if (verbose)
-        System.out.println("Extracting f="+fn+" from jar.");
-      java.net.URL sourceURL = getURL(fn);
-      if (sourceURL != null) {
-        InputStream ios = sourceURL.openStream();
-        if (ios != null)
-          return ios;
-      }
-    } catch (Exception e) {
-    }
-    
-    if (allowOpenFromFileSystem) {
-      if (verbose)
-        System.out.println("TestHarness.getInputStream: going to file system for "+fn);
-      return new FileInputStream(fn);
-    } else {
-      throw new FileNotFoundException("Failed to open " + fn + " from jar file.");
-    }
   }
   
   public static void main(String[] args) {
