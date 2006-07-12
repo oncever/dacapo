@@ -3,7 +3,6 @@ benchmark antlr
 
 size small args "-o","./scratch","-grammars","antlr/java.g"
  output
-   "$stdout" digest 0x2eba08719c117842720ac9926864551a20864e5e,
    "$stderr" digest 0x9f38f22c6d9e69348614705626e6ba8729131efe,
    "JavaLexer.java",
    "JavaRecognizer.java",
@@ -45,7 +44,6 @@ size default args "-o","./scratch",
 		     "antlr/java/track.g", "antlr/java/treewalk.g", 
 		     "antlr/java/unicode.g","antlr/java/xml.g"
   output
-    "$stdout" digest 0xf0f217287a4cf95fb4632e6ae5ad7475c81b03fd,
     "$stderr" digest 0x658c32900cd7b835bc862cba7462f049cf00125b;
 
 size large args "-o","./scratch",
@@ -83,7 +81,6 @@ size large args "-o","./scratch",
 		   "antlr/java/treewalk.g", "antlr/java/unicode.g",
 		   "antlr/java/xml.g"
   output
-    "$stdout" digest 0x55de59eb90537dcc75f403574ca04747ad15aa74,
     "$stderr" digest 0x478f110218fe6b2ba20a9f42e4474f766b7849d5;
 
 description

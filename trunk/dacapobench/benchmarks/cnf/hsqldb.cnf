@@ -4,10 +4,10 @@ benchmark hsqldb
 size small args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:scratch/hsqldb",
 		"-user","sa","-init",
-		"-clients","20",
+		"-clients","10",
 		"-tpc", "5",
-		"-tps","8","-v"
-  output "$stdout" digest 0x9f1b83df6d2e9918a1ae17bf6c0e09ce88c1407d,
+		"-tps","4","-v"
+  output "$stdout" digest 0xe5254c965420a131f264be5adbdbf5f55dbb5b98,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.hsqldb.jdbcDriver",
@@ -16,7 +16,7 @@ size default args "-driver","org.hsqldb.jdbcDriver",
 		  "-clients","40",
 		  "-tpc","20",
 		  "-tps","32"
-  output "$stdout" digest 0xba418e45b6ba5a6afbe57025007bf14a7cf23b1d,
+  output "$stdout" digest 0xd742ecfa28f1c059ad9246182a0c8cccf762ec65,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.hsqldb.jdbcDriver",
@@ -25,7 +25,7 @@ size large args "-driver","org.hsqldb.jdbcDriver",
 		"-clients","40",
 		"-tpc","20",
 		"-tps","64"
-  output "$stdout" digest 0xc8cba6b00e65ca4edac74579f2d3ecb2af280a8d,
+  output "$stdout" digest 0xfbecc98be3c3cfa4589532d0bd6b1a01b933b538,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 

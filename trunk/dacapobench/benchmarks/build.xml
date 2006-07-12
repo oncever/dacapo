@@ -60,7 +60,7 @@
 	<!-- auxilary downloads -->
 	<property name="itext.version" value="1.02b"/>
 	<property name="junit.version" value="3.8.1"/>
-	<property name="python.version" value="2.5b1"/>
+	<property name="python.version" value="2.5b2"/>
 	<property name="xerces.version" value="2.8.0"/>
 	<property name="xerces._version" value="2_8_0"/>
 
@@ -171,9 +171,13 @@
 	<!-- ================================= 
          target: jar              
          ================================= -->
-	<!--	<target name="jar" depends="compile,harness,init" -->
-	<target name="jar" depends="harness,init"
-          description="generate the distribution jar file" >
+	<target name="jar" depends="compile,jar.quick" description="generate the distribution jar file"/>
+
+	<!-- ================================= 
+         target: jar.quick             
+         ================================= -->
+	<target name="jar.quick" depends="harness,init"
+          description="generate a jar file" >
 		<antcall target="meta-inf">
 			<param name="jarroot" value="${build}"/>
 		</antcall>
@@ -184,6 +188,7 @@
          manifest="${build}/META-INF/MANIFEST.MF"
     />
 	</target>
+
 	<!-- ================================= 
          target: meta-inf             
          ================================= -->
@@ -870,7 +875,10 @@
 		</zip>
 
 		<!-- Install the lusearch test data -->
-		<zip basedir="${data}" includes="lusearch/**" destfile="${zipdata}/lusearch.zip"/>
+		<zip destfile="${zipdata}/lusearch.zip">
+			<fileset dir="${data}" includes="lusearch/query*" />
+			<fileset dir="${data}" includes="lusearch/index-default/**" />
+		</zip>
 	</target>
 
 	<!-- ================================= 
