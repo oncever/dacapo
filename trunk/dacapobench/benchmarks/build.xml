@@ -49,9 +49,10 @@
 	<property name="batik.version" value="1.6"/>
 	<property name="bloat.version" value="1.0"/>
 	<property name="chart.version" value="1.0.0"/>
-	<property name="eclipse.version" value="3.1.2"/> <property name="eclipse.drop" value="200601181600"/>
+	<property name="eclipse.version" value="3.1.2"/>
+	<property name="eclipse.drop" value="200601181600"/>
 	<property name="fop.version" value="0.20.5"/>
-	<property name="hsqldb.version" value="1_7_1"/>
+	<property name="hsqldb.version" value="1_8_0_4"/>
 	<property name="jython.version" value="Release_2_2alpha1"/>
 	<property name="lucene.version" value="1.9.1"/>
 	<property name="pmd.version" value="3.7"/>
@@ -60,7 +61,8 @@
 	<property name="itext.version" value="1.02b"/>
 	<property name="junit.version" value="3.8.1"/>
 	<property name="python.version" value="2.5b1"/>
-	<property name="xerces.version" value="2.6.2"/>
+	<property name="xerces.version" value="2.8.0"/>
+	<property name="xerces._version" value="2_8_0"/>
 
 	<!-- benchmark locations -->
 	<property name="antlr.url" value="http://www.antlr.org/download"/>
@@ -140,21 +142,21 @@
          target: srczip              
          ================================= -->
 	<target name="srczip" depends="init,clean" description="--> Creates a source zip">
-	    <zip destfile="dacapo-${DSTAMP}-src.zip">
-	    	<fileset dir=".." includes="extra/eclipse-plugin/*" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="extra/eclipse-plugin/src/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="extra/eclipse-plugin/META-INF/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="benchmarks/LICENSE-2.0.txt"/>
-	    	<fileset dir=".." includes="benchmarks/README.txt"/>
-	    	<fileset dir=".." includes="benchmarks/bmsrc/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="benchmarks/build.xml"/>
-	    	<fileset dir=".." includes="benchmarks/cnf/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="benchmarks/originals/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
-	    	<fileset dir=".." includes="benchmarks/stub/**" excludes="**/CVS"/>
-		</zip>		
+		<zip destfile="dacapo-${DSTAMP}-src.zip">
+			<fileset dir=".." includes="extra/eclipse-plugin/*" excludes="**/CVS"/>
+			<fileset dir=".." includes="extra/eclipse-plugin/src/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="extra/eclipse-plugin/META-INF/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/LICENSE-2.0.txt"/>
+			<fileset dir=".." includes="benchmarks/README.txt"/>
+			<fileset dir=".." includes="benchmarks/bmsrc/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/build.xml"/>
+			<fileset dir=".." includes="benchmarks/cnf/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/originals/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/stub/**" excludes="**/CVS"/>
+		</zip>
 	</target>
 
 
@@ -167,16 +169,17 @@
 
 
 	<!-- ================================= 
-         target: full.jar              
+         target: jar              
          ================================= -->
-	<target name="full.jar" depends="compile,harness,init"
+	<!--	<target name="jar" depends="compile,harness,init" -->
+	<target name="jar" depends="harness,init"
           description="generate the distribution jar file" >
 		<antcall target="meta-inf">
 			<param name="jarroot" value="${build}"/>
 		</antcall>
 
 		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-		<jar jarfile="dacapo-${DSTAMP}-full.jar" basedir="${build}"
+		<jar jarfile="dacapo-${DSTAMP}.jar" basedir="${build}"
          index="true"
          manifest="${build}/META-INF/MANIFEST.MF"
     />
@@ -193,8 +196,7 @@
 	<!-- ================================= 
           target: prune            
          ================================= -->
-	<!-- target name="prune" depends="init,jar" description="prune out the jar file">-->
-	<target name="jar" depends="full.jar" description="prune out the jar file">
+	<target name="prune" depends="jar" description="prune out the jar file">
 		<property name="prune.timestamp" value="${prune}/timestamp"/>
 		<property name="prune.scratch" value="${prune}/scratch"/>
 		<mkdir dir="${prune.scratch}"/>
@@ -204,7 +206,7 @@
 			<fileset dir="${prune}/full"/>
 		</touch>
 		<touch file="${prune.timestamp}"/>
-<!--		<antcall target="prune.eclipse"/> -->
+		<!--		<antcall target="prune.eclipse"/> -->
 		<antcall target="fullrun"/>
 		<exec dir="${prune}/full" executable="find">
 			<arg line="${prune}/full/ ! -anewer ../timestamp -delete"/>
@@ -212,9 +214,9 @@
 		<antcall target="meta-inf">
 			<param name="jarroot" value="${prune}/full"/>
 		</antcall>
-		<jar jarfile="dacapo-${DSTAMP}.jar" basedir="${prune}/full" index="true"
+		<jar jarfile="dacapo-${DSTAMP}-prune.jar" basedir="${prune}/full" index="true"
          manifest="${prune}/full/META-INF/MANIFEST.MF"/>
-		<!--	<delete dir="${prune}"/> -->
+		<delete dir="${prune}"/>
 	</target>
 
 	<!-- ================================= 
@@ -239,17 +241,15 @@
           target: jrerun        
          ================================= -->
 	<target name="jrerun" description="execute all benchmarks at all sizes for one jre">
-		<!--		<antcall target="sizerun">
+		<antcall target="sizerun">
 			<param name="size" value="small"/>
 		</antcall>
--->
 		<antcall target="sizerun">
 			<param name="size" value="default"/>
 		</antcall>
-		<!--		<antcall target="sizerun">
+		<antcall target="sizerun">
 			<param name="size" value="large"/>
 		</antcall>
--->
 	</target>
 
 	<!-- ================================= 
@@ -272,7 +272,7 @@
 			<param name="bm" value="eclipse" />
 		</antcall>
 		<antcall target="run">
-		<param name="bm" value="fop" />
+			<param name="bm" value="fop" />
 		</antcall>
 		<antcall target="run">
 			<param name="bm" value="hsqldb" />
@@ -655,8 +655,8 @@
 	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin" description="--> build the eclipse data file">
 		<!-- Install the test data -->
 		<zip destfile="${zipdata}/eclipse.zip">
-<!--			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> -->
-                        <!-- empirically derived list of what we really need -->
+			<!--			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> -->
+			<!-- empirically derived list of what we really need -->
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/*"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/about_files/**"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/configuration/**"/>
@@ -966,45 +966,15 @@
 	</target>
 
 	<!-- ================================= 
-        target: xalan-241 
-       ================================= -->
-	<target name="xalan-241" description="Build xalan" depends="harness,xerces">
-		<property name="xalan-top" value="${build_src}/xalan/"/>
-		<property name="xalan-v" value="2_4_1"/>
-		<mkdir dir="${xalan-top}"/>
-
-		<!-- Unpack the source distribution -->
-		<!--    <untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" 
-           dest="${xalan-top}" compression="gzip"/>
--->
-		<!-- Build using the supplied build.xml -->
-		<ant antfile="${xalan-top}/xalan-j_${xalan-v}/build.xml" dir="${xalan-top}/xalan-j_${xalan-v}" 
-         inheritall="false"/>
-
-		<!-- Grap the xalan class files from the built jar files -->
-		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
-		<!-- Only required for xalan ${xalan.version} (which doesn't work with classpath 0.18)
-     <unjar src="${xalan-top}/xalan-j_${xalan-v}/build/serializer.jar" dest="${build}"/> -->
-
-		<!-- Install the test data -->
-		<zip basedir="${data}"
-           includes="xalan/**"
-           destfile="${zipdata}/xalan.zip"/>
-
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/xalan/*"/>
-	</target>
-
-	<!-- ================================= 
         target: xalan
        ================================= -->
-	<target name="xalan" depends="xalan.benchmark,xalan.harness" description="--> build the xalan benchmark"/>
+	<target name="xalan" depends="xalan.harness,xalan.benchmark" description="--> build the xalan benchmark"/>
 	<!-- Build the xalan dacapo harness -->
 	<target name="xalan.harness" depends="harness" description="Build xalan">
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/xalan/*"/>
 	</target>
 	<!-- Build the xalan benchmark -->
-	<target name="xalan.benchmark" depends="xerces" description="Build xalan">
+	<target name="xalan.benchmark" depends="init,xerces" description="Build xalan">
 		<property name="xalan-top" value="${build_src}/xalan/"/>
 		<property name="xalan-v" value="${xalan.version}"/>
 		<mkdir dir="${xalan-top}"/>
@@ -1017,9 +987,9 @@
 		<ant antfile="${xalan-top}/xalan-j_${xalan-v}/build.xml" dir="${xalan-top}/xalan-j_${xalan-v}" 
          inheritall="false"/>
 
-		<!-- Grap the xalan class files from the built jar files -->
+		<!-- Grab the xalan class files from the built jar files -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
-		<!-- Only required for xalan ${xalan.version} (which doesn't work with classpath 0.18) -->
+		<!-- required for later versions of xalan -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/serializer.jar" dest="${build}"/>
 
 		<!-- Install the test data -->
@@ -1046,7 +1016,10 @@
 		<untar src="${sources}/Xerces-J-bin.${xerces.version}.tar.gz" 
            dest="${xerces-top}" compression="gzip"/>
 
-		<unjar src="${xerces-top}/xerces-2_6_2/xercesImpl.jar" dest="${build}"/>
-		<unjar src="${xerces-top}/xerces-2_6_2/xml-apis.jar" dest="${build}"/>
+		<condition property="xerces.jar" value="xerces.jar" else="xercesImpl.jar">
+			<contains string="${xerces.version}" substring="1.4.4"/>
+		</condition>
+		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${build}"/>
+		<unjar src="${xerces-top}/xerces-${xerces._version}/xml-apis.jar" dest="${build}"/>
 	</target>
 </project>
