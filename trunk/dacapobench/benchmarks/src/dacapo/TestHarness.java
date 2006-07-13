@@ -11,6 +11,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Vector;
 
 import dacapo.parser.Config;
@@ -56,14 +57,54 @@ public class TestHarness {
     return result;
   }
   
+  
+  
+  /**
+   * Calculates coefficient of variation of a set of longs (standard deviation
+   * divided by mean).
+   * 
+   * @param times Array of input values
+   * @return Coefficient of variation
+   */
+  private static double coeff_of_var(long[] times) {
+    double n = times.length;
+    double sum = 0.0;
+    double sum2 = 0.0;
+    
+    for (int i=0; i < times.length; i++) {
+      double x = times[i];
+      sum += x;
+      sum2 += x * x;
+    }
+    
+    double mean = sum / n;
+    double sigma = Math.sqrt(1.0/n * sum2 - mean * mean);
+    
+    return sigma/mean;
+  }
+  
   public static void main(String[] args) {
     try {
+      DecimalFormat two_dp = new DecimalFormat();
+      two_dp.setMaximumFractionDigits(2);
+      two_dp.setMinimumFractionDigits(2);
+      two_dp.setGroupingUsed(true);
+      
       InputStream ins = System.in;
       String size = "default";
       String scratchDir = "./scratch";
       Callback callback = null;
       int iterations = 1;
       boolean info = false;
+      
+      /* 
+       * Command line parameters for convergent benchmark discipline.
+       * Initial values are defaults overridden on the command line.
+       */
+      boolean converge = false;
+      double target_var = 3.0/100; // Mean deviation to aim for
+      int window = 3;              // # iterations to define mean dev over.
+      int max_iterations = 20;     // Give up on finding convergence after this many times.
       
       /* No options - print usage and die */
       if (args.length == 0) {
@@ -101,12 +142,18 @@ public class TestHarness {
           } else {
             callback = (Callback) cls.newInstance();
           }
-        } else if (args[i].equals("-two")) {
-          // Run twice, showing the second iteration
+        } else if (args[i].equals("-two")) {        // Synonym for -n 2
           iterations = 2;
-        } else if (args[i].equals("-n")) {
-          // Run n times, showing the last iteration
+        } else if (args[i].equals("-n")) {          // Run n times, showing the last iteration
           iterations = Integer.parseInt(args[++i]);
+        } else if (args[i].equals("-converge")) {   // Run until times converge
+          converge = true;
+        } else if (args[i].equals("-max_iterations")) { // Max iterations for convergence
+          max_iterations = Integer.parseInt(args[++i]);
+        } else if (args[i].equals("-variance")) {   // Coeff. of variance to aim for
+          target_var = Double.parseDouble(args[++i])/100.0;
+        } else if (args[i].equals("-window")) {     // # iterations to average convergence over
+          window = Integer.parseInt(args[++i]);
         } else if (args[i].equals("-debug")) {
           Benchmark.verbose = true;
         } else if (args[i].equals("-preserve")) {
@@ -154,11 +201,37 @@ public class TestHarness {
             Benchmark b = (Benchmark) cons.newInstance(new Object[] {harness.config,scratch});
             
             boolean valid = true;
-            for (; iterations > 1; iterations--) 
-              valid = b.run(callback,size,false) && valid;   // beware order of evaluation!
-
-            valid = b.run(callback,size,true) && valid;   // beware order of evaluation!
-
+            if (converge) {
+              /*
+               * Run the benchmark using convergence 
+               */
+              long[] times = new long[window];
+              int n = 0;
+              
+              /* Warmup */
+              while (n < window || (n < max_iterations && coeff_of_var(times) > target_var) ) {
+                long start_time = System.currentTimeMillis();
+                valid = b.run(callback, size, false) && valid;
+                times[n%window] = System.currentTimeMillis() - start_time;
+                n++;
+                if (n >= window && verbose) {
+                  System.err.println("Variation "+two_dp.format(coeff_of_var(times)*100)+
+                          "% achieved after "+n+" iterations");
+                }
+              }
+              if (n < max_iterations) {
+                valid = b.run(callback, size, true) && valid; // beware order of evaluation!
+              } else {
+                System.err.println("Benchmark failed to converge.");
+              }
+            } else {
+              /*
+               * Run the benchmark for a set # of iterations
+               */
+              for (; iterations > 1; iterations--)
+                valid = b.run(callback, size, false) && valid; // beware order of evaluation!
+              valid = b.run(callback, size, true) && valid; // beware order of evaluation!
+            }            
             b.cleanup();
             
             if (!valid) {
@@ -196,15 +269,23 @@ public class TestHarness {
   private static void printUsage() {
     System.out.println("Usage: java Harness [options ...] [benchmarks ...]");
     System.out.println("    -c <callback>           Use class <callback> to bracket benchmark runs");
-    System.out.println("    -debug                  Verbose debugging information");
     System.out.println("    -h                      Print this help");
     System.out.println("    -i                      Display benchmark information");
+    System.out.println("    -s small|default|large  Size of input data");
+    System.out.println();
+    System.out.println("  Measurement methodology options");
+    System.out.println("    -converge               Allow benchmark times to converge before timing");
+    System.out.println("      -max_iterations <n>     Run a max of n iterations (default 20)");
+    System.out.println("      -variance <pct>         Target coefficient of variation (default 3.0)");
+    System.out.println("      -window <n>             Measure variance over n runs (default 3)");
     System.out.println("    -n <iter>               Run the benchmark <iter> times");
+    System.out.println("    -two                    Equivalent to -n 2");
+    System.out.println();
+    System.out.println("  Debugging options");
+    System.out.println("    -debug                  Verbose debugging information");
+    System.out.println("    -v                      Verbose output");
     System.out.println("    -noDigestOutput         Turn off SHA1 digest of stdout/stderr");
     System.out.println("    -preserve               Preserve output files (debug)");
-    System.out.println("    -s small|default|large  Size of input data");
-    System.out.println("    -two                    Run the benchmark twice (equivalent to -n 2)");
-    System.out.println("    -v                      Verbose output");
   }
   
   private static void rmdir(File dir) {
