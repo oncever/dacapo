@@ -61,8 +61,8 @@
 	<property name="itext.version" value="1.02b"/>
 	<property name="junit.version" value="3.8.1"/>
 	<property name="python.version" value="2.5b2"/>
-	<property name="xerces.version" value="2.8.0"/>
-	<property name="xerces._version" value="2_8_0"/>
+<!--	<property name="xerces.version" value="2.8.0"/><property name="xerces._version" value="2_8_0"/> -->
+	<property name="xerces.version" value="2.6.2"/><property name="xerces._version" value="2_6_2"/>
 
 	<!-- benchmark locations -->
 	<property name="antlr.url" value="http://www.antlr.org/download"/>
@@ -425,10 +425,13 @@
 	</target>
 
 
-	<target name="jython.source" depends="init.sources">
+	<target name="jython.source" depends="init.sources, python.source">
 		<get src="${jython.url}/jython_${jython.version}.jar"
      	dest="${sources}/jython_${jython.version}.jar"  
         usetimestamp="true"/>
+	</target>
+	
+	<target name="python.source" depends="init.sources">
 		<get src="${python.url}/Python-${python.version}.tgz"
      	dest="${sources}/Python-${python.version}.tgz"  
         usetimestamp="true"/>
@@ -890,7 +893,7 @@
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/pmd/*"/>
 	</target>
 	<!-- Build the pmd benchmark -->
-	<target name="pmd.benchmark" depends="xerces,junit" description="--> Build the pmd benchmark">
+	<target name="pmd.benchmark" depends="init,xerces,junit" description="--> Build the pmd benchmark">
 
 		<mkdir dir="${build_src}/pmd"/>
 		<property name="pmd-top" value="${build_src}/pmd/pmd-${pmd.version}"/>
