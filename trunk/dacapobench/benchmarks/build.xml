@@ -659,8 +659,24 @@
 			<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
 		</ant>
 	</target>
+	
+	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
+	<target name="eclipse.osgiclasses" depends="eclipse.benchmark">
+		<property name="osgihack" value="${build_src}/eclipse/osgihack"/>
+		<!-- unzip the jar -->
+		<unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+		<!-- copy out the class files -->
+		<copy todir="${build}">
+			<fileset dir="${osgihack}" includes="org/**/*"/>
+		</copy>
+		<!-- delete the directories -->
+		<delete dir="${osgihack}/org"/>
+		<!-- jar up the remainder -->
+		<zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+	</target>
+	
 	<!-- Create the eclipse data file -->
-	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin" description="--> build the eclipse data file">
+	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin,eclipse.osgiclasses" description="--> build the eclipse data file">
 		<!-- Install the test data -->
 		<zip destfile="${zipdata}/eclipse.zip">
 			<!--			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> -->
