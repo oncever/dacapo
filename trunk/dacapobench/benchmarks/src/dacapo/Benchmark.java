@@ -92,9 +92,6 @@ public abstract class Benchmark {
    */
   protected void prepare() throws Exception {
     unpackZipFileResource("data/"+config.name+".zip", scratch);
-    try {
-      new File(fileInScratch("prepare.timestamp")).createNewFile();
-    } catch (Exception e) {};
   }
   
   /**
