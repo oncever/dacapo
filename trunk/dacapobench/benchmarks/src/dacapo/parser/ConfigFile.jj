@@ -89,6 +89,7 @@ TOKEN :
 | < DESCRIPTION : "description" >
 | < DIGEST : "digest" >
 | < KEEP : "keep" >
+| < LICENSE : "license" >
 | < LINES : "lines" >
 | < LONG : "long" >
 | < METHOD : "method" >
@@ -191,7 +192,7 @@ void descElement(Config config) :
 String descId() :
 {}
 {
-  (<SHORT> | <LONG> | <COPYRIGHT> | <VERSION> | <URL>)
+  (<COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <URL> | <VERSION>)
   { return token.image; }
 }
 
