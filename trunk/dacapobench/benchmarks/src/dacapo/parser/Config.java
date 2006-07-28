@@ -208,6 +208,8 @@ public class Config {
     if (decorated) str.println("description");
     describe(str,decorated,"short",",");
     describe(str,decorated,"long",",");
+    describe(str,decorated,"author",",");
+    describe(str,decorated,"license",",");
     describe(str,decorated,"copyright",",");
     describe(str,decorated,"url",",");
     describe(str,decorated,"version",";");
