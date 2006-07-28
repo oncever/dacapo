@@ -82,6 +82,7 @@ MORE :
 TOKEN :
 {
   < ARGS : "args" >
+| < AUTHOR : "author" >
 | < BENCHMARK : "benchmark" >
 | < BYTES : "bytes" >
 | < CLASS : "class" >
@@ -192,7 +193,7 @@ void descElement(Config config) :
 String descId() :
 {}
 {
-  (<COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <URL> | <VERSION>)
+  (<AUTHOR> | <COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <URL> | <VERSION>)
   { return token.image; }
 }
 
