@@ -18,8 +18,10 @@ size large args "-q", "fop/test.fo", "-ps", "test.ps"
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
-  short	"An output-independant print formatter",
-  long	"fop takes an XSL-FO file, parses it and formats it, generating an encrypted pdf file",
+  short		"An output-independant print formatter",
+  long		"fop takes an XSL-FO file, parses it and formats it, generating an encrypted pdf file",
   copyright	"Copyright (C) 1999-2003 The Apache Software Foundation",
-  url        "http://xml.apache.org/fop/",
+  author 	"Apache Software Foundation",
+  license	"Apache Public License",
+  url       "http://xml.apache.org/fop/",
   version	"0.20.5";

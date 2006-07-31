@@ -2,38 +2,28 @@ benchmark luindex
   class dacapo.lucene.LuceneIndex;
 
 size small args "luindex/william/poetry" 
-  output "$stdout"         digest 0x9a8f7a5a54c3e6743df2a33dbdf315dfc0c4d6ad,
+  output /*"$stdout"         digest 0x9a8f7a5a54c3e6743df2a33dbdf315dfc0c4d6ad,*/
          "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
 	 "index/segments"  bytes 27;
 
 size default args "luindex/william","luindex/kjv"
-  output "$stdout"         digest 0xfbafe0f6f51445244656264328cb7abf2116e6d6,
+  output /*"$stdout"         digest 0xfbafe0f6f51445244656264328cb7abf2116e6d6,*/
          "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
 	 "index/segments"  bytes 28;
 
-/*
- * The input sets for 'large' are the same as for 'default', but
- * chopped into multiple overlapping files
- */
-/*size large args "luindex/william4" ,"luindex/kjv4"
-  output "$stdout" digest 0x7ff61623ec0ea6f427ceac2831accabaf6757cb5,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/_y3.cfs"   bytes 10754257,
-	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
-	 "index/segments"  bytes 28;
-*/
-/* for the momement default and large will be identicle.  the source data for large was too huge */
 size large args "luindex/william","luindex/kjv"
-  output "$stdout"         digest 0xfbafe0f6f51445244656264328cb7abf2116e6d6,
+  output /*"$stdout"         digest 0xfbafe0f6f51445244656264328cb7abf2116e6d6,*/
          "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
 	 "index/segments"  bytes 28;
 
 description
-  short	"A text indexing tool",
-  long	"Indexes a set of documents, the works of Shakespeare and the King James Bible",
+  short		"A text indexing tool",
+  long		"Indexes a set of documents, the works of Shakespeare and the King James Bible",
   copyright	"Copyright (C) The Apache Software Foundation",
-  url        "http://lucene.apache.org/",
+  author	"Lucene Project Management Committee",
+  license	"Apache Public License",
+  url       "http://lucene.apache.org/",
   version	"1.9.1";

@@ -24,7 +24,6 @@ public class XalanHarness extends Benchmark {
       xsl = "xalan/william.xsl";
     }
     for(int iRun=0; iRun<nRuns; iRun++){
-      long before = System.currentTimeMillis();
       File outFile = new File(scratch,"xalan.out."+iRun);
       String[] cmdArgs = new String[] {
         "-IN", fileInScratch(in),
@@ -32,11 +31,8 @@ public class XalanHarness extends Benchmark {
         "-OUT", outFile.getPath(),
         "-EDUMP"};
       org.apache.xalan.xslt.Process.main(cmdArgs);
-      System.out.println("Run " + iRun + " completed, " 
-			 + (System.currentTimeMillis() - before) + " ms");
-      //outFile.delete();
+      System.out.println("Run " + iRun + " completed");
     }
     System.out.println("Normal completion.");
-    System.out.println("Normal completion."+in.toString());
   }
 }

@@ -79,8 +79,10 @@ size large args "-o","./scratch",
 		   "antlr/java/xml.g";
 
 description
-    short	"A parser generator and translator generator",
-    long	"ANTLR parses one or more grammar files and generate a parser and lexical analyizer for each.",
-    copyright	"Public Domain",
-    url	"http://www.antlr.org",
-    version	"2.7.2";
+  short		"A parser generator and translator generator",
+  long		"ANTLR parses one or more grammar files and generate a parser and lexical analyizer for each.",
+  copyright	"Public Domain",
+  author	"Terence Parr",
+  license	"Public Domain",
+  url		"http://www.antlr.org",
+  version	"2.7.2";
