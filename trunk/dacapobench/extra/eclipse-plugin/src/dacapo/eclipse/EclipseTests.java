@@ -128,7 +128,6 @@ public class EclipseTests {
     env = null;
   }
   
-  
   /*
    * Set up full source workpsace (from zip file if necessary)
    */
@@ -137,22 +136,8 @@ public class EclipseTests {
     final IWorkspaceRoot workspaceRoot = workspace.getRoot();
     if (workspaceRoot.getProjects().length == 0) {
       createWorkspaceProjects(workspace, workspaceRoot);
-      //throw new IOException("Could not open workspace: "+workspaceRoot.getLocation().toFile().getCanonicalPath());
-      //unzipWorkspace(workspace, workspaceRoot);
     }
-    
-    // FIXME: this code was in the original test harness from the eclipse jdt, but it introduces a classpath problem for the build phase when using non-sun JREs...
-    /*		String jdkLib = Util.getJavaClassLibs()[0];
-     JavaCore.setClasspathVariable("JRE_LIB", new Path(jdkLib), null);
-     */		
-    // workaround bug 73253 Project references not set on project open 
-    if (DEBUG) System.out.print("Set projects classpaths...");
     ALL_PROJECTS = JavaCore.create(workspaceRoot).getJavaProjects();
-    int length = ALL_PROJECTS.length;
-    for (int i = 0; i < length; i++) {
-      ALL_PROJECTS[i].setRawClasspath(ALL_PROJECTS[i].getRawClasspath(), null);
-    }
-    if (DEBUG) System.out.println("done!");
   }
   
   private static void unzipWorkspace(IWorkspace workspace, final IWorkspaceRoot workspaceRoot) throws IOException, CoreException {
