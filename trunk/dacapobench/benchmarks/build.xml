@@ -38,6 +38,10 @@
 	<property name="zipdata" location="${build}/data"/>
 	<property name="config" location="cnf"/>
 	<property name="prune" location="prune"/>
+	
+	<!-- constraints -->
+	<property name="constraints.gnuclasspath" value="true"/>
+	
 	<!-- tested jres -->
 	<property name="j9" value="/opt/ibm-java2-i386-50"/>
 	<property name="jrockit" value="/opt/jrockit-R26.3.0-jdk1.5.0_06"/>
@@ -82,9 +86,11 @@
 	<property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
 	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j"/>
 	<!-- data downloads -->
-	<property name="shakespeare.url" value="http://www.dcs.shef.ac.uk/research/ilash/Moby/mthes.tar.Z"/>
-	<property name="bible.url" value="http://www.gutenberg.org/dirs/etext90/kjv10.zip"/>
-
+	<property name="shakespeare.txt.url" value="http://www.it.usyd.edu.au/~matty/Shakespeare/shakespeare.tar.gz"/>
+	<property name="bible.url" value="http://www.donlineinc.com/download/kjv.exe"/>
+	<property name="xalan.data.url" value="http://www-plan.cs.colorado.edu/henkel/projects/colorado_bench/xalan-20030321.tar.gz"/>
+	<property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
+	
 	<!-- External programs -->
 	<property name="make" location="/usr/bin/make"/>
 
@@ -374,7 +380,7 @@
 
 	<target name="sources" 
     description="Download sources from their original locations"
-    depends="antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,ps.source,xalan.source,xerces.source">
+    depends="init.sources,data.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,ps.source,xalan.source,xerces.source">
 	</target>
 
 	<target name="antlr.source" depends="init.sources">
@@ -478,6 +484,52 @@
        usetimestamp="true"/>
 	</target>
 
+	<!-- *************************************************************************** -->
+	<!--                        Fetch data                                           -->
+	<!-- *************************************************************************** -->
+
+	<target name="data.source" depends="luindex.data"/>
+	
+	<target name="luindex.data" depends="init">
+		<mkdir dir="${data}/luindex"/>
+		<mkdir dir="${data}/lundex/william"/>
+		<get src="${shakespeare.txt.url}" dest="${sources}/shakespeare.txt.tgz" usetimestamp="true"/>
+		<untar src="${sources}/shakespeare.txt.tgz" dest="${data}/luindex/william" compression="gzip"/>
+		<mkdir dir="${data}/luindex/kjv"/>
+		<get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
+		<unzip src="${sources}/kjv.zip" dest="${data}/luindex/kjv"/>
+	</target>
+	
+	<target name="xalan.data" depends="init">
+		<mkdir dir="${data}/xalan"/>
+		<!--
+		<mkdir dir="${data}/xalan/tmp"/>
+		<get src="${shakespeare.xml.url}" dest="${sources}/shakespeare.xml.zip" usetimestamp="true"/>
+		<unzip src="${sources}/shakespeare.xml.zip" dest="${data}/xalan/tmp"/>
+		<delete file="${data}/xalan/william.xml"/>
+		<concat destfile="${data}/xalan/william.xml">
+		    <fileset dir="${data}/xalan/tmp" includes="*.xml"/>
+		</concat>
+		<copy file="${data}/xalan/tmp/play.dtd" todir="${data}/xalan/"/>
+		<delete dir="${data}/xalan/tmp"/> 
+		-->
+		<get src="${xalan.data.url}" dest="${sources}/xalan.data.tgz" usetimestamp="true"/>
+		<untar src="${sources}/xalan.data.tgz" dest="${data}/xalan" compression="gzip">
+			<patternset>
+				<include name="xalan-j_2_2_D9/bench/william.xml"/>
+				<include name="xalan-j_2_2_D9/bench/william.xsl"/>
+				<include name="xalan-j_2_2_D9/bench/xslbenchdream.xml"/>
+				<include name="xalan-j_2_2_D9/bench/xslbench3.xsl"/>
+			</patternset>
+		</untar>
+		<copy todir="${data}/xalan/">
+	    	<fileset dir="${data}/xalan/xalan-j_2_2_D9/bench">
+	      		<include name="*"/>
+	    	</fileset>
+		</copy>
+		<delete dir="${data}/xalan/xalan-j_2_2_D9"/>
+	</target>
+	
 	<!-- *************************************************************************** -->
 	<!--                            Build                                            -->
 	<!-- *************************************************************************** -->
@@ -631,7 +683,7 @@
 	<target name="eclipse" depends="eclipse.data,eclipse.harness" description="--> build the eclipse benchmark"/>
 	<!-- Build the eclipse dacapo harness -->
 	<target name="eclipse.harness" depends="init,harness" description="--> build the eclipse harness">
-		<javac srcdir="${bmsrc}" classpath="${build}:${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar" destdir="${build}" includes="dacapo/eclipse/*.java"/>
+		<javac srcdir="${bmsrc}" classpath="${build}:${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar:${build_src}/eclipse/eclipse/plugins/org.eclipse.core.runtime_${eclipse.version}.jar:${build_src}/eclipse/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar" destdir="${build}" includes="dacapo/eclipse/*.java"/>
 	</target>
 	<!-- Build the eclipse benchmark -->
 	<target name="eclipse.benchmark" depends="init" description="--> build the eclipse benchmark">
@@ -660,6 +712,11 @@
 		</ant>
 	</target>
 	
+	<!-- only delete the directories if not constrained by Jikes RVM -->
+	<target name="eclipse.clearosgi" unless="constraints.jikesrvm">
+		<delete dir="${osgihack}/org"/>
+	</target>
+	
 	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
 	<target name="eclipse.osgiclasses" depends="eclipse.benchmark">
 		<property name="osgihack" value="${build_src}/eclipse/osgihack"/>
@@ -669,10 +726,12 @@
 		<copy todir="${build}">
 			<fileset dir="${osgihack}" includes="org/**/*"/>
 		</copy>
-		<!-- delete the directories -->
+		<!-- conditionally clean out the stuff we've duplicated -->
+	<!--	<antcall target="eclipse.clearosgi"/> -->
 		<delete dir="${osgihack}/org"/>
 		<!-- jar up the remainder -->
 		<zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+		<delete dir="${osgihack}"/>
 	</target>
 	
 	<!-- Create the eclipse data file -->

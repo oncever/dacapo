@@ -1,56 +1,19 @@
 benchmark chart class dacapo.chart.ChartHarness;
 
 size small   args "-p","compress","small","chart/compress.dat"
-  output "compress-tgt-ptr-prf-time.pdf" bytes 8887,
-         "compress-src-ptr-prf-time.pdf" bytes 8183,
-         "compress-dst-ptr-prf-time.pdf" bytes 19861,
-         "compress-tgt-mut-prf-time.pdf" bytes 9029,
-         "compress-src-mut-prf-time.pdf" bytes 8656,
-         "compress-dst-mut-prf-time.pdf" bytes 14128,
-         "compress-heap-comp-b.pdf"      bytes 7694,
-         "compress-heap-comp-a.pdf"      bytes 5806,
-         "compress-tgt-ptr-inf-time.pdf" bytes 11537,
-         "compress-src-ptr-inf-time.pdf" bytes 10559,
-         "compress-dst-ptr-inf-time.pdf" bytes 25675,
-         "compress-tgt-mut-inf-time.pdf" bytes 9100,
-         "compress-src-mut-inf-time.pdf" bytes 8443,
-         "compress-dst-mut-inf-time.pdf" bytes 14195;
+  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
      
 size default args "-p","javac","small","chart/javac.dat"
-  output "javac-tgt-ptr-prf-time.pdf" bytes 141173,
-         "javac-src-ptr-prf-time.pdf" bytes 146266,
-         "javac-dst-ptr-prf-time.pdf" bytes 421378,
-         "javac-tgt-mut-prf-time.pdf" bytes 239221,
-         "javac-src-mut-prf-time.pdf" bytes 236374,
-         "javac-dst-mut-prf-time.pdf" bytes 491659,
-         "javac-heap-comp-b.pdf"      bytes 193289,
-         "javac-heap-comp-a.pdf"      bytes 172745,
-         "javac-tgt-ptr-inf-time.pdf" bytes 148055,
-         "javac-src-ptr-inf-time.pdf" bytes 154112,
-         "javac-dst-ptr-inf-time.pdf" bytes 441160,
-         "javac-tgt-mut-inf-time.pdf" bytes 251384,
-         "javac-src-mut-inf-time.pdf" bytes 242977,
-         "javac-dst-mut-inf-time.pdf" bytes 495482;
+  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 	  
 size large   args "-p","javac","large","chart/javac.dat"
-  output "javac-tgt-ptr-prf-time.pdf" bytes 141173,
-         "javac-src-ptr-prf-time.pdf" bytes 146266,
-         "javac-dst-ptr-prf-time.pdf" bytes 421378,
-         "javac-tgt-mut-prf-time.pdf" bytes 239221,
-         "javac-src-mut-prf-time.pdf" bytes 236374,
-         "javac-dst-mut-prf-time.pdf" bytes 491659,
-         "javac-heap-comp-b.pdf"      bytes 193289,
-         "javac-heap-comp-a.pdf"      bytes 172745,
-         "javac-tgt-ptr-inf-time.pdf" bytes 148055,
-         "javac-src-ptr-inf-time.pdf" bytes 154112,
-         "javac-dst-ptr-inf-time.pdf" bytes 441160,
-         "javac-tgt-mut-inf-time.pdf" bytes 251384,
-         "javac-src-mut-inf-time.pdf" bytes 242977,
-         "javac-dst-mut-inf-time.pdf" bytes 495482;
+  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
-  short	"An graph plotting toolkit and pdf renderer",
-  long	"jfreechart plots a number of complex line graphs and renders them as pdf via itext",
+  short		"A graph plotting toolkit and pdf renderer",
+  long		"jfreechart plots a number of complex line graphs and renders them as pdf via itext",
   copyright	"(C)opyright 2000-2004, by Object Refinery Limited and Contributors; Copyright 2000, 2001, 2002 by Bruno Lowagie",
-  url        "http//www.jfree.org, http://www.lowagie.com/iText/",
+  author    "David Gilbert, Bruno Lowagie and Paulo Soares",
+  license   "LGPL and MPL",
+  url       "http//www.jfree.org, http://www.lowagie.com/iText/",
   version	"0.9.21, 1.0b";

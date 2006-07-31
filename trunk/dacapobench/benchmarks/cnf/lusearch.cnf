@@ -114,8 +114,10 @@ size large args "-index","lusearch/index-default", "-threads", "64", "-queries",
 	 "lusearch.out63" digest 0x63a7b38aca2f8e3c41ae69a20132a7903877c1e9;
 
 description
-  short	"A text search tool",
-  long	"Text search of keywords over a corpus of data comprising the works of Shakespeare and the King James bible",
+  short		"A text search tool",
+  long		"Text search of keywords over a corpus of data comprising the works of Shakespeare and the King James bible",
   copyright	"Apache Software Foundation, Apache license v2.0",
-  url        "http://lucene.apache.org/",
+  author	"Lucene Project Management Committee",
+  license	"Apache Public License",
+  url       "http://lucene.apache.org/",
   version	"1.9.1";

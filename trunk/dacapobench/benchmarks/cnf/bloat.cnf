@@ -30,8 +30,10 @@ size huge args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
-  short	"A Bytecode-level optimization and analysis tool for Java",
-  long	"BLOAT analyzes and optimizes some of its own class files",
+  short		"A Bytecode-level optimization and analysis tool for Java",
+  long		"BLOAT analyzes and optimizes some of its own class files",
   copyright	"Copyright (c) 1997-2001 Purdue Research Foundation of Purdue University",
+  author	"Nathaniel Nystrom and David Whitlock",
+  license   "BSD-style",
   url    	"http://www.cs.purdue.edu/s3/projects/bloat/",
   version	"1.0";

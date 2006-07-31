@@ -72,8 +72,10 @@ size large args "@pmd/large.lst","text",
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
-  short	"A source code analyzer for Java",
-  long	"pmd analyzes a list of Java classes for a range of source code problems",
+  short		"A source code analyzer for Java",
+  long		"pmd analyzes a list of Java classes for a range of source code problems",
   copyright	"Copyright (c) 2003, InfoEther, LLC",
-  url	"http://pmd.sourceforge.net/",
+  author	"Tom Copeland",
+  license	"BSD-style",
+  url		"http://pmd.sourceforge.net/",
   version	"1.8";
