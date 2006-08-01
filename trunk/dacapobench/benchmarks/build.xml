@@ -86,7 +86,7 @@
 	<property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
 	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j"/>
 	<!-- data downloads -->
-	<property name="shakespeare.txt.url" value="http://www.it.usyd.edu.au/~matty/Shakespeare/shakespeare.tar.gz"/>
+	<property name="shakespeare.url" value="http://www.it.usyd.edu.au/~matty/Shakespeare/shakespeare.tar.gz"/>
 	<property name="bible.url" value="http://www.donlineinc.com/download/kjv.exe"/>
 	<property name="xalan.data.url" value="http://www-plan.cs.colorado.edu/henkel/projects/colorado_bench/xalan-20030321.tar.gz"/>
 	<property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
@@ -484,52 +484,13 @@
        usetimestamp="true"/>
 	</target>
 
-	<!-- *************************************************************************** -->
-	<!--                        Fetch data                                           -->
-	<!-- *************************************************************************** -->
-
-	<target name="data.source" depends="luindex.data"/>
-	
-	<target name="luindex.data" depends="init">
-		<mkdir dir="${data}/luindex"/>
-		<mkdir dir="${data}/lundex/william"/>
-		<get src="${shakespeare.txt.url}" dest="${sources}/shakespeare.txt.tgz" usetimestamp="true"/>
-		<untar src="${sources}/shakespeare.txt.tgz" dest="${data}/luindex/william" compression="gzip"/>
-		<mkdir dir="${data}/luindex/kjv"/>
+	<target name="data.source" depends="init.sources">
+		<get src="${shakespeare.url}" dest="${sources}/shakespeare.tgz" usetimestamp="true"/>
 		<get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
-		<unzip src="${sources}/kjv.zip" dest="${data}/luindex/kjv"/>
-	</target>
-	
-	<target name="xalan.data" depends="init">
-		<mkdir dir="${data}/xalan"/>
-		<!--
-		<mkdir dir="${data}/xalan/tmp"/>
-		<get src="${shakespeare.xml.url}" dest="${sources}/shakespeare.xml.zip" usetimestamp="true"/>
-		<unzip src="${sources}/shakespeare.xml.zip" dest="${data}/xalan/tmp"/>
-		<delete file="${data}/xalan/william.xml"/>
-		<concat destfile="${data}/xalan/william.xml">
-		    <fileset dir="${data}/xalan/tmp" includes="*.xml"/>
-		</concat>
-		<copy file="${data}/xalan/tmp/play.dtd" todir="${data}/xalan/"/>
-		<delete dir="${data}/xalan/tmp"/> 
-		-->
 		<get src="${xalan.data.url}" dest="${sources}/xalan.data.tgz" usetimestamp="true"/>
-		<untar src="${sources}/xalan.data.tgz" dest="${data}/xalan" compression="gzip">
-			<patternset>
-				<include name="xalan-j_2_2_D9/bench/william.xml"/>
-				<include name="xalan-j_2_2_D9/bench/william.xsl"/>
-				<include name="xalan-j_2_2_D9/bench/xslbenchdream.xml"/>
-				<include name="xalan-j_2_2_D9/bench/xslbench3.xsl"/>
-			</patternset>
-		</untar>
-		<copy todir="${data}/xalan/">
-	    	<fileset dir="${data}/xalan/xalan-j_2_2_D9/bench">
-	      		<include name="*"/>
-	    	</fileset>
-		</copy>
-		<delete dir="${data}/xalan/xalan-j_2_2_D9"/>
 	</target>
-	
+
+
 	<!-- *************************************************************************** -->
 	<!--                            Build                                            -->
 	<!-- *************************************************************************** -->
@@ -946,11 +907,16 @@
              dest="${build}"/>
 
 		<!-- Install the luindex test data -->
-		<!--		<zip basedir="${data}" includes="luindex/**" destfile="${zipdata}/luindex.zip"/> -->
+		<mkdir dir="${data}/luindex"/>
+		<mkdir dir="${data}/luindex/william"/>
+		<untar src="${sources}/shakespeare.tgz" dest="${data}/luindex/william" compression="gzip"/>
+		<mkdir dir="${data}/luindex/kjv"/>
+		<unzip src="${sources}/kjv.zip" dest="${data}/luindex/kjv"/>
 		<zip destfile="${zipdata}/luindex.zip">
 			<fileset dir="${data}/" includes="luindex/kjv/**/*"/>
 			<fileset dir="${data}/" includes="luindex/william/**/*"/>
 		</zip>
+		<delete dir="${data}/luindex"/>
 
 		<!-- Install the lusearch test data -->
 		<zip destfile="${zipdata}/lusearch.zip">
@@ -1078,13 +1044,36 @@
 		<!-- required for later versions of xalan -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/serializer.jar" dest="${build}"/>
 
-		<!-- Install the test data -->
-		<zip basedir="${data}"
-           includes="xalan/**"
-           destfile="${zipdata}/xalan.zip"/>
+		<!--
+		<mkdir dir="${data}/xalan/tmp"/>
+		<unzip src="${sources}/shakespeare.xml.zip" dest="${data}/xalan/tmp"/>
+		<delete file="${data}/xalan/william.xml"/>
+		<concat destfile="${data}/xalan/william.xml">
+		    <fileset dir="${data}/xalan/tmp" includes="*.xml"/>
+		</concat>
+		<copy file="${data}/xalan/tmp/play.dtd" todir="${data}/xalan/"/>
+		<delete dir="${data}/xalan/tmp"/> 
+		-->
 
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/xalan/*"/>
+		<!-- Install the test data -->
+		<mkdir dir="${data}/xalan"/>
+		<untar src="${sources}/xalan.data.tgz" dest="${data}/xalan" compression="gzip">
+			<patternset>
+				<include name="xalan-j_2_2_D9/bench/william.xml"/>
+				<include name="xalan-j_2_2_D9/bench/william.xsl"/>
+				<include name="xalan-j_2_2_D9/bench/xslbenchdream.xml"/>
+				<include name="xalan-j_2_2_D9/bench/xslbench3.xsl"/>
+			</patternset>
+		</untar>
+		<copy todir="${data}/xalan/">
+	    	<fileset dir="${data}/xalan/xalan-j_2_2_D9/bench">
+	      		<include name="*"/>
+	    	</fileset>
+		</copy>
+		<zip basedir="${data}" includes="xalan/**" destfile="${zipdata}/xalan.zip"/>
+		<delete dir="${data}/xalan"/>
+
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/xalan/*"/>
 	</target>
 
 
