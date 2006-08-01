@@ -9,9 +9,9 @@
 <body>
 <h2>Known Problems</h2>
 <ul>
-  <li>The benchmarks 'chart' and 'batik' currently do not run with
-      JikesRVM (2.4.1) or Kaffe (1.1.6) for what appear to be class-library
-      related issues.<p>
+  <li>The 'chart' benchmark will not run on VMs which use GNU Classpath 0.91 or earlier.<p>
+  </li>
+  <li>The 'eclipse' benchmark requires a regular jre in order to be able to perform its build tasks (it does needs to be able to compile against standard libraries).  Some JVMs do not comply with eclipse's expectations.  A simple work-around is to specify a jre for eclipse to compile against.  If the jvm used to run the benchmarks does not comply with eclipse's expectations, an error message will be produced with an explanation of the suggested work around (setting -Declipse.java.home=xxx on the command line).<p>
   </li>
   <li>The benchmarks run with the Sun jdk 1.4 and 1.5, but do not build with
       1.5.  This is a limitation of some of the benchmarks themselves.<p>
@@ -37,8 +37,6 @@ in particular, ensuring that the <span style="font-family: monospace;">--disable
 argument is <span style="font-style: italic;">not </span>set when
 classpath is built (ie you want the gtk-peer enabled).
 <p>
-(Updated 10/4/05) This no longer seems to be sufficient - JikesRVM (and Kaffe 1.1.6) no longer
-seem to run batik or chart even with gtk support installed.<p>
 </li>
     <li>Version beta041020 did not include sufficient classes for Jikes
 RVM to run xalan.&nbsp; This is fixed in subsequent releases.<br>
