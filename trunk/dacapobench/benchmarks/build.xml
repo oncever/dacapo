@@ -615,7 +615,7 @@
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/chart/*"/>
 	</target>
 	<!-- Build the chart benchmark -->
-	<target name="chart.benchmark" depends="init" description="--> build the jFreeChart benchmark">
+	<target name="chart.benchmark" depends="init,harness" description="--> build the jFreeChart benchmark">
 		<property name="chart-top" value="${build_src}/chart/jfreechart-${chart.version}"/>
 
 		<!-- Un-tar the source distribution -->
