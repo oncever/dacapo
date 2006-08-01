@@ -11,13 +11,13 @@ size default args "luindex/william","luindex/kjv"
   output /*"$stdout"         digest 0xfbafe0f6f51445244656264328cb7abf2116e6d6,*/
          "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
-	 "index/segments"  bytes 28;
+	 "index/segments"  bytes 29;
 
 size large args "luindex/william","luindex/kjv"
   output /*"$stdout"         digest 0xfbafe0f6f51445244656264328cb7abf2116e6d6,*/
          "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
-	 "index/segments"  bytes 28;
+	 "index/segments"  bytes 29;
 
 description
   short		"A text indexing tool",
