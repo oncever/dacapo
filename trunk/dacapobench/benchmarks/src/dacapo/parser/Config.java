@@ -215,6 +215,10 @@ public class Config {
     describe(str,decorated,"version",";");
   }
   
+  public String getDesc(String item) {
+    return (String)desc.get(item);
+  }
+  
   public void print(PrintStream str) {
     str.print("benchmark "+name);
     if (className != null)
