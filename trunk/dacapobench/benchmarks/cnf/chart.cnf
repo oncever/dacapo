@@ -16,4 +16,6 @@ description
   author    "David Gilbert, Bruno Lowagie and Paulo Soares",
   license   "LGPL and MPL",
   url       "http//www.jfree.org, http://www.lowagie.com/iText/",
-  version	"0.9.21, 1.0b";
+  version	"0.9.21, 1.0b",
+  threads	"Single threaded",
+  repeats	"Single iteration plots 14 distinct graphs";

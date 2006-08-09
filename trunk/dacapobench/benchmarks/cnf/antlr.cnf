@@ -85,4 +85,6 @@ description
   author	"Terence Parr",
   license	"Public Domain",
   url		"http://www.antlr.org",
-  version	"2.7.2";
+  version	"2.7.2",
+  threads	"Single threaded",
+  repeats	"Two iterations, each parses 44 distinct grammar files";

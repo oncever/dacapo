@@ -78,4 +78,6 @@ description
   author	"Tom Copeland",
   license	"BSD-style",
   url		"http://pmd.sourceforge.net/",
-  version	"1.8";
+  version	"1.8",
+  threads	"Single threaded",
+  repeats	"Single iteration checks a single large source file against 18 coding rules";

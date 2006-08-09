@@ -16,7 +16,7 @@ import dacapo.parser.Config;
  *
  */
 public class LatexDescriptions {
-  private static String[] items = { "short","long","author","license","copyright","url","version" } ;
+  private static String[] items = { "short","long","threads","repeats","author","license","copyright","url","version" } ;
   
   public static void main(String[] args) {
     try {

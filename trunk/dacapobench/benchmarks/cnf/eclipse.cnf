@@ -20,5 +20,7 @@ description
   author	"Eclipse Foundation",
   license	"Eclipse Public License",
   url 		"http://www.eclipse.org/",
-  version	"3.1.2";
+  version	"3.1.2",
+  threads	"Workload is single threaded, but Eclipse uses multiple threads internally",
+  repeats	"Single iteration, performs multiple distinct Eclipse tasks";
 

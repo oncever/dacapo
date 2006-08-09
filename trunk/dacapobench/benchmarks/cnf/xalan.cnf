@@ -20,4 +20,6 @@ description
   author	"Apache Software Foundation",
   license	"Apache Software License",
   url		"http://xml.apache.org/xalan-j/",
-  version	"2.4.1";
+  version	"2.4.1",
+  threads	"Single threaded",
+  repeats	"8 iterations, each transforms a single large XML document (the works of Shakespeare)";
