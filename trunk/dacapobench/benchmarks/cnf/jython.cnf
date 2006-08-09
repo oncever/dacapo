@@ -20,4 +20,6 @@ description
   author	"Jim Hugunin and Barry Warsaw",
   license	"Jython Software License.",
   url		"http://www.jython.org/",
-  version	"2.1";
+  version	"2.1",
+  threads	"Single threaded",
+  repeats	"Single iteration runs a single iteration of the pybench python benchmark";

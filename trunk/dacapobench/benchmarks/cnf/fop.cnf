@@ -24,4 +24,6 @@ description
   author 	"Apache Software Foundation",
   license	"Apache Public License",
   url       "http://xml.apache.org/fop/",
-  version	"0.20.5";
+  version	"0.20.5",
+  threads	"Single threaded",
+  repeats	"Single iteration, renders a single XSL-FO file";

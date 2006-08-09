@@ -36,4 +36,6 @@ description
   author	"The HSQLDB Development Group",
   license	"The HSQLDB license.",
   url		"http://hsqldb.sourceforge.net",
-  version	"1.8.0.4";
+  version	"1.8.0.4",
+  threads	"20 client threads",
+  repeats	"40 transactions per client";

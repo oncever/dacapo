@@ -99,6 +99,8 @@ TOKEN :
 | < SIZE : "size" >
 | < URL : "url" >
 | < VERSION : "version" >
+| < THREADS : "threads" >
+| < REPEATS : "repeats" >
 }
 
 /* Literals */
@@ -193,7 +195,7 @@ void descElement(Config config) :
 String descId() :
 {}
 {
-  (<AUTHOR> | <COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <URL> | <VERSION>)
+  (<AUTHOR> | <COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <THREADS> | <REPEATS> | <URL> | <VERSION>)
   { return token.image; }
 }
 

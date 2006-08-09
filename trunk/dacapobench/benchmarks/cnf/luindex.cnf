@@ -26,4 +26,6 @@ description
   author	"Lucene Project Management Committee",
   license	"Apache Public License",
   url       "http://lucene.apache.org/",
-  version	"1.9.1";
+  version	"1.9.1",
+  threads	"Single threaded",
+  repeats	"Single iteration indexes two multi-file documents";
