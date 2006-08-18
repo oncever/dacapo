@@ -73,7 +73,7 @@
 	<property name="batik.url" value="http://archive.apache.org/dist/xml/batik"/>
 	<property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
 	<property name="chart.url" value="http://easynews.dl.sourceforge.net/sourceforge/jfreechart"/>
-	<property name="eclipse.url" value="http://download2.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
+	<property name="eclipse.url" value="http://download.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
 	<property name="fop.url" value="http://archive.apache.org/dist/xml/fop"/>
 	<property name="hsqldb.url" value="http://easynews.dl.sourceforge.net/sourceforge/hsqldb"/>
 	<property name="jython.url" value="http://easynews.dl.sourceforge.net/sourceforge/jython"/>
@@ -83,7 +83,7 @@
 	<!-- auxilary downloads -->
 	<property name="itext.url" value="http://easynews.dl.sourceforge.net/sourceforge/itext"/>
 	<property name="junit.url" value="http://easynews.dl.sourceforge.net/sourceforge/junit"/>
-	<property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
+	<property name="python.url" value="http://www.python.org/ftp/python/2.5/prev"/>
 	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j"/>
 	<!-- data downloads -->
 	<property name="shakespeare.url" value="http://www.it.usyd.edu.au/~matty/Shakespeare/shakespeare.tar.gz"/>
@@ -131,7 +131,7 @@
          ================================= -->
 	<target name="bms" depends="compile" description="compile the benchmarks">
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${bmsrc}" destdir="${build}" excludes="${bmsrc}/dacapo/eclipse/src/**/*"/>
+		<javac srcdir="${bmsrc}" destdir="${build}"/>
 
 	</target>
 
