@@ -1,11 +1,11 @@
 /*
  * Style sheet for GC benchmark pages
- *
+ *http://www.dacapobench.org/images/music.jpg
  * Robin Garner, ANU, 2006
  */
 body {
 	background-image: url("http://cs.anu.edu.au/people/Robin.Garner/private/mustext.jpg");
-    	font-family: arial;
+    	font-family: arial, sans-serif;
 }
 p { 	color: black;
 }
@@ -15,5 +15,5 @@ body.menu {
 	/*background-color: rgb(40,40,180); */
 	background-color: rgb(240,250,235);
 	color: rgb(0,0,0);
-    	font-family: arial;
+    	font-family: arial, sans-serif;
 }
