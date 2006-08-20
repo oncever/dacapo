@@ -340,6 +340,7 @@
 		<delete dir="${build_src}/xalan/xalan-j_2_4_1"/>
 		<delete dir="${build_src}/xalan/xalan-j_${xalan.version}"/>
 		<delete dir="${build_src}/xerces"/>
+		<delete dir="${extra}/eclipse-plugin/@dot"/>
 		<delete dir="cachedir"/>
 		<!-- Jython's mess -->
 		<delete dir="scratch"/>
