@@ -9,9 +9,11 @@
 <body>
 <h2>Known Problems</h2>
 <ul>
-  <li>The 'chart' benchmark will not run on VMs which use GNU Classpath 0.91 or earlier.<p>
+  <li>The <b>'chart'</b> benchmark will not run on VMs which use GNU Classpath 0.91 or earlier.<p>
   </li>
-  <li>The 'eclipse' benchmark requires a regular jre in order to be able to perform its build tasks (it does needs to be able to compile against standard libraries).  Some JVMs do not comply with eclipse's expectations.  A simple work-around is to specify a jre for eclipse to compile against.  If the jvm used to run the benchmarks does not comply with eclipse's expectations, an error message will be produced with an explanation of the suggested work around (setting -Declipse.java.home=xxx on the command line).<p>
+  <li>The <b>'eclipse'</b> benchmark requires a regular, Sun-like jre in order to be able to perform its build tasks (it needs to be able to compile against standard libraries such as 'rt.jar').  Some JVMs do not comply with eclipse's expectations.  A simple work-around is to specify a jre for eclipse to compile against.  If the jvm used to run the benchmarks does not comply with eclipse's expectations, an error message will be produced with an explanation of the suggested work around (setting -Declipse.java.home=xxx on the command line to point to an orthodox jre, whose libraries will be used).<p>
+  </li>
+  <li>The <b>'jython'</b> benchmark has been reported to fail bytecode verification on an internal product JVM.  We have not yet confirmed whether this is a problem with jython or just that JVM.  The jython interpreter dynamically generates bytecodes, and apparently it is these that are failing verification.<p>
   </li>
   <li>The benchmarks run with the Sun jdk 1.4 and 1.5, but do not build with
       1.5.  This is a limitation of some of the benchmarks themselves.<p>
