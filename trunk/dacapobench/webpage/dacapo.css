@@ -4,16 +4,18 @@
  * Robin Garner, ANU, 2006
  */
 body {
-	background-image: url("http://cs.anu.edu.au/people/Robin.Garner/private/mustext.jpg");
+	background-image: none;	
+/*	background-image: url("http://dacapobench.org/images/music-faint.png"); */
+	background-color: rgb(255,255,255);
+	color: rgb(0,0,0);
     	font-family: arial, sans-serif;
 }
 p { 	color: black;
 }
 
 body.menu {
-	/* background-image: none; */
-	/*background-color: rgb(40,40,180); */
-	background-color: rgb(240,250,235);
+	background-image: url("http://dacapobench.org/images/music.png");
+	background-color: rgb(255,255,255);
 	color: rgb(0,0,0);
     	font-family: arial, sans-serif;
 }
