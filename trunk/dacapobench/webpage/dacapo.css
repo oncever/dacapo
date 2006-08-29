@@ -14,7 +14,8 @@ p { 	color: black;
 }
 
 body.menu {
-	background-image: url("http://dacapobench.org/images/music.png");
+	background-image: none;	
+/*	background-image: url("http://dacapobench.org/images/music.png"); */
 	background-color: rgb(255,255,255);
 	color: rgb(0,0,0);
     	font-family: arial, sans-serif;
