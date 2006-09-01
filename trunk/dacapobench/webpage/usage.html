@@ -7,18 +7,28 @@
 </head>
 
 <body>
+<h1>Usage</h1>
+Our suite will evolve to maintain its relevance. It is therefore
+<span style="color: rgb(204, 0, 0); font-style: italic;"> essential that
+the version number associated with the release be cited in any use of
+the benchmark,</span> and we ask that you please cite the 2006 OOPSLA paper describing the suite:
+<ul>
+<font size=-2>
+Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur, R., Diwan, A., Feinberg, D., Frampton, D., Guyer, S. Z., Hirzel, M., Hosking, A., Jump, M., Lee, H., Moss, J. E. B., Phansalkar, A., Stefanovic, D., VanDrunen, T., von Dincklage, D., and Wiedermann, B. <b>The DaCapo Benchmarks: Java Benchmarking Development and Analysis</b>, <i>OOPSLA '06: Proceedings of the 21st annual ACM SIGPLAN conference on Object-Oriented Programing, Systems, Languages, and Applications</i>, (Portland, OR, USA, October 22-26, 2006) (<a href="download/dacapo-oopsla-2006.pdf">pdf</a>, <a href="cite.html">BibTeX</a>).
+</font>
+</ul>
 <h2>Running benchmarks</h2>
-To run one of the benchmarks, use the command
-<pre>java -jar dacapo-beta&lt;date&gt;.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-<flags>] &lt;bm&gt; [&lt;bm2&gt;, ...]</pre>
+To run one of the benchmarks, use the command:<p>
+<span style="font-family: monospace;">java -jar dacapo-beta&lt;date&gt;.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-<flags>] &lt;bm&gt; [&lt;bm2&gt;, ...]</span>
 <pre><br>where:</pre>
-<table cellpadding="2" cellspacing="2" border="0" style="text-align: left; width: 100%;">
+<table cellpadding="2" cellspacing="2" border="0" style="text-align: left; font-family: monospace;">
   <tbody>
     <tr>
       <td style="vertical-align: top;">
       <pre><b>-s</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>specifies the workload size (small, default, large)</pre>
+      specifies the workload size (small, default, large)
       </td>
     </tr>
     <tr>
@@ -26,8 +36,8 @@ To run one of the benchmarks, use the command
       <pre><b>-c</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>specifies the name of a callback class which extends dacapo.Callback, 
-allowing hooks for benchmark start, end, warmup start, and warm up end</pre>
+      specifies the name of a callback class which extends dacapo.Callback, 
+allowing hooks for benchmark start, end, warmup start, and warm up end
       </td>
     </tr>
     <tr>
@@ -35,7 +45,7 @@ allowing hooks for benchmark start, end, warmup start, and warm up end</pre>
       <pre><b>-h</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>prints a usage message</pre>
+      prints a usage message
       </td>
     </tr>
     <tr>
@@ -43,8 +53,8 @@ allowing hooks for benchmark start, end, warmup start, and warm up end</pre>
       <pre><b>-n &lt;num></pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>Number of iterations.  The first (n-1) are warmup iterations, 
-and the last one is timed.</pre>
+      Number of iterations.  The first (n-1) are warmup iterations, 
+and the last one is timed.
       </td>
     </tr>
     <tr>
@@ -52,8 +62,8 @@ and the last one is timed.</pre>
       <pre><b>-i</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>print information about the benchmark(s), including brief description, urls,
-copyright and version</pre>
+      print information about the benchmark(s), including brief description, urls,
+copyright and version
       </td>
     </tr>
     <tr>
@@ -61,8 +71,8 @@ copyright and version</pre>
       <pre><b>-scratch scratch-dir</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>Specify a scratch directory for temporary output files.  If it exists, the harness
-will delete and re-create it.</pre>
+      Specify a scratch directory for temporary output files.  If it exists, the harness
+will delete and re-create it.
       </td>
     </tr>
     <tr>
@@ -70,7 +80,7 @@ will delete and re-create it.</pre>
       <pre><b>-debug</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>debugging output (probably only of interest to maintainers)</pre>
+      debugging output (probably only of interest to maintainers)
       </td>
     </tr>
     <tr>
@@ -78,7 +88,7 @@ will delete and re-create it.</pre>
       <pre><b>-noDigestOutput</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>Disable digest validation of standard output and error streams.</pre>
+      Disable digest validation of standard output and error streams.
       </td>
     </tr>
     <tr>
@@ -86,7 +96,7 @@ will delete and re-create it.</pre>
       <pre><b>-preserve</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>preserve output files (probably only of interest to maintainers)</pre>
+      preserve output files (probably only of interest to maintainers)
       </td>
     </tr>
     <tr>
@@ -94,7 +104,7 @@ will delete and re-create it.</pre>
       <pre><b>-v</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>verbose output (probably only of interest to maintainers)</pre>
+      verbose output (probably only of interest to maintainers)
       </td>
     </tr>
     <tr>
@@ -102,8 +112,8 @@ will delete and re-create it.</pre>
       <pre><b>&lt;bm&gt;</pre>
       </td>
       <td style="vertical-align: top;">
-      <pre>a list of benchmarks to execute {antlr, bloat, chart, eclipse, fop, hsqldb, jython, 
-lusearch, luindex, pmd, xalan}</pre>
+      a list of benchmarks to execute {antlr, bloat, chart, eclipse, fop, hsqldb, jython, 
+lusearch, luindex, pmd, xalan}
       </td>
     </tr>
   </tbody>
@@ -119,7 +129,7 @@ writeable by the current user.
 The harness allows for pluggable callbacks which are executed before and after
 benchmark execution.  These allow (for example) JVM-specific statistics collection
 to be started and stopped.
-<a href="download/releases/beta/MyCallback.java">Here</a>
+<a href="MyCallback.java">Here</a>
 is an example benchmark callback
 class (use<span style="font-family: monospace;"> "-c MyCallback"</span>
 on the commandline).  The distributed jar file contains one pre-built
