@@ -12,8 +12,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
-import java.security.DigestOutputStream;
-import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -29,42 +27,101 @@ import dacapo.parser.Config;
  *
  */
 public abstract class Benchmark {
+  
   /*
-   * These flags are set by the TestHarness in response to command line flags
+   * Constants
    */
-  public static boolean verbose = false;
-  public static boolean digestOutput = true;
-  public static boolean preserve = false;
   
-  protected final File scratch;
-  protected final Config config;
-  
+  /**
+   * I/O buffer size for unzipping
+   */
   private static final int BUFFER = 2048;
-  protected static final MessageDigest outDigest = Digest.create();
-  protected static final MessageDigest errDigest = Digest.create();
-  protected static final PrintStream out = new PrintStream(
-      new DigestOutputStream(System.out,outDigest));
-  protected static final PrintStream err = new PrintStream(
-      new DigestOutputStream(System.err,errDigest));
   
+  /*
+   * Class variables
+   */
+  
+  /**
+   * Verbose output.  
+   */
+  private static boolean verbose = false;
+  
+  /**
+   * Perform digest operations on standard output and standard error
+   */
+  private static boolean digestOutput = true;
+  
+  /**
+   * Don't clean up output files
+   */
+  private static boolean preserve = false;
+  
+  /**
+   * Output stream for validating System.out
+   */
+  private final DigestPrintStream out;
+  
+  /**
+   * Saved System.out while redirected to the digest stream
+   */
   private static PrintStream savedOut = System.out;
+  
+
+  /**
+   * Output stream for validating System.err
+   */
+  private final DigestPrintStream err;
+  
+  /**
+   * Saved System.err while redirected to the digest stream
+   */
   private static PrintStream savedErr = System.err;
   
+  /*
+   * Instance fields
+   */
+  
+  /**
+   * The scratch directory
+   */
+  protected final File scratch;
+  
+  /**
+   * Parsed version of the configuration file for this benchmark
+   */
+  protected final Config config;
+  
+  /**
+   * Saved versions of the most recent output/error digests
+   */
   private String lastOutDigest, lastErrDigest;
   
-  public boolean run(Callback callback, String size, boolean timing) throws Exception {
+  /**
+   * Run a benchmark.  This is final because we don't want individual
+   * benchmarks interfering with the flow of control.
+   * 
+   * @param callback The user-specified timing callback
+   * @param size The size (as given on the command line)
+   * @param timing Is this the timing loop ?  Affects how we call the callback.
+   * @return Whether the run was valid or not.
+   * @throws Exception Whatever exception the target application dies with
+   */
+  public final boolean run(Callback callback, String size, boolean timing) throws Exception {
     preIteration(size);
     if (timing)
       callback.start(config.name);
     else
       callback.startWarmup(config.name);
+    
     startIteration();
     iterate(size);
     stopIteration();
+    
     if (timing)
       callback.stop();
     else
       callback.stopWarmup();
+    
     boolean valid = validate(size);
     if (timing)
       callback.complete(config.name, valid);
@@ -83,6 +140,8 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
     this.config = config;
+    out = new DigestPrintStream(System.out,scratch);
+    err = new DigestPrintStream(System.out,scratch);
     prepare();
   }
   
@@ -117,8 +176,8 @@ public abstract class Benchmark {
     if (digestOutput) {
       System.setOut(out);
       System.setErr(err);
-      outDigest.reset();
-      errDigest.reset();
+      out.reset();
+      err.reset();
     }
   }
   
@@ -139,8 +198,13 @@ public abstract class Benchmark {
     if (digestOutput) {
       System.setOut(savedOut);
       System.setErr(savedErr);
-      lastOutDigest = Digest.toString(outDigest.digest());
-      lastErrDigest = Digest.toString(errDigest.digest());
+      
+      /* 
+       * Reading a digest resets it, so we save them at the earliest opportunity
+       * to avoid arguments between different methods.
+       */
+      lastOutDigest = Digest.toString(out.digest());
+      lastErrDigest = Digest.toString(err.digest());
     }
   }
   
@@ -154,7 +218,7 @@ public abstract class Benchmark {
     boolean valid = true;
     for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
       String file = (String)v.next();
-      
+
       /*
        * Validate by file digest
        */
@@ -413,6 +477,30 @@ public abstract class Benchmark {
   }
   public static long byteCount(File file) throws IOException {
     return file.length();
+  }
+
+  public static void setVerbose(boolean verbose) {
+    Benchmark.verbose = verbose;
+  }
+
+  public static boolean isVerbose() {
+    return verbose;
+  }
+
+  public static void setDigestOutput(boolean digestOutput) {
+    Benchmark.digestOutput = digestOutput;
+  }
+
+  public static boolean isDigestOutput() {
+    return digestOutput;
+  }
+
+  public static void setPreserve(boolean preserve) {
+    Benchmark.preserve = preserve;
+  }
+
+  public static boolean isPreserve() {
+    return preserve;
   }
   
 }

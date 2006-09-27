@@ -19,7 +19,6 @@ package dacapo.lucene;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
@@ -45,13 +44,13 @@ public class LuceneIndex extends Benchmark {
   }
   
   public void cleanup() {
-    if (!preserve) {
+    if (!isPreserve()) {
       deleteTree(new File(scratch,"luindex"));
     }
   }
   
   public void postIteration(String size) {
-    if (!preserve) {
+    if (!isPreserve()) {
       deleteTree(new File(scratch,"index"));
     }
   }
