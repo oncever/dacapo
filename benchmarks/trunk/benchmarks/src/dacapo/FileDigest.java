@@ -1,9 +1,12 @@
 package dacapo;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
@@ -45,10 +48,13 @@ public class FileDigest {
    */
   public static byte[] get(File file) throws IOException {
       final MessageDigest digest = Digest.create();
-      DigestInputStream in = new DigestInputStream(new FileInputStream(file),digest);
-      byte[] buffer = new byte[2048];
-      while (in.read(buffer) >= 0) 
-        ;
+      BufferedReader in = new BufferedReader(new FileReader(file));
+      String line;
+      while ((line = in.readLine()) != null) {
+        byte[] buf = line.getBytes();
+        for (int i=0; i < buf.length; i++)
+          digest.update(buf[i]);
+      }
       in.close();
       return digest.digest();
   }
