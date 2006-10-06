@@ -113,7 +113,7 @@ public class TestHarness {
       
       /* get global options */
       int i = 0;
-      for (; i < args.length; i++) {
+      for (; i < args.length && args[i].charAt(0) == '-'; i++) {
         if (args[i].equals("-s")) {
           // size name name
           size = args[++i];
@@ -125,9 +125,6 @@ public class TestHarness {
         } else if (args[i].equals("-v")) {
           // display detailed information
           verbose = true;
-        } else if (args[i].equals("-vv")) {
-          // display verbose information from the benchmark harness
-          Benchmark.setVerbose(true);
         } else if (args[i].equals("-c")) {
           // use a callback
           Class cls = null;
@@ -156,18 +153,22 @@ public class TestHarness {
           target_var = Double.parseDouble(args[++i])/100.0;
         } else if (args[i].equals("-window")) {     // # iterations to average convergence over
           window = Integer.parseInt(args[++i]);
-        } else if (args[i].equals("-debug")) {
+        } else if (args[i].equals("-debug")) {      // Verbose benchmark output
           Benchmark.setVerbose(true);
-        } else if (args[i].equals("-preserve")) {
+        } else if (args[i].equals("-preserve")) {   // Preserve scratch directory contents
           Benchmark.setPreserve(true);
-        } else if (args[i].equals("-noDigestOutput")) {
+        } else if (args[i].equals("-noDigestOutput")) {  // 
           Benchmark.setDigestOutput(false);
         } else if (args[i].equals("-ignoreValidation")) {
           ignoreValidation = true;
+        } else if (args[i].equals("-validationReport")) {
+          Benchmark.enableValidationReport(args[++i]);
         } else if (args[i].equals("-scratch")) {
           scratchDir = args[++i];
-        } else
-          break;
+        } else {
+          System.err.println("Unrecognized option "+args[i]);
+          System.exit(1);
+        }
       }
       if (callback == null) {
         callback = new Callback();
@@ -289,12 +290,13 @@ public class TestHarness {
     System.out.println("    -n <iter>               Run the benchmark <iter> times");
     System.out.println("    -two                    Equivalent to -n 2");
     System.out.println();
-    System.out.println("  Debugging options");
+    System.out.println("  Debugging options (for benchmark suite maintainers)");
     System.out.println("    -debug                  Verbose debugging information");
-    System.out.println("    -v                      Verbose output");
-    System.out.println("    -noDigestOutput         Turn off SHA1 digest of stdout/stderr");
     System.out.println("    -ignoreValidation       Don't halt on validation failure");
+    System.out.println("    -noDigestOutput         Turn off SHA1 digest of stdout/stderr");
     System.out.println("    -preserve               Preserve output files (debug)");
+    System.out.println("    -v                      Verbose output");
+    System.out.println("    -validationReport       Report digests, line counts etc");
   }
   
   private static void rmdir(File dir) {
