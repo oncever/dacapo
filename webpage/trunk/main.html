@@ -19,10 +19,13 @@ applications with non-trivial memory loads.  The suite is the culmination of ove
 
 <h2>News</h2>
 
-<ul>
-<li>A new beta release of the suite is now available for <a
-href="download.html">download</a> and evaluation (version <span
-style="font-weight: bold;">beta-2006-08</span>).</li>
+<ul><span style="color: rgb(204, 0, 0);">NEW: </span>A new October beta release of the suite is available for <a href="download.html">download</a> and evaluation (version <b>beta-2006-10</b>). <i>New features for beta-2006-10 include:</i></li>
+<ol>
+    <li><b>The <span style="font-family:monospace;">xalan</span> benchmark has been re-written. </b>This version has a more realistic workload (following feedback from domain experts). We also force the use of version 2.4.1 and ensure that xalan is used (rather than a bundled xlt processor). [Thanks to Kev Jones of Intel!]</li>
+    <li><b>The validation mechanism has been completely overhauled</b> (this is used to ensure successful benchmark completion). It should now work properly on any OS (we discovered CRLF issues), and deals with the users' pwd which creeps into some benchmark output. [Thanks to Robin Garner of ANU!]</li>
+    <li><b>The <span style="font-family:monospace;">lusearch</span> benchmark has been improved</b>, so that each query thread includes a mix of unique and shared queries (previously all queries were unique).</li>
+    <li><b>The build system has been improved </b>considerably and is a little better documented.</li>
+  </ol>
 </ul>
 
 <h2>Plans</h2>
