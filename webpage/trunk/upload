@@ -1,0 +1,2 @@
+#!/bin/bash
+rsync -ave ssh *.html *.pdf *.css *.java images steveb-oss@shell.sourceforge.net:/home/groups/d/da/dacapobench/htdocs
