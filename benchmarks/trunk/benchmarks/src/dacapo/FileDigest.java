@@ -7,12 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
 /**
- * Perform a digest operation on a file.  Provides a main for maintainers
+ * Perform a digest operation on a file.  Also provides a 'main' method for maintainers
  * to use outside the harness.
  * 
  * @author Robin Garner
