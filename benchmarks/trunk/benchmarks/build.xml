@@ -657,6 +657,7 @@
           target: eclipse              
          ================================= -->
 	<target name="eclipse" depends="eclipse.data,eclipse.harness" description="--> build the eclipse benchmark"/>
+
 	<!-- Build the eclipse dacapo harness -->
 	<target name="eclipse.harness" depends="init,harness" description="--> build the eclipse harness">
 		<javac 	srcdir="${bmsrc}" 
@@ -670,6 +671,7 @@
 			</classpath>
 		</javac>
 	</target>
+
 	<!-- Build the eclipse benchmark -->
 	<target name="eclipse.benchmark" depends="init" description="--> build the eclipse benchmark">
 		<property name="eclipse-top" value="${build_src}/eclipse/eclipse"/>
@@ -687,13 +689,14 @@
 		</unzip>
 		<delete dir="${build_src}/eclipse/eclipse-testing"/>
 	</target>
+
 	<!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
 	<target name="eclipse.plugin" depends="eclipse.benchmark,eclipse.harness" description="--> build the eclipse harness">
 		<ant antfile="${extra}/eclipse-plugin/build.xml" dir="${extra}/eclipse-plugin" 
          target="build.update.jar" inheritall="false">
-			<property name="eclipsesrc.home" location="${build_src}/eclipse"/>
+			<property name="eclipsesrc.home" location="${eclipse-top}"/>
 			<property name="harness.home" location="${build}"/>
-			<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
+			<property name="plugin.destination" location="${eclipse-top}/plugins/"/>
 		</ant>
 	</target>
 
