@@ -844,7 +844,7 @@
 	<!-- ================================= 
           target: fop              
          ================================= -->
-	<target name="fop" depends="fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
+	<target name="fop" depends="batik.benchmark,fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
 	<!-- Build the fop dacapo harness -->
 	<target name="fop.harness" depends="harness" description="--> Build the fop harness">
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
