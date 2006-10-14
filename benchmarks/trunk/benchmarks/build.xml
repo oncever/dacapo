@@ -844,7 +844,7 @@
 	<!-- ================================= 
           target: fop              
          ================================= -->
-	<target name="fop" depends="batik.benchmark,fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
+	<target name="fop" depends="fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
 	<!-- Build the fop dacapo harness -->
 	<target name="fop.harness" depends="harness" description="--> Build the fop harness">
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
@@ -881,12 +881,11 @@
 	</target>
 	<!-- Add external libraries to the build -->
 	<target name="fop.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-		<echo message="INTERNALIZING"/>
 		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
+		<unjar src="${fop-top}/lib/batik.jar" dest="${build}"/>
     </target>
 	<!-- Add external libraries to the deps -->
 	<target name="fop.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-		<echo message="EXTERNALIZING"/>
 		<unjar src="${fop-top}/lib/batik.jar" dest="${deps}"/>
 		<unjar src="${fop-top}/lib/xalan-2.4.1.jar" dest="${deps}"/>
 		<unjar src="${fop-top}/lib/ant-1.5.1.jar" dest="${deps}"/>
