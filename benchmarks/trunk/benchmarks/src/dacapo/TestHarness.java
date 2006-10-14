@@ -276,7 +276,7 @@ public class TestHarness {
    * Print a usage message to stdout
    */
   private static void printUsage() {
-    System.out.println("Usage: java Harness [options ...] [benchmarks ...]");
+    System.out.println("Usage: java -jar dacapo-<version>.jar [options ...] [benchmarks ...]");
     System.out.println("    -c <callback>           Use class <callback> to bracket benchmark runs");
     System.out.println("    -h                      Print this help");
     System.out.println("    -i                      Display benchmark information");
