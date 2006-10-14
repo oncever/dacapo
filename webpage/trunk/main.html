@@ -19,7 +19,15 @@ applications with non-trivial memory loads.  The suite is the culmination of ove
 
 <h2>News</h2>
 
-<ul><span style="color: rgb(204, 0, 0);">NEW: </span>A new beta release of the suite is available for <a href="download.html">download</a> and evaluation (version <b>beta-2006-10</b>). <i>New features for beta-2006-10 include:</i></li>
+<ul><span style="color: rgb(204, 0, 0);">NEW Oct 15: </span>We have produced release candidates in anticipation of our initial full release around October 23. These are now available for <a href="download.html">download</a> and evaluation.  Feedback recieved prior to October 20 may be included in the full release.  <i>New features for release candidates include:</i></li>
+<ol>
+    <li><b>Further improvements to the validation mechanism.</b>  We now accommodate the DOS "\" path separator--hopefully this is the last of the OS-specific issues.</li>
+    <li><b>We have added a new build target <span style="font-family:monospace;">split-deps</span></b>.  This allows those who build from source to separate out dependencies into a separate jar (this feature was added after feedback on the mailing list, and is used to enable whole program analysis). [Thanks to Eric Bodden of McGill!]</li>
+    <li><b>Improvements to the harness.</b>  Fixed a bug that prevented output from subsequent benchmarks being displayed when executing more than one benchmark at a time.  Improved usage message.  [Thanks to Vladimir Strigun of Intel].</li>
+    <li><b>Minor improvements to the build scripts.</b>  This includes updates to source URLs, refactoring, comments.</li>
+  </ol>
+</ul>
+<ul>The release candidates build on a series of improvements seen in beta-2006-10, including:</i></li>
 <ol>
     <li><b>The <span style="font-family:monospace;">xalan</span> benchmark has been re-written. </b>This version has a more realistic workload. We also force the use of version 2.4.1 and ensure that xalan is used (rather than a bundled xslt processor). [Thanks to Kev Jones of Intel!]</li>
     <li><b>The validation mechanism has been completely overhauled</b>.  The validation mechanism ensures that benchmarks only "PASS" if they complete correctly. The harness should now work properly on any OS, and deals with the users' pwd which creeps into some benchmark output. [Thanks to Robin Garner of ANU!]</li>
@@ -31,7 +39,7 @@ applications with non-trivial memory loads.  The suite is the culmination of ove
 <h2>Plans</h2>
 
 <ul>
-<li>We will make our first full release by October 24, in time for our OOPSLA presentation of the suite and accompanying paper.
+<li>We will make our first full release before October 24, in time for our OOPSLA presentation of the suite and accompanying paper.
 </ul>
 
 Our suite will evolve to maintain its relevance. It is therefore <span style="color: rgb(204, 0, 0); font-style: italic;">essential that
