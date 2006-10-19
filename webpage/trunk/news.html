@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="dacapo.css"/>
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  <title>The DaCapo Benchmark Suite</title>
+</head>
+
+<body>
+<h1>News</h1>
+<h2>2006-10-15</h2>
+<ul>We have produced release candidates in anticipation of our initial full release around October 23. These are now available for <a href="download.html">download</a> and evaluation.  Feedback recieved prior to October 20 may be included in the full release.  <i>New features for release candidates include:</i></li>
+<ol>
+    <li><b>Further improvements to the validation mechanism.</b>  We now accommodate the DOS "\" path separator--hopefully this is the last of the OS-specific issues.</li>
+    <li><b>We have added a new build target <span style="font-family:monospace;">split-deps</span></b>.  This allows those who build from source to separate out dependencies into a separate jar (this feature was added after feedback on the mailing list, and is used to enable whole program analysis). [Thanks to Eric Bodden of McGill!]</li>
+    <li><b>Improvements to the harness.</b>  Fixed a bug that prevented output from subsequent benchmarks being displayed when executing more than one benchmark at a time.  Improved usage message.  [Thanks to Vladimir Strigun of Intel].</li>
+    <li><b>The <span style="font-family:monospace;">eclipse</span> benchmark now uses a self-contaied dummy jre</b> for its build tasks, so it should work on any jvm without special action (previously a third-party jre needed to be specified on the command line of jvms which Eclipse did not recognise).</li>
+    <li><b>Minor improvements to the build scripts.</b>  This includes updates to source URLs, refactoring, comments.</li>
+  </ol>
+</ul>
+<h2>2006-10-07</h2>
+<ul>We have made a new beta release, beta-2006-10, which has a number of improvements including:</i></li>
+<ol>
+    <li><b>The <span style="font-family:monospace;">xalan</span> benchmark has been re-written. </b>This version has a more realistic workload. We also force the use of version 2.4.1 and ensure that xalan is used (rather than a bundled xslt processor). [Thanks to Kev Jones of Intel!]</li>
+    <li><b>The validation mechanism has been completely overhauled</b>.  The validation mechanism ensures that benchmarks only "PASS" if they complete correctly. The harness should now work properly on any OS, and deals with the users' pwd which creeps into some benchmark output. [Thanks to Robin Garner of ANU!]</li>
+    <li><b>The <span style="font-family:monospace;">lusearch</span> benchmark has been improved</b>, so that each query thread includes a mix of unique and shared queries (previously all queries were unique/non-shared).</li>
+    <li><b>The build system has been improved </b>considerably and is a little better documented.</li>
+</ol>
+</ul>
+</body></html>
+
