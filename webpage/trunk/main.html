@@ -19,29 +19,14 @@ applications with non-trivial memory loads.  The suite is the culmination of ove
 
 <h2>News</h2>
 
-<ul><b><span style="color: rgb(204, 0, 0);">NEW Oct 15: </span></b>We have produced release candidates in anticipation of our initial full release around October 23. These are now available for <a href="download.html">download</a> and evaluation.  Feedback recieved prior to October 20 may be included in the full release.  <i>New features for release candidates include:</i></li>
-<ol>
-    <li><b>Further improvements to the validation mechanism.</b>  We now accommodate the DOS "\" path separator--hopefully this is the last of the OS-specific issues.</li>
-    <li><b>We have added a new build target <span style="font-family:monospace;">split-deps</span></b>.  This allows those who build from source to separate out dependencies into a separate jar (this feature was added after feedback on the mailing list, and is used to enable whole program analysis). [Thanks to Eric Bodden of McGill!]</li>
-    <li><b>Improvements to the harness.</b>  Fixed a bug that prevented output from subsequent benchmarks being displayed when executing more than one benchmark at a time.  Improved usage message.  [Thanks to Vladimir Strigun of Intel].</li>
-    <li><b>The <span style="font-family:monospace;">eclipse</span> benchmark now uses a self-contaied dummy jre</b> for its build tasks, so it should work on any jvm without special action (previously a third-party jre needed to be specified on the command line of jvms which Eclipse did not recognise).</li>
-    <li><b>Minor improvements to the build scripts.</b>  This includes updates to source URLs, refactoring, comments.</li>
-  </ol>
-</ul>
-<ul>The release candidates build on a series of improvements seen in beta-2006-10, including:</i></li>
-<ol>
-    <li><b>The <span style="font-family:monospace;">xalan</span> benchmark has been re-written. </b>This version has a more realistic workload. We also force the use of version 2.4.1 and ensure that xalan is used (rather than a bundled xslt processor). [Thanks to Kev Jones of Intel!]</li>
-    <li><b>The validation mechanism has been completely overhauled</b>.  The validation mechanism ensures that benchmarks only "PASS" if they complete correctly. The harness should now work properly on any OS, and deals with the users' pwd which creeps into some benchmark output. [Thanks to Robin Garner of ANU!]</li>
-    <li><b>The <span style="font-family:monospace;">lusearch</span> benchmark has been improved</b>, so that each query thread includes a mix of unique and shared queries (previously all queries were unique/non-shared).</li>
-    <li><b>The build system has been improved </b>considerably and is a little better documented.</li>
-b  </ol>
+<ul>
+<b><span style="color: rgb(204, 0, 0);">NEW (Oct 15) </span></b>We have produced release candidates in anticipation of our initial full release around October 23. These are now available for <a href="download.html">download</a> and evaluation.  Feedback recieved prior to October 20 may be included in the full release.  <i>See <a href="news.html" target="MAIN">news</a> for a list of new features.</i>
 </ul>
 
 <h2>Plans</h2>
 
 <ul>
-<li>We will make our first full release before October 24, in time for our OOPSLA presentation of the suite and accompanying paper.
-</ul>
+<li>We will make our first full release before October 24, in time for our OOPSLA presentation of the suite and accompanying paper.</li><p>
 
 Our suite will evolve to maintain its relevance. It is therefore <span style="color: rgb(204, 0, 0); font-style: italic;">essential that
 the version number associated with the release be cited in any use of
@@ -50,6 +35,7 @@ the benchmark,</span> and we ask that you please cite the 2006 OOPSLA paper desc
 <font size=-2>
 Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur, R., Diwan, A., Feinberg, D., Frampton, D., Guyer, S. Z., Hirzel, M., Hosking, A., Jump, M., Lee, H., Moss, J. E. B., Phansalkar, A., Stefanovic, D., VanDrunen, T., von Dincklage, D., and Wiedermann, B. <b>The DaCapo Benchmarks: Java Benchmarking Development and Analysis</b>, <i>OOPSLA '06: Proceedings of the 21st annual ACM SIGPLAN conference on Object-Oriented Programing, Systems, Languages, and Applications</i>, (Portland, OR, USA, October 22-26, 2006) (<a href="dacapo-oopsla-2006.pdf">pdf</a>, <a href="cite.html">BibTeX</a>).
 </font>
+</ul>
 </ul>
 
 <h2>Feedback</h2>
