@@ -359,7 +359,6 @@ public class TestHarness {
     System.out.println("      -variance <pct>         Target coefficient of variation (default 3.0)");
     System.out.println("      -window <n>             Measure variance over n runs (default 3)");
     System.out.println("    -n <iter>               Run the benchmark <iter> times");
-    System.out.println("    -two                    Equivalent to -n 2");
     System.out.println();
     System.out.println("  Debugging options (for benchmark suite maintainers)");
     System.out.println("    -debug                  Verbose debugging information");
