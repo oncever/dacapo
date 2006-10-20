@@ -1174,6 +1174,9 @@
 		<!-- Unpack the source distribution -->
 		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" dest="${xalan-top}" compression="gzip"/>
 
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/xalan.patch" dir="${build_src}" strip="0"/>
+
 		<!-- Build using Ant, setting the classpath appropriately -->
 		<exec dir="${xalan-top}/xalan-j_${xalan-v}" executable="ant">
 			<env key="CLASSPATH" value=".:${xalan.xerces.jar}:${xalan.xercesxml.jar}"/>

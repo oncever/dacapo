@@ -115,6 +115,7 @@ public class TestHarness {
       /* get global options */
       int i = 0;
       for (; i < args.length && args[i].charAt(0) == '-'; i++) {
+    	try {
         if (args[i].equals("-s")) {
           // size name name
           if (i == args.length - 1) {
@@ -196,6 +197,10 @@ public class TestHarness {
           System.err.println("Unrecognized option "+args[i]+ " (\"-h\" for usage)");
           System.exit(1);
         }
+    	} catch (NumberFormatException e) {
+          System.err.println("Could not parse numeric argument to "+args[i-1]+" : "+args[i]+"! (\"-h\" for usage)");
+          System.exit(18);    	  
+    	}
       }
       
       if (i == args.length) {
