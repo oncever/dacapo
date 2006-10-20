@@ -198,7 +198,7 @@ public class TestHarness {
           System.exit(1);
         }
     	} catch (NumberFormatException e) {
-          System.err.println("Could not parse numeric argument to "+args[i-1]+" : "+args[i]+"! (\"-h\" for usage)");
+          System.err.println("Could not parse numeric argument to \""+args[i-1]+"\": \""+args[i]+"\"! (\"-h\" for usage)");
           System.exit(18);    	  
     	}
       }
