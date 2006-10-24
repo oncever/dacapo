@@ -1087,6 +1087,9 @@
 		<!-- Expand the pmd distribution zipfile -->
 		<unzip src="${sources}/pmd-src-${pmd.version}.zip" dest="${build_src}/pmd"/>
 
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/pmd.patch" dir="${build_src}" strip="0"/>
+		
 		<!-- Build using Ant, setting the classpath appropriately -->
 		<exec dir="${pmd-top}/bin" executable="ant">
 			<arg value="compile"/>
