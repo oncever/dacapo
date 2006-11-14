@@ -125,17 +125,25 @@ creating a new subdirectory in the current working directory called
 It is therefore necessary to run the benchmarks in a directory that is
 writeable by the current user.
 
-<h3>Callbacks</h3>
-The harness allows for pluggable callbacks which are executed before and after
-benchmark execution.  These allow (for example) JVM-specific statistics collection
-to be started and stopped.
-<a href="MyCallback.java">Here</a>
-is an example benchmark callback
-class (use<span style="font-family: monospace;"> "-c MyCallback"</span>
-on the commandline).  The distributed jar file contains one pre-built
-callback
-<ul>
-<li><bf>MMTkCallback</bf>.  Brackets the timing run with calls to MMTk's
-  benchmark harness.</li>
-</ul><br>
+<h3>Callbacks</h3> 
+
+The harness allows for pluggable callbacks which are executed before
+and after benchmark execution.  These allow (for example) JVM-specific
+statistics collection to be started and stopped.<p>
+
+<a href="MyCallback.java">Here</a> is an example benchmark callback
+class.<p>
+
+<b>Note:</b> To allow java to find your callback class, you will need to
+avoid using <span style="font-family: monospace;">-jar</span>, which
+overrides the classpath. So instead of:<br> <span style="font-family:
+monospace;">"java <b>-jar dacapo.jar</b> [remaining args]"</span>,<br>use:<br><span
+style="font-family: monospace;">"java <b>-classpath .:./dacapo.jar
+Harness -c MyCallback</b> [remaining args]"</span><br> (you should replace  <span style="font-family:
+monospace;">"."</span> with whichever directory contains your callback class).<p>
+
+The distributed jar file contains one pre-built callback,
+<bf>MMTkCallback</bf>, which brackets the timing run with calls to
+MMTk's benchmark harness.  <br> 
+
 </body></html>
