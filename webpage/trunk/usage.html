@@ -42,6 +42,7 @@ To run one of the benchmarks, use the command:<p>
 java -jar dacapo-2006-10.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-<flags>] &lt;bm&gt; [&lt;bm2&gt;, ...]
 </span>
 <p>
+where:
 <table class="options">
   <tbody>
     <tr><td class="section" colspan=2>Standard options</td></tr>
@@ -123,6 +124,15 @@ and the last one is timed.
     <tr>
       <td class="flag">-noDigestOutput</td>
       <td class="desc"> Disable digest validation of standard output and error streams.  </td>
+    </tr>
+    <tr>
+      <td class="flag">-noValidation</td>
+      <td class="desc"> Disable validation completely. </td>
+    </tr>
+    <tr>
+      <td class="flag">-ignoreValidation</td>
+      <td class="desc"> Don't halt on validation failure.  Validation failures are reported to
+         the user, but benchmark execution continues. </td>
     </tr>
     <tr>
       <td class="flag">-preserve</td>
