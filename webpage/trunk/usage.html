@@ -4,6 +4,25 @@
   <link rel="stylesheet" type="text/css" href="dacapo.css"/>
   <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
   <title>The DaCapo Benchmark Suite</title>
+<style>
+TABLE.options { border-collapse: collapse; }
+TD {
+  vertical-align: top;
+  padding-right: 12px;
+}
+TD.flag { 
+  font-weight: bold; 
+  font-family: monospace;
+}
+TD.desc { 
+  font-family: arial, sans-serif;
+  font-size: smaller;
+}
+TD.section {
+  font-weight: bold; 
+  padding-top: 18px;
+}
+</style>
 </head>
 
 <body>
@@ -19,111 +38,107 @@ Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur
 </ul>
 <h2>Running benchmarks</h2>
 To run one of the benchmarks, use the command:<p>
-<span style="font-family: monospace;">java -jar dacapo-beta&lt;date&gt;.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-<flags>] &lt;bm&gt; [&lt;bm2&gt;, ...]</span>
-<pre><br>where:</pre>
-<table cellpadding="2" cellspacing="2" border="0" style="text-align: left; font-family: monospace;">
+<span style="font-family: monospace;">
+java -jar dacapo-2006-10.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-<flags>] &lt;bm&gt; [&lt;bm2&gt;, ...]
+</span>
+<p>
+<table class="options">
   <tbody>
+    <tr><td class="section" colspan=2>Standard options</td></tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-s</pre>
-      </td>
-      <td style="vertical-align: top;">
-      specifies the workload size (small, default, large)
-      </td>
+      <td class="flag"> -s&nbsp;<i>size</i></td>
+      <td class="desc"> specifies the workload size (small, default, large) </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-c</pre>
-      </td>
-      <td style="vertical-align: top;">
+      <td class="flag">-c&nbsp;<i>class</i></td>
+      <td class="desc">
       specifies the name of a callback class which extends dacapo.Callback, 
 allowing hooks for benchmark start, end, warmup start, and warm up end
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-h</pre>
-      </td>
-      <td style="vertical-align: top;">
-      prints a usage message
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-n &lt;num></pre>
-      </td>
-      <td style="vertical-align: top;">
-      Number of iterations.  The first (n-1) are warmup iterations, 
-and the last one is timed.
+      <td class="flag"><i>bm</i></td>
+      <td class="desc">
+      a list of benchmarks to execute {antlr, bloat, chart, eclipse, fop, hsqldb, jython, 
+lusearch, luindex, pmd, xalan}
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-i</pre>
-      </td>
-      <td style="vertical-align: top;">
+      <td class="flag">-h</td>
+      <td class="desc"> prints a usage message </td>
+    </tr>
+
+    <tr>
+      <td class="flag">-i</td>
+      <td class="desc">
       print information about the benchmark(s), including brief description, urls,
 copyright and version
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-scratch scratch-dir</pre>
-      </td>
-      <td style="vertical-align: top;">
+      <td class="flag">-scratch&nbsp;<i>scratch-dir</i></tt> </td>
+      <td class="desc">
       Specify a scratch directory for temporary output files.  If it exists, the harness
-will delete and re-create it.
+will delete and re-create it.  Defaults to "./scratch".
+      </td>
+    </tr>
+
+    <tr><td class="section" colspan=2>Measurement methodology options</td></tr>
+    <tr>
+    <td class="flag">-converge </td>
+      <td class="desc">Allow benchmark times to converge before timing.  This
+        option calculates a running coefficient of variation over the last <i>k</i> runs
+        of the benchmark, and when this drops below a threshold, the following iteration
+        is timed.  The following flags control the convergence process:
+        <table>
+          <tr>
+            <td class="flag">-max_iterations&nbsp;<i>n</i></td>
+            <td class="desc"> Run a max of <i>n</i> iterations (default 20)</td>
+          </tr>
+          <tr>
+            <td class="flag">-variance&nbsp;<i>pct</i></td>
+            <td class="desc"> Target coefficient of variation (default 3.0)</td>
+          </tr>
+          <tr>
+            <td class="flag">-window&nbsp;<i>n</i></td>
+            <td class="desc"> Measure variance over <i>n</i> runs (default 3)</td>
+          </tr>
+        </table>
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-debug</pre>
+      <td class="flag">-n&nbsp;<i>num</i> </td>
+      <td class="desc">
+      Number of iterations.  The first (n-1) are warmup iterations, 
+and the last one is timed.
       </td>
-      <td style="vertical-align: top;">
+    </tr>
+  <tr><td class="section" colspan=2>Debugging options</td></tr>
+    <tr>
+      <td class="flag">-debug</td>
+      <td class="desc">
       debugging output (probably only of interest to maintainers)
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-noDigestOutput</pre>
-      </td>
-      <td style="vertical-align: top;">
-      Disable digest validation of standard output and error streams.
-      </td>
+      <td class="flag">-noDigestOutput</td>
+      <td class="desc"> Disable digest validation of standard output and error streams.  </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-preserve</pre>
-      </td>
-      <td style="vertical-align: top;">
+      <td class="flag">-preserve</td>
+      <td class="desc">
       preserve output files (probably only of interest to maintainers)
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">
-      <pre><b>-v</pre>
-      </td>
-      <td style="vertical-align: top;">
+      <td class="flag">-v</td>
+      <td class="desc">
       verbose output (probably only of interest to maintainers)
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><b>&lt;bm&gt;</pre>
-      </td>
-      <td style="vertical-align: top;">
-      a list of benchmarks to execute {antlr, bloat, chart, eclipse, fop, hsqldb, jython, 
-lusearch, luindex, pmd, xalan}
       </td>
     </tr>
   </tbody>
 </table>
-<pre><br></pre>
-Several of the benchmarks create output files, which they do by
-creating a new subdirectory in the current working directory called
-'scratch'.  The jython benchmark creates a subdirectory called 'cachedir'.
-It is therefore necessary to run the benchmarks in a directory that is
-writeable by the current user.
+<br>
 
 <h3>Callbacks</h3> 
 
