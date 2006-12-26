@@ -8,7 +8,23 @@ body {
 /*	background-image: url("http://dacapobench.org/images/music-faint.png"); */
 	background-color: rgb(255,255,255);
 	color: rgb(0,0,0);
-    	font-family: arial, sans-serif;
+        font-family:        verdana, arial, helvetica, sans-serif;
+        font-size:          small;
+        font-weight:        normal;
+}
+tr
+{
+        font-size:          x-small;
+        font-family:        verdana, arial, helvetica, sans-serif;
+        font-weight:        normal;
+        color:              #000000;
+}
+td
+{
+        font-size:          x-small;
+        font-family:        verdana, arial, helvetica, sans-serif;
+        font-weight:        normal;
+        color:              #000000;
 }
 p { 	color: black;
 }
@@ -18,5 +34,7 @@ body.menu {
 /*	background-image: url("http://dacapobench.org/images/music.png"); */
 	background-color: rgb(255,255,255);
 	color: rgb(0,0,0);
-    	font-family: arial, sans-serif;
+        font-family:        verdana, arial, helvetica, sans-serif;
+        font-size:          medium;
+        font-weight:        normal;
 }
