@@ -1,3 +1,9 @@
+ - When multiple benchmarks are specified with -n, n > 1,
+   the first benchmark is run n times, and subsequent ones
+   only once.  Fixed.
+ 	 
+dacapo-2006-10-MR1
+
  - Xalan benchmark harness now closes input and output files
    explicitly.  Prevents running out of file handles in large
    heaps (where finalizers never run).
