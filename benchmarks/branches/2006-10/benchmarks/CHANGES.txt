@@ -1,3 +1,9 @@
+ - Added new build targets for generating a "deps" zip file
+   which contains "split deps" jars for each benchmark, which
+   seperate the benchmark proper from their dependencies. This
+   is important for some whole program analysis, particularly
+   users of Soot.
+ 
  - jython suffered from a problem on Windows platforms which
    seems to have been traced to a timer resolution issue and
    pybench's timing thresholds.  Fixed. Thanks to Christian Wimmer
