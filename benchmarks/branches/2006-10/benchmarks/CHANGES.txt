@@ -1,3 +1,5 @@
+ dacapo-2006-10-MR2 
+ 
  - Added new build targets for generating a "deps" zip file
    which contains "split deps" jars for each benchmark, which
    seperate the benchmark proper from their dependencies. This
