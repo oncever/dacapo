@@ -297,7 +297,7 @@ public class TestHarness {
       /*
        * Run the benchmark for a set # of iterations
        */
-      for (; iterations > 1; iterations--)
+      for (int n = 0; n < iterations - 1; n++)
         valid = b.run(callback, size, false) && valid; // beware order of evaluation!
       valid = b.run(callback, size, true) && valid; // beware order of evaluation!
     }            
