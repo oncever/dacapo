@@ -1,0 +1,46 @@
+#/bin/bash
+
+#written by Eric Bodden, McGill University,
+#use at own risk
+
+### USER DEFINED VARIABLES ###
+
+#JAVA RUNTIME
+JRE=~/bin/sun-jdk1.4.2_12/jre
+
+#custom command line options for Soot
+CUSTOM_OPTIONS=
+
+#temporary directory in which to extract the benchmarks as input for Soot
+TEMP=/tmp/dacapo
+
+### END OF USER DEFINED VARIABLES ###
+
+
+for BM in \
+        antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan; \
+do \
+
+#prepare benchmark
+echo preparing ${BM}...
+rm -fr ${TEMP}
+mkdir -p ${TEMP}
+cp ${BM}.jar ${TEMP}
+OLDDIR=`pwd`
+cd ${TEMP}
+jar xf ${BM}.jar
+cd ${OLDDIR}
+
+#process benchmark
+echo processing ${BM}...
+
+java -Xmx512m -cp ./abc-complete.jar \
+soot.Main \
+-process-dir ${TEMP} \
+-soot-class-path ${JRE}/lib/rt.jar:${JRE}/lib/jce.jar:${JRE}/lib/jsse.jar:${BM}-deps.jar:${TEMP} \
+-main-class dacapo.${BM}.Main \
+${CUSTOM_OPTIONS}
+
+echo finished with ${BM}.
+
+done

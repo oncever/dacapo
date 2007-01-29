@@ -1,2 +1,2 @@
 #!/bin/bash
-rsync -aCve ssh *.html *.pdf *.css *.java images steveb-oss@shell.sourceforge.net:/home/groups/d/da/dacapobench/htdocs
+rsync -aCve ssh batchsoot *.html *.pdf *.css *.java images steveb-oss@shell.sourceforge.net:/home/groups/d/da/dacapobench/htdocs
