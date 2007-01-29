@@ -5,8 +5,11 @@
 
 ### USER DEFINED VARIABLES ###
 
-#JAVA RUNTIME
+#java runtime to analyze with Soot
 JRE=~/bin/sun-jdk1.4.2_12/jre
+
+#location of Soot
+SOOT=./soot-classes.jar
 
 #custom command line options for Soot
 CUSTOM_OPTIONS=
@@ -34,7 +37,7 @@ cd ${OLDDIR}
 #process benchmark
 echo processing ${BM}...
 
-java -Xmx512m -cp ./abc-complete.jar \
+java -Xmx512m -cp ${SOOT} \
 soot.Main \
 -process-dir ${TEMP} \
 -soot-class-path ${JRE}/lib/rt.jar:${JRE}/lib/jce.jar:${JRE}/lib/jsse.jar:${BM}-deps.jar:${TEMP} \
@@ -44,3 +47,4 @@ ${CUSTOM_OPTIONS}
 echo finished with ${BM}.
 
 done
+
