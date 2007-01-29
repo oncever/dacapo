@@ -7,7 +7,38 @@
 </head>
 
 <body>
-This page is a place holder for information on how to use the DaCapo benchmarks with ahead of time analysis tools such as <a target="_foo" href="http://www.sable.mcgill.ca/soot">Soot</a>.  This requires using the new 'xdeps' repackaging of the suite (eg <tt>dacapo-2006-10-MR2-xdeps.zip</tt>).<p>
-<b>Please note</b> that we strongly recommend that you use the regular jar packaging of the suite (eg <tt>dacapo-2006-10-MR2.jar</tt>) unless you specifically need to use the 'xdeps' repackaging.
+This page describes how to use the 'xdeps' packaging of the DaCapo benchmark suite (eg <tt>dacapo-2006-10-MR2-xdeps.zip</tt>) to process them with <a target="_foo" href="http://www.sable.mcgill.ca/soot/">Soot</a>.  The information may be of interest to anyone performing <i>ahead-of-time whole program analyses</i>.<p>
+
+<b>Please note</b> that we strongly recommend that you use the regular jar packaging of the suite (eg <tt>dacapo-2006-10-MR2.jar</tt>) unless you specifically need to use the 'xdeps' repackaging as described here.<p>
+
+Special thanks to Eric Bodden of McGill for helping develop support for Soot and contributing the following.<p>
+
+<h1>Processing the DaCapo benchmarks with Soot</h1>
+
+The DaCapo benchmarks can be fully processed with <a target="_foo" href="http://www.sable.mcgill.ca/soot/">Soot</a>. (The following was tested with Soot version 2.2.3.)<br>
+
+<h2>About stub classes<br>
+</h2>
+One problem that arose early on when trying to conduct a whole-program analysis on the DaCapo benchmarks is that DaCapo uses reflection to bootstrap its Harness, obscuring the static path to the benchmark. Therefore, DaCapo now includes a stub class for bootstrapping static whole-program analyses, which &quot;appears to call&quot; the harness directly. (We invoke the respective methods with fake arguments). This should work for most analyses, however there might be occasions where one needs to tamper around with them. If so, feel free to do so - they are contained in the source distribution as well. Those stub classes adhere to the name pattern <tt>dacapo.&lt;bm&gt;.Main</tt>.
 <br>
+
+<h2>Application classes and library classes</h2>
+
+Soot users are probably aware that Soot distinguishes between application classes and library classes (only the former are optimized, see the <a target="_foo" href="http://www.sable.mcgill.ca/soot/tutorial/usage/index.html">Soot tutorial</a> for details). In order to support this model, there is an &quot;xdeps&quot; packaging of DaCapo available, where each benchmark, <tt>bm</tt>, is compiled separately into <i>two</i> jars. One file has the name <tt>&lt;bm&gt;.jar</tt> and holds all application classes for the benchmark <tt>bm</tt>. The other file has the name <tt>&lt;benchmark&gt;-deps.jar</tt> and holds all library classes for the benchmark.   This packaging is avaliable as a binary download (<tt>dacapo-&lt;RELEASE&gt;-xdeps.zip</tt>), or via an ant target for a source build.
+<br>
+
+<h2>Applying Soot to the DaCapo benchmarks</h2>
+
+In order to apply Soot to a benchmark <tt>BM</tt> you basically need the following command line (or you can use the following <a href="batchsoot">script</a>):
+<br>
+<pre>java -Xmx512m -cp ./abc-complete.jar \
+soot.Main \
+-process-dir ${TEMP} \
+-soot-class-path ${JRE}/lib/rt.jar:${JRE}/lib/jce.jar:${JRE}/lib/jsse.jar:${B}-deps.jar:${TEMP} \
+-main-class dacapo.${BM}.Main \
+${CUSTOM_OPTIONS}</pre>
+
+Here, <tt>TEMP</tt> points to some temporary directory, <tt>JRE</tt> to the Java runtime library you want to analyze and <tt>BM</tt> to the name of one of the DaCapo benchmarks.<br>
+<br>
+In case of any questions, feel free to email <a target="_foo" href="http://www.sable.mcgill.ca/%7Eebodde/">Eric Bodden</a>.<br>
 </body></html>
