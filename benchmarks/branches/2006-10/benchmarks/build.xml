@@ -382,7 +382,7 @@
          target: depzip.basic        
          ================================= -->
 	<target name="depzip.basic" depends="dep.jars" description="--> Create a zip file containing two jar files for each benchmark; one containing the benchmark, the other containing its dependencies">
-		<zip basedir="${dep.tmp}" includes="**" destfile="${zip.basename}${zip.suffix}-deps.zip"/>
+		<zip basedir="${dep.tmp}" includes="**" destfile="${zip.basename}${zip.suffix}-xdeps.zip"/>
 	</target>
 	
 	<!-- ================================= 
