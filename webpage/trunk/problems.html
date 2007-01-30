@@ -9,6 +9,8 @@
 <body>
 <h1>Known Problems</h1>
 <ul>
+  <li>The <b>'xalan'</b> benchmark needlessly uses unbuffered IO.  Many JVMs show little slowdown due to this innefficiency, however those that use GNU Classpath are <i>significantly</i> impacted by the unbuffered IO.  The problem is in xalan harness, rather than the xalan libraries.  We have fixed this problem in subversion and the fix will be reflected in future major releases (post <tt>dacapo-2006-10-XX</tt>).  We have <i>not</i> propogated this change to any of the current releases (or maintenance releases) since it fundamentally changes the workload and we will not change workloads except at major releases (which are infrequent, and where all workloads are subject to change).<p>
+  </li>
   <li>The <b>'chart'</b> benchmark will not run on VMs which use GNU Classpath 0.91 or earlier.<p>
   </li>
   <li>The benchmarks run with 1.4 and 1.5 JVMs, but <b>do not build with
@@ -29,16 +31,20 @@ classpath is built (ie you want the gtk-peer enabled).
     <li>MarkCompact will not run for <b>'eclipse'</b> or <b>'jython'</b>, and will only work in large heaps for <b>'luindex'</b>. </li>
 <li>GenMS will not run for <b>'eclipse'</b>, and will only work in large heaps for <b>'luindex'</b>.</li>
 <li>GenCopy will only work in large heaps for <b>'luindex'</b>.</li>
-</ul> 
-    </li>
     <li>Version beta041020 of the DaCapo suite did not include sufficient classes for Jikes
 RVM to run <b>'xalan'</b>.&nbsp; This is fixed in subsequent releases.<br>
+    </li>
+</ul> 
     </li>
   </ul>
 </ul>
 <h3>Resolved Problems</h3>
 <ul>
-  <li><i></i>
+  <li>The jython benchmark would fail under some circumstances when running on Windows.  The problem was due to a timing threashold within the pybench benchmark which forms the heart of the jython benchmark.   This threashold is unnecessary and does not affect the workload.  We surmise the problem may have been due to an issue with the resolution of timers on Windows-based JVMs.  <b>[Fixed in 2006-10-MR2]</b>
+  </li>
+<li>The <tt>-n</tt> option did not behave correctly when multiple benchmarks were specified. <b>[Fixed in 2006-10-MR2]</b>
+</li>
+  <li>
 The jar file contains the compiled classes for the benchmark programs, plus
 the minimum library jar file contents required to get the benchmarks to run.
 If the system class libraries for your VM are <b>missing classes</b> which
@@ -46,11 +52,11 @@ are distributed as library jar files with the benchmark, please let us
 know so we can amend the build procedure.  After building with ant,
 the source tree for each benchmark is left in the build_src
 subdirectory, and comparing the library jar files distributed with the
-benchmark and the dacapo build.xml might provide the answer.  <b>[Fixed in dacapo-beta-2006-08; we no longer prune the jar]</b><p>
+benchmark and the dacapo build.xml might provide the answer.  <b>[Fixed in dacapo-beta-2006-08; we no longer prune the jar]</b>
   </li>
-  <li>The <b>'jython'</b> benchmark has been reported to fail bytecode verification on an internal product JVM.  We have not yet confirmed whether this is a problem with jython or just that JVM.  The jython interpreter dynamically generates bytecodes, and apparently it is these that are failing verification. <b>[This problem was confirmed as a jvm defect]</b><p>
+  <li>The <b>'jython'</b> benchmark has been reported to fail bytecode verification on an internal product JVM.  We have not yet confirmed whether this is a problem with jython or just that JVM.  The jython interpreter dynamically generates bytecodes, and apparently it is these that are failing verification. <b>[This problem was confirmed as a jvm defect]</b>
   </li>
-  <li>The <b>'eclipse'</b> benchmark requires a regular, Sun-like jre in order to be able to perform its build tasks (it needs to be able to compile against standard libraries such as 'rt.jar').  Some JVMs do not comply with eclipse's expectations.  A simple work-around is to specify a jre for eclipse to compile against.  If the jvm used to run the benchmarks does not comply with eclipse's expectations, an error message will be produced with an explanation of the suggested work around (setting -Declipse.java.home=xxx on the command line to point to an orthodox jre, whose libraries will be used). <b>[Fixed in 2006-10-RC1]</b> <p>
+  <li>The <b>'eclipse'</b> benchmark requires a regular, Sun-like jre in order to be able to perform its build tasks (it needs to be able to compile against standard libraries such as 'rt.jar').  Some JVMs do not comply with eclipse's expectations.  A simple work-around is to specify a jre for eclipse to compile against.  If the jvm used to run the benchmarks does not comply with eclipse's expectations, an error message will be produced with an explanation of the suggested work around (setting <tt>-Declipse.java.home=xxx</tt> on the command line to point to an orthodox jre, whose libraries will be used). <b>[Fixed in 2006-10-RC1]</b> <p>
   </li>
 </ul>
 <br>
