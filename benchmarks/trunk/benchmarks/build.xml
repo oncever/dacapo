@@ -81,7 +81,7 @@
          ================================= -->
 	<target name="sources" 
     description="Download sources from their original locations"
-    depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
+    depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
 	</target>
     	
 	<!-- ================================= 
