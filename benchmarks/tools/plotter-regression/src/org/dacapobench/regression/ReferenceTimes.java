@@ -40,6 +40,7 @@ public class ReferenceTimes {
     addScore(ref, "luindex", 10556);
     addScore(ref, "lusearch", 5493);
     addScore(ref, "pmd", 6302);
+    addScore(ref, "sunflow", 5026);
     addScore(ref, "xalan", 6070);
     Database.the.putTable("reference", ref);
   }
