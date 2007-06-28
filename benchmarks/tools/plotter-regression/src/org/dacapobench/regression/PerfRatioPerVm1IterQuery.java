@@ -8,7 +8,6 @@ package org.dacapobench.regression;
 import org.jfree.data.general.Dataset;
 import org.jfree.data.xy.XYDataset;
 
-import edu.anu.thylacine.graph.Benchmark;
 import edu.anu.thylacine.graph.Err;
 import edu.anu.thylacine.graph.NoDataException;
 import edu.anu.thylacine.graph.graphs.adapters.GraphAdapter;
@@ -17,35 +16,46 @@ import edu.anu.thylacine.relational.Column;
 import edu.anu.thylacine.relational.ColumnValue;
 import edu.anu.thylacine.relational.Database;
 import edu.anu.thylacine.relational.Table;
-import edu.anu.thylacine.relational.Tuple;
 
 /**
- * Mean across all benchmarks of performance
  * 
  * @author Robin Garner
- * @date $Date: 2006/11/20 09:06:40 $
- * @id $Id: PerfMeanQuery.java,v 1.1 2006/11/20 09:06:40 robing Exp $
+ * @date $Date:$
+ * @id $Id:$
  *
  */
-public class PerfMeanQuery extends PerfRatioQuery {
-  
-  private static Column[] resultColumns = new Column[] {
-    PerfData.JVM,
+public class PerfRatioPerVm1IterQuery extends PerfRatioQuery {
+
+  private static Column[] columns = new Column[] {
+    Database.BENCHMARK,
     PerfData.TIME,
     RATIO,
   };
-
+  
+  /**
+   * 
+   */
+  public PerfRatioPerVm1IterQuery() {
+  }
 
   /* (non-Javadoc)
-   * @see org.dacapobench.regression.PerfHistoryQuery#exec(edu.anu.thylacine.relational.ColumnValue[])
+   * @see org.dacapobench.regression.PerfRatioQuery#exec(edu.anu.thylacine.relational.ColumnValue[])
    */
   @Override
   public Table exec(ColumnValue... bindings) throws NoDataException {
-    Table result = super.exec().select(
-          Database.bind(Database.BENCHMARK,Benchmark.geomean));
-    Table finalResult = result.select(bindings).project(resultColumns);
-    //finalResult.orderBy(PerfData.TIME).print();
-    return finalResult;
+    boolean hasBenchmark = false;
+    boolean hasIter = false;
+    for (ColumnValue value : bindings) {
+      hasBenchmark |= value.getColumn().equals(PerfData.JVM);
+      hasIter |= value.getColumn().equals(Iterations.ITER);
+    }
+    if (!hasBenchmark)
+      Err.die("A PerfRatioPerVm1IterQuery will return erroneous results if a JVM isn't specified");
+    if (!hasIter)
+      Err.die("A PerfRatioPerVm1IterQuery will return erroneous results if an iteration isn't specified");
+    
+    Table table = super.exec(bindings);
+    return table.project(columns);
   }
 
   /* (non-Javadoc)
@@ -54,10 +64,10 @@ public class PerfMeanQuery extends PerfRatioQuery {
   public <T extends Dataset> GraphAdapter<T> getAdapter(Class<T> resultClass) {
     if (XYDataset.class.isAssignableFrom(resultClass))
       return (GraphAdapter<T>)new TimeSeriesTableAdapter<T>(resultClass,
-          PerfData.TIME,
-          PerfData.JVM);
+          PerfData.TIME, // X-axis column
+          Database.BENCHMARK); // Category column
     else {
-      Err.die("Cannot produce a %s from a PerfMeanQuery", resultClass.toString());
+      Err.die("Cannot produce a %s from a PerfHistoryQuery", resultClass.toString());
       return null;
     }
   }

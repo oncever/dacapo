@@ -11,7 +11,7 @@ import java.awt.Stroke;
 import edu.anu.thylacine.graph.graphs.formats.LineColour;
 import edu.anu.thylacine.graph.graphs.formats.Lines;
 
-class PerfLineColour extends LineColour {
+class PerfColumnColour extends LineColour {
   
   private static final Color[] colours = new Color[] {
     Color.RED,
@@ -28,27 +28,9 @@ class PerfLineColour extends LineColour {
     Color.GRAY
   };
   
-  private static final Stroke[] strokes =  new Stroke[] {
-    Lines.SOLID,
-    Lines.DOTTED,
-    Lines.DASH1
-  };
-  
-  private final int groupSize;
-  
-  PerfLineColour(int groupSize) {
-    this.groupSize = groupSize;
-  }
-  
   @Override
   public Color getColour(int row, int column) {
-    int group = column / groupSize;
-    Color colour = colours[group % colours.length];
+    Color colour = colours[row % colours.length];
     return colour;
-  }
-  @Override
-  public Stroke getStroke(int row, int column) {
-    int member = column % groupSize;
-    return strokes[member % strokes.length];
   }
 }

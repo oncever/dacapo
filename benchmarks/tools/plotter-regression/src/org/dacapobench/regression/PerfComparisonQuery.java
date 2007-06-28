@@ -9,10 +9,13 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.Dataset;
 
 import edu.anu.thylacine.graph.Err;
+import edu.anu.thylacine.graph.NoDataException;
 import edu.anu.thylacine.graph.graphs.adapters.CategoryTableAdapter;
 import edu.anu.thylacine.graph.graphs.adapters.GraphAdapter;
 import edu.anu.thylacine.relational.Column;
+import edu.anu.thylacine.relational.ColumnValue;
 import edu.anu.thylacine.relational.Database;
+import edu.anu.thylacine.relational.Table;
 
 /**
  * Query that produces a single number per benchmark per VM.  
@@ -27,18 +30,22 @@ import edu.anu.thylacine.relational.Database;
  */
 public class PerfComparisonQuery extends PerfRatioQuery {
   
-  private final Column<Double> stat;
+  private final int iteration;
   
   public PerfComparisonQuery(int iteration) {
-    switch (iteration) {
-    case 1: stat = PerfData.ITER1; break;
-    case 2: stat = PerfData.ITER2; break;
-    case 3: stat = PerfData.ITER3; break;
-    default:
-      Err.die("Unknown iteration %d",iteration);
-      stat = null;
-    }
+    this.iteration = iteration;
   }
+  
+  
+
+  @Override
+  public Table exec(ColumnValue... bindings) throws NoDataException {
+    Table base = super.exec(bindings);
+    
+    return base.select(Database.bind(Iterations.ITER, iteration));
+  }
+
+
 
   /* (non-Javadoc)
    * @see edu.anu.thylacine.graph.graphs.Query#getAdapter(java.lang.Class)
@@ -49,7 +56,7 @@ public class PerfComparisonQuery extends PerfRatioQuery {
       return (GraphAdapter<T>)new CategoryTableAdapter<T>(resultClass,
           PerfData.JVM,             // Label
           Database.BENCHMARK,       // Category 
-          stat);          // Value
+          RATIO);          // Value
     else {
       Err.die("Cannot produce a %s from a PerfComparisonQuery", resultClass.toString());
       return null;

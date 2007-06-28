@@ -22,7 +22,7 @@
   <property name="jcommon.jar" value="lib/jcommon-${jcommon.version}.jar"/>
   <property name="jfree.jar" value="lib/jfreechart-${jfree.version}.jar"/>
   <property name="xerces.jar" value="lib/xercesImpl.jar"/>
-  <property name="plotter.jar" value="../plotter-new/plotter.jar"/>
+  <property name="plotter.jar" value="../plotter/plotter.jar"/>
   
   <path id="main.classpath">
     <!-- <pathelement path="${itext.jar}"/>

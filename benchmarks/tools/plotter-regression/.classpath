@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="lib" path="/plotter-new/lib/xml-apis.jar"/>
-	<classpathentry kind="lib" path="/plotter-new/lib/xercesImpl.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jcommon-1.0.6"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jfreechart-1.0.2"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/plotter-new"/>
-	<classpathentry kind="lib" path="/plotter-new/lib/itext-1.4.3.jar"/>
-	<classpathentry kind="lib" path="/plotter-new/lib/jcommon-1.0.6.jar"/>
-	<classpathentry kind="lib" path="/plotter-new/lib/jfreechart-1.0.2.jar"/>
-	<classpathentry kind="con" path="SWT_CONTAINER/PLATFORM"/>
+	<classpathentry kind="lib" path="/plotter/lib/itext-1.4.3.jar"/>
+	<classpathentry kind="lib" path="/plotter/lib/jcommon-1.0.6.jar"/>
+	<classpathentry kind="lib" path="/plotter/lib/jfreechart-1.0.2.jar"/>
+	<classpathentry kind="lib" path="/plotter/lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="/plotter/lib/xml-apis.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/plotter"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
