@@ -5,6 +5,8 @@
 
 package org.dacapobench.regression;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
@@ -31,32 +33,33 @@ import edu.anu.thylacine.util.MyHashSet;
  */
 public class PerfRatioQuery extends PerfHistoryQuery {
 
-  public static QuotientColumn ITER1_RATIO = new QuotientColumn("ITER1",
-      ReferenceTimes.time,PerfData.ITER1);
-  public static QuotientColumn ITER2_RATIO = new QuotientColumn("ITER2",
-      ReferenceTimes.time,PerfData.ITER2);
-  public static QuotientColumn ITER3_RATIO = new QuotientColumn("ITER3",
-      ReferenceTimes.time,PerfData.ITER3);
+  public static QuotientColumn RATIO = new QuotientColumn("RATIO",
+      ReferenceTimes.time,ELAPSED);
     
-  public static final Column<Double> ITER1_MEAN = Database.newColumn("ITER1",Double.class);
-  public static final Column<Double> ITER2_MEAN = Database.newColumn("ITER2",Double.class);
-  public static final Column<Double> ITER3_MEAN = Database.newColumn("ITER3",Double.class);
+  public static final Column<Double> MEAN = Database.newColumn("MEAN",Double.class);
 
   private static Column[] columns = new Column[] {
     Database.BENCHMARK,
     PerfData.JVM,
     PerfData.TIME,
-    ITER1_RATIO,
-    ITER2_RATIO,
-    ITER3_RATIO,
+    Iterations.ITER,
+    RATIO,
   };
   
   private static final Table meanBenchmark = createMeanBenchmarkTable();
+  private static final Table meanJVM = createMeanJVMTable();
 
   private static Table createMeanBenchmarkTable() {
     Schema schema = new DefaultSchema(Database.BENCHMARK);
     Table result = new DefaultTable(schema);
     result.insert(Database.bind(Database.BENCHMARK,Benchmark.geomean));
+    return result;
+  }
+
+  private static Table createMeanJVMTable() {
+    Schema schema = new DefaultSchema(PerfData.JVM);
+    Table result = new DefaultTable(schema);
+    result.insert(Database.bind(PerfData.JVM,"geomean"));
     return result;
   }
 
@@ -69,26 +72,28 @@ public class PerfRatioQuery extends PerfHistoryQuery {
    * 
    */
   public Table exec(ColumnValue... bindings) throws NoDataException {
+    long start = now();
     Table perf = super.exec();
+    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): Super-query\n", elapsed(start));
     Table ref = Database.the.getTable("reference");
     
-    Table perfNorm = perf.join(ref).append(ITER1_RATIO,ITER2_RATIO,ITER3_RATIO);
+    Table perfNorm = perf.join(ref).append(RATIO);
+    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): append ratio\n", elapsed(start));
 
     Table result = perfNorm.project(columns);
+    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): project\n", elapsed(start));
 
-    Table means = result.aggregate(
-        new MyHashSet<Column>(new Column[]{PerfData.TIME,PerfData.JVM}),          // Group-by 
-        new GeoMean<Double>(ITER1_RATIO,ITER1_MEAN),
-        new GeoMean<Double>(ITER2_RATIO,ITER2_MEAN),
-        new GeoMean<Double>(ITER3_RATIO,ITER3_MEAN)).join(meanBenchmark);
+    Table meanByJVM = result.aggregate(
+        new HashSet<Column>(Arrays.asList(PerfData.TIME,PerfData.JVM,Iterations.ITER)),  // Group-by 
+        new GeoMean<Double>(RATIO,MEAN)).join(meanBenchmark);
+    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): aggregate and form means\n", elapsed(start));
 
     Map<Column,Column> renames = new HashMap<Column,Column>();
-    renames.put(ITER1_MEAN,ITER1_RATIO);
-    renames.put(ITER2_MEAN,ITER2_RATIO);
-    renames.put(ITER3_MEAN,ITER3_RATIO);
-    means = means.rename(renames).project(columns);
+    renames.put(MEAN,RATIO);
+    meanByJVM = meanByJVM.rename(renames).project(columns);
 
-    return result.union(means).select(bindings);
+    Table finalResult = result.union(meanByJVM);
+    return finalResult.select(bindings);
   }
 
 }

@@ -24,16 +24,14 @@ public class PerfRatioPerBmQuery extends PerfRatioQuery {
   private static Column[] columns = new Column[] {
     PerfData.JVM,
     PerfData.TIME,
-    ITER1_RATIO,
-    ITER2_RATIO,
-    ITER3_RATIO,
+    Iterations.ITER,
+    RATIO,
   };
   
   /**
    * 
    */
   public PerfRatioPerBmQuery() {
-    // TODO Auto-generated constructor stub
   }
 
   /* (non-Javadoc)
