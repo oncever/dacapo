@@ -34,7 +34,7 @@ import edu.anu.thylacine.util.MyHashSet;
  */
 public class PerfHistoryQuery implements Query {
   
-  protected final boolean PROFILE = false;
+  protected final boolean PROFILE = true;
   
   public static final Column<Double> ELAPSED = Database.newColumn("elapsed",Double.class);
   
@@ -73,11 +73,9 @@ public class PerfHistoryQuery implements Query {
     return new MyHashSet<String>("perf");
   }
   
-  /* (non-Javadoc)
-   * @see edu.anu.thylacine.graph.graphs.Query#exec(edu.anu.thylacine.relational.ColumnValue[])
-   * 
-   */
-  public Table exec(ColumnValue... bindings) throws NoDataException {
+  static Table processed = null;
+  
+  private Table preProcess() throws NoDataException {
     Table perf = Database.the.getTable("perf");
     if (perf == null)
       Err.noData("perf");
@@ -102,9 +100,21 @@ public class PerfHistoryQuery implements Query {
     if (PROFILE) System.out.printf("PerfHistoryQuery (%4.2f): insert 2nd iteration\n",elapsed(start));
     result = result.union(raw.project(iter3Columns).join(iteration3).rename(iter3Map));
     if (PROFILE) System.out.printf("PerfHistoryQuery (%4.2f): insert 3rd iteration\n",elapsed(start));
+    return result;
+  }
+  
+  /* (non-Javadoc)
+   * @see edu.anu.thylacine.graph.graphs.Query#exec(edu.anu.thylacine.relational.ColumnValue[])
+   * 
+   */
+  public Table exec(ColumnValue... bindings) throws NoDataException {
+    if (processed == null) {
+      processed = preProcess();
+    }
     
+    long start = now();
     if (PROFILE) System.out.printf("PerfHistoryQuery (%4.2f): renamed columns\n",elapsed(start));
-    Table last = result.select(bindings);
+    Table last = processed.select(bindings);
     if (PROFILE) System.out.printf("PerfHistoryQuery (%4.2f): selected by bindings\n",elapsed(start));
     return last;
   }

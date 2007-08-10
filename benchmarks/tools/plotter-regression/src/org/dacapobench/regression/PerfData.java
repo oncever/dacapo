@@ -11,9 +11,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
+import edu.anu.thylacine.data.RawCSVFile;
 import edu.anu.thylacine.graph.Benchmark;
 import edu.anu.thylacine.graph.data.files.Parser;
-import edu.anu.thylacine.graph.data.files.RawCSVFile;
 import edu.anu.thylacine.graph.data.files.TupleProvider;
 import edu.anu.thylacine.relational.Column;
 import edu.anu.thylacine.relational.Database;
