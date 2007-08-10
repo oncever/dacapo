@@ -30,20 +30,21 @@ public class ReferenceTimes {
    */
   public static void createReferenceTable() {
     Table ref = Database.newTable(Database.BENCHMARK,time);
-    addScore(ref, "antlr", 2640);
-    addScore(ref, "bloat", 8576);
-    addScore(ref, "chart", 7813);
-    addScore(ref, "eclipse", 38913);
-    addScore(ref, "fop", 2609);
-    addScore(ref, "hsqldb", 4384);
-    addScore(ref, "jython", 5870);
-    addScore(ref, "luindex", 10556);
-    addScore(ref, "lusearch", 5493);
+    addScore(ref, "antlr", 2462);
+    addScore(ref, "bloat", 8124);
+    addScore(ref, "chart", 7756);
+    addScore(ref, "eclipse", 36346);
+    addScore(ref, "fop", 2408);
+    addScore(ref, "hsqldb", 3314);
+    addScore(ref, "jython", 5595);
+    addScore(ref, "luindex", 7608);
+    addScore(ref, "lusearch", 5279);
     addScore(ref, "pmd", 6302);
-    addScore(ref, "sunflow", 5026);
+    addScore(ref, "sunflow", 4928);
     addScore(ref, "xalan", 6070);
     Database.the.putTable("reference", ref);
   }
+
 
   /**
    * @param ref

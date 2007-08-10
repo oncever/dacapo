@@ -67,32 +67,36 @@ public class PerfRatioQuery extends PerfHistoryQuery {
     return new MyHashSet<String>("reference").union(super.baseTables());
   }
   
+  private static Table finalResult = null;
+  
   /* (non-Javadoc)
    * @see edu.anu.thylacine.graph.graphs.Query#exec(edu.anu.thylacine.relational.ColumnValue[])
    * 
    */
   public Table exec(ColumnValue... bindings) throws NoDataException {
     long start = now();
-    Table perf = super.exec();
-    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): Super-query\n", elapsed(start));
-    Table ref = Database.the.getTable("reference");
-    
-    Table perfNorm = perf.join(ref).append(RATIO);
-    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): append ratio\n", elapsed(start));
+    if (finalResult == null) {
+      Table perf = super.exec();
 
-    Table result = perfNorm.project(columns);
-    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): project\n", elapsed(start));
+      if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): Super-query\n", elapsed(start));
+      Table ref = Database.the.getTable("reference");
 
-    Table meanByJVM = result.aggregate(
-        new HashSet<Column>(Arrays.asList(PerfData.TIME,PerfData.JVM,Iterations.ITER)),  // Group-by 
-        new GeoMean<Double>(RATIO,MEAN)).join(meanBenchmark);
-    if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): aggregate and form means\n", elapsed(start));
+      Table perfNorm = perf.join(ref).append(RATIO);
+      if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): append ratio\n", elapsed(start));
 
-    Map<Column,Column> renames = new HashMap<Column,Column>();
-    renames.put(MEAN,RATIO);
-    meanByJVM = meanByJVM.rename(renames).project(columns);
+      Table result = perfNorm.project(columns);
+      if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): project\n", elapsed(start));
 
-    Table finalResult = result.union(meanByJVM);
+      Table meanByJVM = result.aggregate(
+          new HashSet<Column>(Arrays.asList(PerfData.TIME,PerfData.JVM,Iterations.ITER)),  // Group-by 
+          new GeoMean<Double>(RATIO,MEAN)).join(meanBenchmark);
+      if (PROFILE) System.out.printf("PerfRatioQuery (%4.2f): aggregate and form means\n", elapsed(start));
+
+      Map<Column,Column> renames = new HashMap<Column,Column>();
+      renames.put(MEAN,RATIO);
+      meanByJVM = meanByJVM.rename(renames).project(columns);
+      finalResult = result.union(meanByJVM);
+    }
     return finalResult.select(bindings);
   }
 
