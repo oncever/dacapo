@@ -9,14 +9,40 @@
 export BIN=$HOME/dacapo_regressions
 export SCRATCH=$HOME/tmp
 export JAVA_HOME_14=/usr/lib/j2se/1.4
-#export JAVA_HOME_15=/opt/jdk1.5.0
-export JAVA_HOME_15=/opt/ibm-java2-i386-50
+export JAVA_HOME_15=/opt/jdk1.5.0
+#export JAVA_HOME_15=/opt/ibm-java2-i386-50
+export HOST=$(uname -n)
 
-export ALL_VMS="DRLVM JIKESRVM SUN JDK16 J9 JROCKIT"
-export ALL_BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd sunflow xalan"
-export ALL_SIZES="small default large"
+# 
+# JikesRVM configuration variabes
+# 
+# The host type as used by the JikesRVM build system
+#
+export HOST_TYPE=$(uname -m | sed -e 's/i686/ia32/' -e 's/x86_64/ia32/')-$(uname -o | sed -e 's@GNU/Linux@linux@')
+
+#
+# The configuration to build
+#
+export RVM_CONFIG=FastAdaptiveGenMS
+
+export ALL_VMS="DRLVM JIKESRVM SUN JDK16 J9 JROCKIT JROCKIT16 CACAO"
+export PERF_VMS="JIKESRVM DRLVM SUN JDK16 J9 JROCKIT JROCKIT16 CACAO"
 export PUBLIC_HOST=war.anu.edu.au
-export PUBLIC_PATH=/cs/pub/people/Robin.Garner/dacapo/regression/
+case $HOST in
+  #
+  # dacapoa - correctness regressions against SVN head
+  #
+  dacapoa) export PUBLIC_PATH=/cs/pub/people/Robin.Garner/dacapo/regression/
+           export ALL_BMS="antlr bloat chart derby eclipse fop hsqldb jython luindex lusearch pmd sunflow xalan"
+           export ALL_SIZES="small default large"
+           ;;
+  #
+  # dacapob - performance regressions against the latest release
+  #
+  dacapob) export PUBLIC_PATH=/cs/pub/people/Robin.Garner/dacapo/release/
+           export ALL_BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
+           export ALL_SIZES="default"
+	   export RELEASE=/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar
+           ;;
+esac
 export PUBLIC=$PUBLIC_HOST:$PUBLIC_PATH
-export PERF_VMS="JIKESRVM DRLVM SUN JDK16 J9 JROCKIT"
-

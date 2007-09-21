@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -x
+TODAY=$(date +%Y%m%d)
+
+BIN=$HOME/dacapo_regressions
+. $BIN/config
+
+DATE=${1:-$TODAY}
+SVNDATE=$(date -d $DATE +%Y-%m-%d)
+TOP=$HOME/tmp/rerun-cacao-$DATE
+
+[ -e $TOP ] || mkdir $TOP #|| { echo "Please cleanup $TOP before you re-run"; exit 1; }
+
+echo "Copying old results back here"
+rsync -a $PUBLIC/results-$DATE $TOP/
+
+if [ ! -e $TOP/results-$DATE/summary.dat ]; then
+  echo "results-$DATE was not a valid run - perhaps you should redo the whole thing"
+  exit 1
+fi
+
+if [ ! -e $BIN/builds/dacapo-$DATE.jar ]; then
+  echo "There is no dacapo JAR for that date"
+  exit 1
+fi
+
+(
+  cd $TOP
+  $BIN/build_cacao $TOP &> $TOP/results-$DATE/cacao.build.$try.log
+  if [ ! -e $TOP/cacao/build/bin/cacao ]; then
+    echo "ERROR: Cacao failed to build."
+  else
+    break;
+  fi
+  cp $BIN/builds/dacapo-$DATE.jar .
+  export CACAO_HOME=$TOP/cacao/build
+  $BIN/test_dacapo $DATE CACAO
+  $BIN/test_dacapo_results results-$DATE
+)

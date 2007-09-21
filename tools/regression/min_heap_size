@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# min_heap_size bm
+#
+
+bm=$1
+
+HERE=$(dirname $0)
+MINIMA=$HERE/minima
+
+min=$(grep ^$bm $MINIMA | awk '{print $2}')
+if [ -z "$min" ]; then
+  echo 64
+else
+  echo $min
+fi
