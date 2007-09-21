@@ -29,8 +29,8 @@ shift 2
 
 START=`date -u +%s`
 
-echo $* > $logfile
-$* >> $logfile 2>&1 &
+echo $* > $logfile.raw
+$* >> $logfile.raw 2>&1 &
 PID=$!
 
 NOW=`date -u +%s`
@@ -40,23 +40,21 @@ while [ \( "$(proctree $PID)" != "" \) -a \( $NOW -lt $TIMEOUT \) ]; do
   NOW=`date -u +%s`
 done
 
-#set -x
+echo "" > $logfile.kill
 PROCS=$(proctree $PID)
 if [ "$PROCS" != "" ]; then
   #
   # timeout occurred - time to kill the offending process and its progeny
   #
-  echo "TIMEOUT - terminating benchmark run" | tee /dev/stdout >> $logfile
-  echo "Killing $PROCS" | tee /dev/stdout >> $logfile
-  # kill $PROCS
-  # sleep 5
+  echo "TIMEOUT - terminating benchmark run" | tee /dev/stderr >> $logfile.kill
+  echo "Killing $PROCS" | tee /dev/stderr >> $logfile.kill
   
   for try in 1 2 3 4 5 6 7 8 9 10; do
     for pid in $PROCS; do
       if [ $try > 5 ]; then SIG="-9"; else SIG=""; fi
       if [ "$(check_pid $pid)" != "" ]; then
         # no more "mr nice guy"
-        echo "kill $SIG $pid" | tee /dev/stdout >> $logfile
+        echo "kill $SIG $pid" | tee /dev/stderr >> $logfile.kill
         kill $SIG $pid
       fi
     done
@@ -64,8 +62,10 @@ if [ "$PROCS" != "" ]; then
   done
   for pid in $PROCS; do
     if [ "$(check_pid $pid)" != "" ]; then
-      echo "WARNING: Unable to kill $pid" | tee /dev/stdout >> $logfile
+      echo "WARNING: Unable to kill $pid" | tee /dev/stderr >> $logfile.kill
     fi
   done
 fi
-
+cp $logfile.raw $logfile
+cat $logfile.kill >> $logfile
+rm $logfile.kill

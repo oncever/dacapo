@@ -13,10 +13,10 @@ fi
 
 DSTAMP=$(date +%Y%m%d)
 TOP=$SCRATCH/dacapo-nightly-$DSTAMP
-DACAPO_SVNHOME=https://svn.sourceforge.net/svnroot/dacapobench
+DACAPO_SVNHOME=https://dacapobench.svn.sourceforge.net/svnroot/dacapobench
 DACAPO_BRANCH=benchmarks/trunk
 #DACAPO_BRANCH=benchmarks/branches/robin
-RVM_SVNHOME=https://svn.sourceforge.net/svnroot/jikesrvm
+RVM_SVNHOME=https://jikesrvm.svn.sourceforge.net/svnroot/jikesrvm
 ANT=/usr/bin/ant
 
 #
@@ -26,12 +26,6 @@ SYSCONFIG=$BIN/$(uname -m).nightly.config
 if [ -e $SYSCONFIG ]; then
   . $SYSCONFIG
 fi
-
-#
-# JikesRVM configuration variabes
-#
-RVM_CONFIG=FastAdaptiveGenMS
-export RVM_ROOT=$TOP/rvm_trunk
 
 #
 # Create the working directory and other initialization tasks
@@ -74,18 +68,25 @@ build_dacapo() {
 
 (
   init
-  build_dacapo
-  if [ ! -e $TOP/dacapo-$DSTAMP.jar ]; then
-    echo "ERROR: dacapo benchmarks failed to build."
-    exit 1
+  if [ -z "$RELEASE" ]; then
+    build_dacapo
+    if [ ! -e $TOP/dacapo-$DSTAMP.jar ]; then
+      echo "ERROR: dacapo benchmarks failed to build."
+      exit 1
+    fi
+  else
+    if [ ! -e $RELEASE ]; then
+      echo "JAR file $RELEASE not found"
+      exit 1
+    fi
   fi
 
   if $(echo $ALL_VMS | grep JIKESRVM > /dev/null); then
     $BIN/build_jikesrvm $TOP $RVM_CONFIG &> $TOP/results-$DSTAMP/jikesrvm.build.log
-    export RVM_BUILD=$RVM_ROOT/builds/$RVM_CONFIG
-    if [ ! -e $RVM_BUILD/JikesRVM ]; then
+    if [ ! -e $TOP/rvm_trunk/dist/${RVM_CONFIG}_${HOST_TYPE}/JikesRVM ]; then
       echo "ERROR: JikesRVM failed to build."
     fi
+    export RVM_ROOT=$TOP/rvm_trunk
   fi
 
   if $(echo $ALL_VMS | grep DRLVM > /dev/null); then
@@ -93,6 +94,15 @@ build_dacapo() {
     export DRLVM_HOME=$TOP/harmony/harmony/working_vm/build/lnx_ia32_gcc_release/deploy/jdk
     if [ ! -e $DRLVM_HOME/jre/bin/java ]; then
       echo "ERROR: DRLVM failed to build."
+    fi
+  fi
+
+  if $(echo $ALL_VMS | grep CACAO > /dev/null); then
+    export JAVA_HOME=$JAVA_HOME_15
+    $BIN/build_cacao $TOP/cacao &> $TOP/results-$DSTAMP/cacao.build.log
+    export CACAO_HOME=$TOP/cacao/cacao/build/
+    if [ ! -e $CACAO_HOME/bin/cacao ]; then
+      echo "ERROR: CACAO failed to build."
     fi
   fi
 

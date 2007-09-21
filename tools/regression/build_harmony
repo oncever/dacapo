@@ -22,10 +22,6 @@ while [ ! -z "$1" ]; do
   shift
 done
 
-echo "------------ environment ------------"
-env
-echo "------------ /environment ------------"
-
 #
 # Internal parameters
 #
@@ -34,7 +30,8 @@ VMTOP=$TOP/harmony/working_vm/
 export JAVA_HOME=/opt/ibm-java2-i386-50
 export PATH=$JAVA_HOME/bin:$PATH
 
-ECJ_DIR=$TOP/harmony/working_classlib/depends/jars/ecj_3.2/
+ECJ_DIR=$TOP/harmony/common_resources/depends/jars/ecj_3.3/
+export BUILD_CFG=release
 
 
 build_ant() {
@@ -49,12 +46,28 @@ build_ant() {
   fi
 }
 
+build_common() {
+  (
+    echo "Building common resources"
+    cd common_resources
+    ant fetch-depends
+  )
+}
+
+build_jdktools() {
+  (
+    echo "Building jdktools"
+    cd working_jdktools
+    ant fetch-depends
+    ant -lib $ECJ_DIR
+  )
+}
+
 build_classlib() {
   (
     echo "Building class library"
     cd working_classlib
     ant fetch-depends
-    
     ant -lib $ECJ_DIR
   )
 }
@@ -69,9 +82,8 @@ build_vm() {
     echo "Updating dependencies"
     chmod +x build.sh
     $BUILD/build.sh update && {
-
       echo "Building"
-      $BUILD/build.sh
+      $BUILD/build.sh -lib $ECJ_DIR
     }
   )
 }
@@ -86,6 +98,8 @@ ant populate_source
 build_ant
 export ANT_HOME=$TOP/apache-ant-1.6.5
 
+build_common
+build_jdktools
 build_classlib
 build_vm
 )

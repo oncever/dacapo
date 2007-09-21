@@ -11,13 +11,15 @@ if [ -z "$BIN" ]; then
   . $(dirname $0)/config
 fi
 
-VERSION=$1
+DATE=$1
 VMS="$2"
 BMS="$3"
 SIZES="$4"
 
-if `echo $VERSION | grep '\.' > /dev/null`; then
-  VERSION=$(echo $VERSION | cut -f1 -d.)
+XVFB_RUN=${XVFB_RUN:-/usr/bin/xvfb-run -a}
+
+if `echo $DATE | grep '\.' > /dev/null`; then
+  DATE=$(echo $DATE | cut -f1 -d.)
 fi
 
 if [ "$VMS" == "" -o "$VMS" == "ALL" ]
@@ -35,13 +37,18 @@ then
   SIZES=$ALL_SIZES
 fi
 
-echo "Version: $VERSION"
+echo "Version: $DATE"
 echo "VMs: $VMS"
 echo "Benchmarks: $BMS"
 echo "Sizes: $SIZES"
 
-OUTDIR=results-$VERSION
-JAR=dacapo-${VERSION}.jar
+OUTDIR=results-$DATE
+advicedir=$HOME/dacapo_regressions/advice-10-iterations
+if [ -z "$RELEASE" ]; then
+  JAR=dacapo-${DATE}.jar
+else
+  JAR=$RELEASE
+fi
 
 [ -e $OUTDIR ] || { mkdir $OUTDIR; }
 
@@ -59,6 +66,23 @@ with_timeout() {
   $BIN/run_with_timeout $limit $OUTDIR/$logfile $*
 }
 
+#
+# Some benchmarks with some class libraries require an x-windows display
+# This function determines a wrapper that provides it
+#
+display_wrapper() {
+  local bm=$1
+  local jvm=$2
+
+  case $bm in
+    chart|sunflow)
+      case $jvm in
+        JIKESRVM|CACAO|DRLVM)
+          echo $XVFB_RUN
+          ;;
+      esac
+  esac
+}
 
 #
 # Run the benchmarks:
@@ -73,11 +97,11 @@ for vm in $VMS
 do
   export PATH=$OLD_PATH
   case $vm in  
-  JIKESRVM)  JAVA_HOME=/usr/lib/j2se/1.4 
-             export PATH=$RVM_ROOT/bin:$PATH
-             ;;
+  JIKESRVM*)  JAVA_HOME=/opt/jdk1.5.0 ;;
+  CACAO)  JAVA_HOME=$CACAO_HOME ;;
   DRLVM)     JAVA_HOME=$DRLVM_HOME ;;
-  JROCKIT)   JAVA_HOME=/opt/jrockit-R26.3.0-jdk1.5.0_06 ;;
+  JROCKIT)   JAVA_HOME=/opt/jrockit-R27.2.0-jdk1.5.0_10 ;;
+  JROCKIT16)   JAVA_HOME=/opt/jrockit-R27.2.0-jdk1.6.0 ;;
   SUN)       JAVA_HOME=/opt/jdk1.5.0 ;;
   JDK16)     JAVA_HOME=/opt/jdk1.6.0 ;;
   BLACKDOWN) JAVA_HOME=/usr/lib/j2se/1.4 ;;
@@ -94,8 +118,9 @@ do
   esac
 
   case $vm in
-    JIKESRVM) JAVA=$RVM_ROOT/bin/rvm ;;
+    JIKESRVM*) JAVA=$RVM_ROOT/dist/${RVM_CONFIG}_${HOST_TYPE}/rvm ;;
     DRLVM) JAVA=$JAVA_HOME/jre/bin/java ;;
+    CACAO) JAVA=$JAVA_HOME/bin/cacao ;;
     *) JAVA=$JAVA_HOME/bin/java;;
   esac
   export JAVA_HOME
@@ -106,11 +131,49 @@ do
   for size in $SIZES
   do
     echo -n "$vm/$size: "
+
+    #
+    # Select the passes to perform
+    #
+    PASS_TMP=1
+    PASS_DFLT=1
+    PASS_PERF=0
+    PASS_SMP=0
+    case $size in
+      small) ;;
+      default)
+        PASS_PERF=1
+        ;;
+      large)
+        PASS_DFLT=0
+        ;;
+    esac
+
+    # The SMP pass is a Jikes-only pass
+    PASS_SMP=0
+    case $vm in
+      JIKESRVM-REPLAY)
+        PASS_TMP=0
+        PASS_DFLT=0
+        PASS_SMP=0
+        if [ $size = default ]; then
+          PASS_PERF=1
+        fi
+        ;;
+      JIKESRVM)
+        if [ $size != large ]; then
+          PASS_SMP=1
+        fi
+        ;;
+    esac
+
     for bm in $BMS
     do
       echo -n "$bm"
-      HEAP=512
       VMFLAGS=
+      #
+      # Set benchmark-specific options
+      #
       case $bm in
         antlr)   case $vm in
                    DRLVM) VMFLAGS="-Xbootclasspath/p:$BIN/antlr.jar" 
@@ -122,68 +185,69 @@ do
                      jar xf $JAR xalan.jar 
                      VMFLAGS="-Xbootclasspath/p:xalan.jar" ;;
                  esac ;;
-        chart)   if [ $vm == "JIKESRVM" -o $vm == "DRLVM" ]; then 
-                   # assume virtual framebuffer device
-                   export DISPLAY=:0.0
-                 fi ;;
         eclipse) if [ $vm == "JIKESRVM" ]; then
                    VMFLAGS="-Declipse.java.home=$JAVA_HOME"
                  fi ;;
       esac
+      DISPLAY_WRAPPER=$(display_wrapper $bm $vm)
       
       DFLAGS="-s $size -n 2"
-      HEAPFLAGS="-Xmx${HEAP}m -Xms${HEAP}m"
+      HEAP_PERF=$(( `$BIN/min_heap_size $bm` * 3 ))
+      HEAP_FAST=512
+      HEAPFLAGS_FAST="-Xmx${HEAP_FAST}m -Xms${HEAP_FAST}m"
+      HEAPFLAGS_PERF="-Xmx${HEAP_PERF}m -Xms${HEAP_PERF}m"
       
-      with_timeout 1200 $vm/$bm.$size.tmp.log $JAVA $VMFLAGS $HEAPFLAGS \
-        -jar $JAR $DFLAGS -scratch /tmp/$$ $bm
-      if [ -e /tmp/$$ ]; then
-        rm -rf /tmp/$$
+      # Run with an absolute scratch directory
+      if [ $PASS_TMP = 1 ]; then
+        with_timeout 1200 $vm/$bm.$size.tmp.log $DISPLAY_WRAPPER \
+	  $JAVA $VMFLAGS $HEAPFLAGS_FAST \
+          -jar $JAR $DFLAGS -scratch /tmp/$$ $bm
+        if [ -e /tmp/$$ ]; then
+          rm -rf /tmp/$$
+        fi
       fi
 
-      if [ "$size" != "large" ]; then
-        with_timeout 1200 $vm/$bm.$size.log $JAVA $VMFLAGS $HEAPFLAGS \
+      # Relative scratch directory
+      if [ $PASS_DFLT = 1 ]; then
+        with_timeout 1200 $vm/$bm.$size.log $DISPLAY_WRAPPER \
+	  $JAVA $VMFLAGS $HEAPFLAGS_FAST \
           -jar $JAR $DFLAGS $bm
       fi
 
       #
       # VM-specific tests
       #
-      if [ $vm == "JIKESRVM" -a "$size" != "large" ]; then
-          with_timeout 1200 $vm/$bm.$size.2proc.log \
-            $JAVA $VMFLAGS -X:processors=2 $HEAPFLAGS \
-              -jar $JAR $DFLAGS $bm
+      if [ $PASS_SMP = 1 ]; then
+          if [ $vm = JIKESRVM ]; then
+            SMPFLAG="-X:processors=all"
+          fi
+          with_timeout 1200 $vm/$bm.$size.2proc.log $DISPLAY_WRAPPER \
+            $JAVA $VMFLAGS $SMPFLAG $HEAPFLAGS_FAST -jar $JAR $DFLAGS $bm
       fi
 
       #
       # Performance run for default workload - do 3 iterations
       #
-      case $bm in
-        antlr) HEAP=64 ;;
-        bloat) HEAP=256 ;;
-        chart) HEAP=128;;
-        fop) HEAP=32;;
-        eclipse) HEAP=256;;
-        hsqldb) HEAP=256;;
-        jython) HEAP=64;;
-        luindex) HEAP=128;;
-        lusearch) HEAP=128;;
-        pmd) HEAP=128;;
-        sunflow) HEAP=256;;
-        xalan) HEAP=128;;
-        *) HEAP=512;;
-      esac
-      HEAPFLAGS="-Xmx${HEAP}m -Xms${HEAP}m"
-      if [ "$size" == "${PERF_SIZE:-default}" ]; then
+      if [ $PASS_PERF = 1 ]; then
         DFLAGS="-s $size -n 3"
-        if [ "$vm" = "JIKESRVM" -a "$bm" != "eclipse" ]; then
+        if [ "$vm" = "JIKESRVM" ]; then
           VMFLAGS="$VMFLAGS -X:processors=2"
         fi
-        with_timeout 1800 $vm/$bm.$size.perf.log $JAVA $VMFLAGS $HEAPFLAGS \
+        if [ "$vm" = "DRLVM" -o "$vm" = "SUN" -o "$vm" = "JDK16" -o "$vm" = "JROCKIT" ]; then
+          VMFLAGS="$VMFLAGS -server"
+        elif [ $vm = JIKESRVM-REPLAY ]; then
+          VMFLAGS="$VMFLAGS -X:aos:enable_replay_compile=true"
+          VMFLAGS="$VMFLAGS -X:aos:cafi=$advicedir/$bm.ca"
+          VMFLAGS="$VMFLAGS -X:aos:dcfi=$advicedir/$bm.dc"
+          VMFLAGS="$VMFLAGS -X:vm:edgeCounterFile=$advicedir/$bm.ec"
+        fi
+        with_timeout 1800 $vm/$bm.$size.perf.log $DISPLAY_WRAPPER \
+          $JAVA $VMFLAGS $HEAPFLAGS_PERF \
           -jar $JAR $DFLAGS $bm
       fi
       echo -n " "
     done
-    echo "...complete, publishing results"
-    $BIN/test_dacapo_results results-$VERSION
   done
+  echo "...complete, publishing results"
+  $BIN/test_dacapo_results results-$DATE
 done

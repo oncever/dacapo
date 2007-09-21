@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Build cacao from either distribution or SVN
+#
+
+TOP=$1
+DEST=$TOP/cacao/build
+CLASSPATH=classpath-0.95
+CLASSPATH_TAR=${CLASSPATH}.tar.gz
+CLASSPATH_URL=ftp://ftp.gnu.org/gnu/classpath/${CLASSPATH_TAR}
+CLASSPATH_CVS=:pserver:anonymous@cvs.savannah.gnu.org:/sources/classpath
+
+FROM=svn
+
+(
+mkdir -p $TOP/cacao
+cd $TOP/cacao
+export PATH=$JAVA_HOME/bin:$PATH
+
+#
+# Build classpath
+#
+if [ $FROM = svn ]; then
+  cvs -d$CLASSPATH_CVS co classpath
+  cd classpath
+  ./autogen.sh
+  ./configure --prefix=$DEST/classpath --with-ecj --disable-gconf-peer --disable-plugin &&
+        make &&
+        make install
+else
+  wget $CLASSPATH_URL
+  tar -xvzf $CLASSPATH_TAR
+  cd $CLASSPATH
+  ./configure --prefix=$DEST/classpath --with-ecj --disable-gconf-peer --disable-plugin &&
+	make &&
+	make install
+fi
+#
+# Build cacao
+#
+cd $TOP/cacao
+if [ $FROM = svn ]; then
+  # svn co svn://c1.complang.tuwien.ac.at/ahome/cacao/svn/cacao/trunk $TOP/cacao/cacao-svn
+  hg clone http://mips.complang.tuwien.ac.at/hg/cacao/ cacao-hg
+
+  cd $TOP/cacao/cacao-hg
+  ./autogen.sh
+elif [ $FROM = 0.98 ]; then
+  wget -c http://www.complang.tuwien.ac.at/cacaojvm/download/cacao-0.98/cacao-0.98.tar.bz2
+  
+  tar -xvjf cacao-0.98.tar.bz2 
+  cd $TOP/cacao/cacao-0.98
+else
+  echo Unknown cacao version, $FROM
+  exit 1
+fi
+
+./configure --disable-debug CFLAGS="-O2" --prefix=$DEST --with-classpath-prefix=$DEST/classpath &&
+	make && 
+	make install
+)

@@ -134,7 +134,7 @@ if true; then
   for vm in $VMS
   do
     case $vm in
-      JIKESRVM|DRLVM)
+      JIKESRVM|DRLVM|CACAO)
         lcvm=$(echo $vm | tr 'A-Z' 'a-z')
         echo "<a href=\"$lcvm.build.log\">$vm</a> "
         ;; 
