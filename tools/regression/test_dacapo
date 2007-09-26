@@ -43,7 +43,6 @@ echo "Benchmarks: $BMS"
 echo "Sizes: $SIZES"
 
 OUTDIR=results-$DATE
-advicedir=$HOME/dacapo_regressions/advice-10-iterations
 if [ -z "$RELEASE" ]; then
   JAR=dacapo-${DATE}.jar
 else
@@ -237,9 +236,9 @@ do
           VMFLAGS="$VMFLAGS -server"
         elif [ $vm = JIKESRVM-REPLAY ]; then
           VMFLAGS="$VMFLAGS -X:aos:enable_replay_compile=true"
-          VMFLAGS="$VMFLAGS -X:aos:cafi=$advicedir/$bm.ca"
-          VMFLAGS="$VMFLAGS -X:aos:dcfi=$advicedir/$bm.dc"
-          VMFLAGS="$VMFLAGS -X:vm:edgeCounterFile=$advicedir/$bm.ec"
+          VMFLAGS="$VMFLAGS -X:aos:cafi=$ADVICEDIR/$bm.ca"
+          VMFLAGS="$VMFLAGS -X:aos:dcfi=$ADVICEDIR/$bm.dc"
+          VMFLAGS="$VMFLAGS -X:vm:edgeCounterFile=$ADVICEDIR/$bm.ec"
         fi
         with_timeout 1800 $vm/$bm.$size.perf.log $DISPLAY_WRAPPER \
           $JAVA $VMFLAGS $HEAPFLAGS_PERF \

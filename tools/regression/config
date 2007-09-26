@@ -6,7 +6,7 @@
 # the main shell scripts to pick up symbols.
 #
 
-export BIN=$HOME/dacapo_regressions
+export BIN=$HOME/regression
 export SCRATCH=$HOME/tmp
 export JAVA_HOME_14=/usr/lib/j2se/1.4
 export JAVA_HOME_15=/opt/jdk1.5.0
@@ -27,19 +27,20 @@ export RVM_CONFIG=FastAdaptiveGenMS
 
 export ALL_VMS="DRLVM JIKESRVM SUN JDK16 J9 JROCKIT JROCKIT16 CACAO"
 export PERF_VMS="JIKESRVM DRLVM SUN JDK16 J9 JROCKIT JROCKIT16 CACAO"
-export PUBLIC_HOST=war.anu.edu.au
+export PUBLIC_HOST=jikesrvm.anu.edu.au
+export ADVICEDIR=$HOME/regression/advice-10-iterations
 case $HOST in
   #
   # dacapoa - correctness regressions against SVN head
   #
-  dacapoa) export PUBLIC_PATH=/cs/pub/people/Robin.Garner/dacapo/regression/
+  dacapoa) export PUBLIC_PATH=public_html/regression/
            export ALL_BMS="antlr bloat chart derby eclipse fop hsqldb jython luindex lusearch pmd sunflow xalan"
            export ALL_SIZES="small default large"
            ;;
   #
   # dacapob - performance regressions against the latest release
   #
-  dacapob) export PUBLIC_PATH=/cs/pub/people/Robin.Garner/dacapo/release/
+  dacapob) export PUBLIC_PATH=public_html/release/
            export ALL_BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
            export ALL_SIZES="default"
 	   export RELEASE=/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar

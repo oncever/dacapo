@@ -35,8 +35,7 @@ init() {
   then
     rm -rf $TOP
   fi
-  mkdir $TOP
-  mkdir $TOP/results-$DSTAMP
+  mkdir -p $TOP/results-$DSTAMP
 }
 
 #

@@ -11,6 +11,10 @@ TOP=$1
 }
 shift
 
+if [ -z "$BIN" ]; then
+  . $(dirname $0)/config
+fi
+
 while [ ! -z "$1" ]; do
   case $1 in 
     clean) rm -rf $TOP/harmony
@@ -25,7 +29,6 @@ done
 #
 # Internal parameters
 #
-BIN=$HOME/dacapo_regressions
 VMTOP=$TOP/harmony/working_vm/
 export JAVA_HOME=/opt/ibm-java2-i386-50
 export PATH=$JAVA_HOME/bin:$PATH

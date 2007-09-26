@@ -3,8 +3,9 @@
 set -x
 TODAY=$(date +%Y%m%d)
 
-BIN=$HOME/dacapo_regressions
-. $BIN/config
+if [ -z "$BIN" ]; then
+  . $(dirname $0)/config
+fi
 
 DATE=${1:-$TODAY}
 SVNDATE=$(date -d $DATE +%Y-%m-%d)
