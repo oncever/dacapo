@@ -9,8 +9,6 @@ if [ -z "$BIN" ]; then
 fi
 
 
-BIN=$HOME/dacapo_regressions
-
 mkdir $TOP || { echo "Please cleanup $TOP before you re-run"; exit 1; }
 
 echo "Copying old results back here"
