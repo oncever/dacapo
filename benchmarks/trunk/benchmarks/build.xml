@@ -237,7 +237,7 @@
 
     <!-- benchmark locations -->
     <property name="antlr.url" value="http://www.antlr2.org/download"/>
-    <property name="batik.url" value="${apache.dl.url}/xml/batik"/>
+    <property name="batik.url" value="${apache.dl.url}/xmlgraphics/batik"/>
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
     <property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
     <property name="derby.url" value="http://apache.wildit.net.au/db/derby/db-derby-${derby.version}"/>
