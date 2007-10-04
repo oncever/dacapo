@@ -803,9 +803,9 @@
             </fileset>
         </copy>
         <unjar src="${batik-top}/lib/xml-apis-ext.jar" dest="${build}"/>
+	<unjar src="${batik-top}/lib/build/crimson-1.1.3.jar" dest="${build}"/>
 
         <!-- unjar dependencies into build.deps directory -->
-        <unjar src="${batik-top}/lib/build/crimson-1.1.3.jar" dest="${build.deps}"/>
         <unjar src="${batik-top}/lib/js.jar" dest="${build.deps}"/>
         <unjar src="${batik-top}/lib/pdf-transcoder.jar" dest="${build.deps}"/>
 
