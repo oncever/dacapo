@@ -70,21 +70,21 @@ public class FileDigest {
    * @throws IOException
    */
   public static byte[] getText(File file, boolean filter, File scratch) throws IOException {
-      final MessageDigest digest = Digest.create();
-      BufferedReader in = new BufferedReader(new FileReader(file));
-      String line;
-      while ((line = in.readLine()) != null) {
-        if (filter) {
-          line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
-          line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
-          line = replaceAllFixed(line,"\\","/");
-        }
-        byte[] buf = line.getBytes();
-        for (int i=0; i < buf.length; i++)
-          digest.update(buf[i]);
+    final MessageDigest digest = Digest.create();
+    BufferedReader in = new BufferedReader(new FileReader(file));
+    String line;
+    while ((line = in.readLine()) != null) {
+      if (filter) {
+        line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
+        line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
+        line = replaceAllFixed(line,"\\","/");
       }
-      in.close();
-      return digest.digest();
+      byte[] buf = line.getBytes();
+      for (int i=0; i < buf.length; i++)
+        digest.update(buf[i]);
+    }
+    in.close();
+    return digest.digest();
   }
 
   /**
@@ -95,16 +95,16 @@ public class FileDigest {
    * @throws IOException
    */
   public static byte[] getBinary(File file) throws IOException {
-      final MessageDigest digest = Digest.create();
-      BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-      byte[] buf = new byte[BUFLEN];
-      int len;
-      while ((len=in.read()) > 0) {
-        for (int i=0; i < len; i++)
-          digest.update(buf[i]);
-      }
-      in.close();
-      return digest.digest();
+    final MessageDigest digest = Digest.create();
+    BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+    byte[] buf = new byte[BUFLEN];
+    int len;
+    while ((len=in.read(buf)) > 0) {
+      for (int i=0; i < len; i++)
+        digest.update(buf[i]);
+    }
+    in.close();
+    return digest.digest();
   }
 
   /**
