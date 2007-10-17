@@ -80,6 +80,9 @@ display_wrapper() {
           echo $XVFB_RUN
           ;;
       esac
+      ;;
+    batik) echo $XVFB_RUN 
+      ;;
   esac
 }
 
