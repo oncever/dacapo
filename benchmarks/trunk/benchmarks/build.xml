@@ -782,10 +782,7 @@
         <mkdir dir="${build.src}/batik"/>
 
         <!-- unpack the source files -->
-	<!--        <unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/> -->
-
-        <!-- Apply the dacapo patch -->
-        <fixcrlf srcdir="${batik-top}/sources" includes="**/*.java"/>
+    	<unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/>
 
         <!-- Build using the supplied build.xml -->
         <ant antfile="${batik-top}/build.xml" dir="${batik-top}" 
