@@ -1072,12 +1072,7 @@
                  dir="${fop-top}"
                  strip="0" ignorewhitespace="yes"/>
 
-        <!-- Build it using fop's build.xml      
-           Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
-           build.xml handles relative directories.  The classpath allows the patched
-           sources to see the test harness code.
-        -->
-        <exec executable="ant" dir="${fop-top}"/>
+    	<ant dir="${fop-top}" inheritall="false"/>
 
         <!-- Install the test data -->
     	<!-- create the zip for fop -->
