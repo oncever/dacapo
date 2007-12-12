@@ -61,7 +61,6 @@
     <property name="blackdown" value="/usr/lib/j2se/1.4"/>
 
     <!-- required libraries -->
-    <property name="java.home.14" location="/usr/lib/j2se/1.4"/>
     <!-- debian standard location -->
 
     <!-- END USER-MODIFIABLE PROPERTIES -->
