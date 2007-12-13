@@ -51,6 +51,14 @@ public class FileDigest {
     }
   }
   
+  /**
+   * Replace all occurrences of a fixed string
+   * 
+   * @param line
+   * @param substr
+   * @param replacement
+   * @return
+   */
   private static String replaceAllFixed(String line, String substr, String replacement) {
     int start = 0;
     int match;
@@ -73,8 +81,11 @@ public class FileDigest {
     final MessageDigest digest = Digest.create();
     BufferedReader in = new BufferedReader(new FileReader(file));
     String line;
+    int unvalidated = 0;
     while ((line = in.readLine()) != null) {
       if (filter) {
+        if (line.startsWith("#NOVALIDATE#"))
+          line = "#NOVALIDATE#"+(unvalidated++);
         line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
         line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
         line = replaceAllFixed(line,"\\","/");
