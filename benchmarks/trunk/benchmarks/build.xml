@@ -865,7 +865,7 @@
     <!-- ================================= 
           target: jython                
          ================================= -->
-    <target name="jython" depends="init,harness" description="--> build the jython benchmark">
+    <target name="jython" depends="init,harness,ant" description="--> build the jython benchmark">
 		<ant antfile="${ant.dir}/jython.xml" target="build" inheritAll="true"/>
 	</target>
 
