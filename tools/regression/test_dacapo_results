@@ -209,7 +209,7 @@ if true; then
     for size in $SIZES
     do
       echo -n "<tr class=\"$size\">"
-      if [ "$size" == "small" ]; then
+      if [ "$size_no" == 0 ]; then
         echo "<th class=\"benchmark\" rowspan=${NUM_SIZES}>$bm</th>"
       fi
       echo -n "<td class=\"size\">$size</td>"
