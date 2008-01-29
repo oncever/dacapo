@@ -6,11 +6,30 @@
 # the main shell scripts to pick up symbols.
 #
 
+#
+# Directory where these scripts live
+#
 export BIN=$HOME/regression
+
+#
+# Scratch directory - requires a couple of Gb of space
+#
 export SCRATCH=$HOME/tmp
+
+#
+# Path to a Java 1.4 SDK
+#
 export JAVA_HOME_14=/usr/lib/j2se/1.4
+
+#
+# Path to a Java 1.5 SDK
+#
 export JAVA_HOME_15=/opt/jdk1.5.0
 #export JAVA_HOME_15=/opt/ibm-java2-i386-50
+
+#
+# Current hostname
+#
 export HOST=$(uname -n)
 
 # 
@@ -21,14 +40,39 @@ export HOST=$(uname -n)
 export HOST_TYPE=$(uname -m | sed -e 's/i686/ia32/' -e 's/x86_64/ia32/')-$(uname -o | sed -e 's@GNU/Linux@linux@')
 
 #
-# The configuration to build
+# The JikesRVM configuration to build
 #
 export RVM_CONFIG=FastAdaptiveGenMS
 
+#
+# List of virtual machines
+#
 export ALL_VMS="DRLVM JIKESRVM SUN JDK16 J9 JROCKIT JROCKIT16 CACAO"
+
+#
+# List of virtual machines to do performance runs against
+#
 export PERF_VMS="JIKESRVM DRLVM SUN JDK16 J9 JROCKIT JROCKIT16 CACAO"
+
+#
+# The web server and directory where the results live
+#
 export PUBLIC_HOST=jikesrvm.anu.edu.au
+export PUBLIC_PATH=
+
+#
+# Advice files for JikesRVM replay compilation (under development)
+#
 export ADVICEDIR=$HOME/regression/advice-10-iterations
+
+#
+# Do we need to hack the bootclasspath, or are we testing the dacapo classloader ?
+#
+export HACK_BOOTCLASSPATH=true
+
+#
+# Configuration variations for the regression and performance machines
+#
 case $HOST in
   #
   # dacapoa - correctness regressions against SVN head
@@ -36,6 +80,7 @@ case $HOST in
   dacapoa) export PUBLIC_PATH=public_html/regression/
            export ALL_BMS="antlr batik bloat chart derby eclipse fop hsqldb jython luindex lusearch pmd sunflow xalan"
            export ALL_SIZES="small default large"
+           export HACK_BOOTCLASSPATH=false
            ;;
   #
   # dacapob - performance regressions against the latest release
@@ -44,6 +89,7 @@ case $HOST in
            export ALL_BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
            export ALL_SIZES="default"
 	   export RELEASE=/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar
+           export HACK_BOOTCLASSPATH=true
            ;;
 esac
 export PUBLIC=$PUBLIC_HOST:$PUBLIC_PATH
