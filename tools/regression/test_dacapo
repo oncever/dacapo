@@ -177,16 +177,22 @@ do
       # Set benchmark-specific options
       #
       case $bm in
-        antlr)   case $vm in
-                   DRLVM) VMFLAGS="-Xbootclasspath/p:$BIN/antlr.jar" 
-			;;
-                 esac ;;
+        antlr)   
+		if [ $HACK_BOOTCLASSPATH = "true" ]; then
+		    case $vm in
+                        DRLVM) VMFLAGS="-Xbootclasspath/p:$BIN/antlr.jar" 
+		               ;;
+                    esac 
+                fi ;;
         hsqldb)  HEAP=768 ;;
-        xalan)   case $vm in
-                   J9|TOKYO|DRLVM)
-                     jar xf $JAR xalan.jar 
-                     VMFLAGS="-Xbootclasspath/p:xalan.jar" ;;
-                 esac ;;
+        xalan)   
+		if [ $HACK_BOOTCLASSPATH = "true" ]; then
+                   case $vm in
+                     J9|TOKYO|DRLVM)
+                       jar xf $JAR xalan.jar 
+                       VMFLAGS="-Xbootclasspath/p:xalan.jar" ;;
+                   esac
+                fi ;;
         eclipse) if [ $vm == "JIKESRVM" ]; then
                    VMFLAGS="-Declipse.java.home=$JAVA_HOME"
                  fi ;;
