@@ -29,80 +29,34 @@ done
 #
 # Internal parameters
 #
-VMTOP=$TOP/harmony/working_vm/
-export JAVA_HOME=/opt/ibm-java2-i386-50
+export JAVA_HOME=$JAVA_HOME_15
 export PATH=$JAVA_HOME/bin:$PATH
 
-ECJ_DIR=$TOP/harmony/common_resources/depends/jars/ecj_3.3/
+#
+# Dependencies
+#
+DEPENDS=$BIN/downloads
+mkdir -p $DEPENDS
+
+ensure() {
+  local target=$1
+  local source=$2
+
+  wget -c $source -O $target
+}
+
+ensure $DEPENDS/ecj_3.3.jar http://archive.eclipse.org/eclipse/downloads/drops/R-3.3-200706251500/ecj.jar
+
 export BUILD_CFG=release
 
-
-build_ant() {
-  if [ ! -e $TOP/apache-ant-1.6.5 ]; then (
-    echo "Downloading ant"
-    cd $TOP
-    #wget -c http://www.apache.org/dist/ant/ant-current-bin.zip
-    wget -c http://archive.apache.org/dist/ant/binaries/apache-ant-1.6.5-bin.tar.gz
-    echo "Unpacking ANT"
-    tar -xzf apache-ant-1.6.5-bin.tar.gz
-  )
-  fi
-}
-
-build_common() {
-  (
-    echo "Building common resources"
-    cd common_resources
-    ant fetch-depends
-  )
-}
-
-build_jdktools() {
-  (
-    echo "Building jdktools"
-    cd working_jdktools
-    ant fetch-depends
-    ant -lib $ECJ_DIR
-  )
-}
-
-build_classlib() {
-  (
-    echo "Building class library"
-    cd working_classlib
-    ant fetch-depends
-    ant -lib $ECJ_DIR
-  )
-}
-
-build_vm() {
-  (
-    echo "Building the VM"
-    BUILD=$VMTOP/build
-    cd $BUILD
-    cp $BIN/drlvm.properties $BUILD/drlvm.properties
-
-    echo "Updating dependencies"
-    chmod +x build.sh
-    $BUILD/build.sh update && {
-      echo "Building"
-      $BUILD/build.sh -lib $ECJ_DIR
-    }
-  )
-}
-
-(
 svn co https://svn.apache.org/repos/asf/harmony/enhanced/trunk $TOP/harmony
-cd $TOP/harmony
+export ANT_OPTS='-Xms256m -Xmx512m'
 
-echo "Populating source"
-ant populate_source
-
-build_ant
-export ANT_HOME=$TOP/apache-ant-1.6.5
-
-build_common
-build_jdktools
-build_classlib
-build_vm
+( 
+  #
+  # Build the classlib and VM
+  #
+    cd $TOP/harmony &&
+    ant -lib $DEPENDS -Dauto.fetch=true all
 )
+

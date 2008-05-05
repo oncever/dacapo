@@ -8,6 +8,11 @@ if [ -z "$BIN" ]; then
   . $(dirname $0)/config
 fi
 
+if [ -z "$RELEASE" ]; then
+  JAR=dacapo-${DATE}.jar
+else
+  JAR=$RELEASE
+fi
 
 mkdir $TOP || { echo "Please cleanup $TOP before you re-run"; exit 1; }
 
@@ -19,14 +24,14 @@ if [ ! -e $TOP/results-$DATE/summary.dat ]; then
   exit 1
 fi
 
-if [ ! -e $BIN/builds/dacapo-$DATE.jar ]; then
+if [ -z "$RELEASE" -a ! -e $BIN/builds/dacapo-$DATE.jar ]; then
   echo "There is no dacapo JAR for that date"
   exit 1
 fi
 
 (
   cd $TOP
-  export DRLVM_HOME=$TOP/harmony/harmony/working_vm/build/lnx_ia32_gcc_release/deploy/jdk
+  export DRLVM_HOME=$TOP/harmony/harmony/working_vm/deploy/jdk
   for try in 1 2 3 LAST
   do
     echo "Building harmony"
