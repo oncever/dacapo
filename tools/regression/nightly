@@ -90,7 +90,7 @@ build_dacapo() {
 
   if $(echo $ALL_VMS | grep DRLVM > /dev/null); then
     $BIN/build_harmony $TOP/harmony &> $TOP/results-$DSTAMP/drlvm.build.log
-    export DRLVM_HOME=$TOP/harmony/harmony/working_vm/build/lnx_ia32_gcc_release/deploy/jdk
+    export DRLVM_HOME=$TOP/harmony/harmony/working_vm/deploy/jdk
     if [ ! -e $DRLVM_HOME/jre/bin/java ]; then
       echo "ERROR: DRLVM failed to build."
     fi
