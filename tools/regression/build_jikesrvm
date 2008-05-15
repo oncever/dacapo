@@ -32,20 +32,23 @@ fi
   export JAVA_HOME=$JAVA_HOME_15
   export PATH=$JAVA_HOME/bin:$PATH
 
-  svn co --revision $REVISION $RVM_SVNHOME/rvmroot/trunk rvm_trunk
-  cd $TOP/rvm_trunk
+  svn co --revision $REVISION $RVM_SVNHOME/rvmroot/trunk rvm_trunk &&
+    cd $TOP/rvm_trunk && {
 
-  # Apply jikesrvm patches
-  [ ! -e  dacapo.patches ] && touch dacapo.patches
-  for patch in $BIN/patches/jikesrvm/*.patch
-  do
-    if $(grep -vq $patch dacapo.patches); then
-      echo "Applying patch $patch"
-      patch -p0 <$patch && echo "successful"
-      echo $patch >> dacapo.patches
-    fi
-  done
+    # Apply jikesrvm patches
+    [ ! -e  dacapo.patches ] && touch dacapo.patches
+    for patch in $BIN/patches/jikesrvm/*.patch
+    do
+      if $(grep -vq $patch dacapo.patches); then
+        echo "Applying patch $patch"
+        patch -p0 <$patch && echo "successful"
+        echo $patch >> dacapo.patches
+      fi
+    done
 
-  ant -Dhost.name=$HOST_TYPE -Dconfig.name=${CONFIG} profiled-image
-  ls -l $TOP/rvm_trunk/dist/${CONFIG}_${HOST_TYPE}/JikesRVM
+    ant -Dhost.name=$HOST_TYPE -Dconfig.name=${CONFIG} \
+	-Dcomponents.cache.dir=$BIN/downloads \
+	profiled-image
+    ls -l $TOP/rvm_trunk/dist/${CONFIG}_${HOST_TYPE}/JikesRVM
+  }
 )
