@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# Cleanup obsolete files - log files, failed runs etc
+#
+# Can be controlled by settings in the config file
+#	MAX_LOG_AGE    default 90 (days)
+#	MAX_TMP_AGE	default 14 (days)
+
+HERE=$(dirname $0)
+
+if [ -z "$BIN" ]; then
+  . $HERE/config
+fi
+
+# Set defaults for any parameters not set in config
+MAX_LOG_AGE=${MAX_LOG_AGE:-90}
+MAX_TMP_AGE=${MAX_TMP_AGE:-7}
+
+# First, cleanup old log files
+
+find $HOME -maxdepth 1 \
+	-mtime +$MAX_LOG_AGE \
+	-name "nightly.*.log" |
+  xargs rm -v
+
+# now old trees in tmp
+
+find $SCRATCH -maxdepth 1 \
+	-mtime +$MAX_TMP_AGE |
+  while read tmpfile; do
+    echo "Removing $tmpfile"
+    rm -rf $tmpfile
+  done
