@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# Update regression test harness to latest svn
+#
+
+
+HERE=$(dirname $0)
+
+if [ -z "$BIN" ]; then
+  . $HERE/config
+fi
+
+HOST=$(hostname --fqdn)
+DATE=$(date +%Y%m%d)
+
+( cd $BIN
+
+  # Create directories if necessary
+  [ -d $LOG ] || mkdir -p $LOG
+  [ -d $SCRATCH ] || mkdir -p $SCRATCH
+
+  # Update the scripts
+  svn update
+
+  # update the crontab
+  crontab crontab.$HOST
+) > $LOG/update.$DATE.log 2>&1

@@ -114,4 +114,4 @@ build_dacapo() {
   ) && { 
       rm -rf $TOP
   }
-) > $HOME/nightly.$DSTAMP.log 2>&1
+) > $LOG/nightly.$DSTAMP.log 2>&1

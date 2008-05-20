@@ -7,6 +7,7 @@
 #	MAX_TMP_AGE	default 14 (days)
 
 HERE=$(dirname $0)
+DATE=$(date +%Y%m%d)
 
 if [ -z "$BIN" ]; then
   . $HERE/config
@@ -18,16 +19,18 @@ MAX_TMP_AGE=${MAX_TMP_AGE:-7}
 
 # First, cleanup old log files
 
-find $HOME -maxdepth 1 \
+(
+  find $LOG -maxdepth 1 \
 	-mtime +$MAX_LOG_AGE \
-	-name "nightly.*.log" |
-  xargs rm -v
+	-name "*.log" |
+    xargs rm -v
 
 # now old trees in tmp
 
-find $SCRATCH -maxdepth 1 \
+  find $SCRATCH -maxdepth 1 \
 	-mtime +$MAX_TMP_AGE |
-  while read tmpfile; do
-    echo "Removing $tmpfile"
-    rm -rf $tmpfile
-  done
+    while read tmpfile; do
+      echo "Removing $tmpfile"
+      rm -rf $tmpfile
+    done
+) > $LOG/cleanup.$DATE.log 2>&1
