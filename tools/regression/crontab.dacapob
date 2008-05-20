@@ -1,3 +1,4 @@
 # m h  dom mon dow   command
+10 23 * * * /home/dacapo/regression/update
+55 23 * * * /home/dacapo/regression/cleanup
 35 00 * * * /home/dacapo/regression/nightly
-55 23 * * * /home/dacapo/regression/cleanup > /dev/null
