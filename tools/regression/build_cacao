@@ -55,7 +55,9 @@ else
   exit 1
 fi
 
-./configure --disable-debug CFLAGS="-O2" --prefix=$DEST --with-classpath-prefix=$DEST/classpath &&
+./configure --disable-debug CFLAGS="-O2" \
+	    --prefix=$DEST \
+	    --with-java-runtime-library-prefix=$DEST/classpath &&
 	make && 
 	make install
 )
