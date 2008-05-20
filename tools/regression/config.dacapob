@@ -1,0 +1,10 @@
+#
+# Node-specific config for dacapob
+#
+# Performance tests against latest official release
+#
+export PUBLIC_PATH=public_html/release/
+export ALL_BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
+export ALL_SIZES="default"
+export RELEASE=/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar
+export HACK_BOOTCLASSPATH=true
