@@ -33,6 +33,11 @@ export JAVA_HOME_15=/opt/jdk1.5.0
 #export JAVA_HOME_15=/opt/ibm-java2-i386-50
 
 #
+# Path to a Java 6 SDK
+#
+export JAVA_HOME_6=/opt/jdk1.6.0
+
+#
 # Current hostname
 #
 export HOST=$(uname -n)
