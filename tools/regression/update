@@ -10,7 +10,7 @@ if [ -z "$BIN" ]; then
   . $HERE/config
 fi
 
-HOST=$(hostname --fqdn)
+HOST=$(hostname)
 DATE=$(date +%Y%m%d)
 
 ( cd $BIN
