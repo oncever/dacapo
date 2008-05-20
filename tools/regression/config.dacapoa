@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Node-specific config for dacapoa
+#
+# Regression tests against svn head
+#
+
+export PUBLIC_PATH=public_html/regression/
+export ALL_BMS="antlr batik bloat chart derby eclipse fop hsqldb jython luindex lusearch pmd sunflow xalan"
+export ALL_SIZES="small default large"
+export HACK_BOOTCLASSPATH=false
+

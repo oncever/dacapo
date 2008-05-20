@@ -12,6 +12,11 @@
 export BIN=$HOME/regression
 
 #
+# Directory for log files
+#
+export LOG=$HOME/log
+
+#
 # Scratch directory - requires a couple of Gb of space
 #
 export SCRATCH=$HOME/tmp
@@ -71,25 +76,8 @@ export ADVICEDIR=$HOME/regression/advice-10-iterations
 export HACK_BOOTCLASSPATH=true
 
 #
-# Configuration variations for the regression and performance machines
+# Support node-specific overrides
 #
-case $HOST in
-  #
-  # dacapoa - correctness regressions against SVN head
-  #
-  dacapoa) export PUBLIC_PATH=public_html/regression/
-           export ALL_BMS="antlr batik bloat chart derby eclipse fop hsqldb jython luindex lusearch pmd sunflow xalan"
-           export ALL_SIZES="small default large"
-           export HACK_BOOTCLASSPATH=false
-           ;;
-  #
-  # dacapob - performance regressions against the latest release
-  #
-  dacapob) export PUBLIC_PATH=public_html/release/
-           export ALL_BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
-           export ALL_SIZES="default"
-	   export RELEASE=/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar
-           export HACK_BOOTCLASSPATH=true
-           ;;
-esac
+[ -e $BIN/config.$HOST ] && . $BIN/config.$HOST
+
 export PUBLIC=$PUBLIC_HOST:$PUBLIC_PATH
