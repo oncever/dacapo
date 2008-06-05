@@ -4,6 +4,16 @@
 #
 
 TOP=$1
+[ -z "$TOP" ] && {
+  echo "Usage: $0 scratch-dir"
+  exit 1
+}
+shift
+
+if [ -z "$BIN" ]; then
+  . $(dirname $0)/config
+fi
+
 DEST=$TOP/cacao/build
 CLASSPATH=classpath-0.95
 CLASSPATH_TAR=${CLASSPATH}.tar.gz
@@ -13,8 +23,10 @@ CLASSPATH_CVS=:pserver:anonymous@cvs.savannah.gnu.org:/sources/classpath
 FROM=svn
 
 (
+set -x
 mkdir -p $TOP/cacao
 cd $TOP/cacao
+export JAVA_HOME=$JAVA_HOME_15
 export PATH=$JAVA_HOME/bin:$PATH
 
 #
@@ -25,15 +37,15 @@ if [ $FROM = svn ]; then
   cd classpath
   ./autogen.sh
   ./configure --prefix=$DEST/classpath --with-ecj --disable-gconf-peer --disable-plugin &&
-        make &&
-        make install
+        { echo "-- make"; make; } &&
+        { echo "-- make install"; make install; }
 else
   wget $CLASSPATH_URL
   tar -xvzf $CLASSPATH_TAR
   cd $CLASSPATH
   ./configure --prefix=$DEST/classpath --with-ecj --disable-gconf-peer --disable-plugin &&
-	make &&
-	make install
+        { echo "-- make"; make; } &&
+        { echo "-- make install"; make install; }
 fi
 #
 # Build cacao
