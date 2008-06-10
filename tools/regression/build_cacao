@@ -19,8 +19,21 @@ CLASSPATH=classpath-0.95
 CLASSPATH_TAR=${CLASSPATH}.tar.gz
 CLASSPATH_URL=ftp://ftp.gnu.org/gnu/classpath/${CLASSPATH_TAR}
 CLASSPATH_CVS=:pserver:anonymous@cvs.savannah.gnu.org:/sources/classpath
+JAR_SEARCH_PATH=$BIN/downloads:/usr/share/java
 
 FROM=svn
+
+find_jar() {
+  local jarfile=$1
+  for libdir in $(echo $JAR_SEARCH_PATH | sed -e 's/:/ /g'); do
+    if [ -f $libdir/$jarfile ]; then
+      return $libdir/$jarfile
+    fi
+  done
+  return $jarfile
+}
+
+ANTLR_JAR=$(find_jar antlr.jar)
 
 (
 set -x
@@ -36,17 +49,15 @@ if [ $FROM = svn ]; then
   cvs -d$CLASSPATH_CVS co classpath
   cd classpath
   ./autogen.sh
-  ./configure --prefix=$DEST/classpath --with-ecj --disable-gconf-peer --disable-plugin &&
-        { echo "-- make"; make; } &&
-        { echo "-- make install"; make install; }
 else
   wget $CLASSPATH_URL
   tar -xvzf $CLASSPATH_TAR
   cd $CLASSPATH
-  ./configure --prefix=$DEST/classpath --with-ecj --disable-gconf-peer --disable-plugin &&
-        { echo "-- make"; make; } &&
-        { echo "-- make install"; make install; }
 fi
+./configure --prefix=$DEST/classpath --with-ecj --disable-gconf-peer --disable-plugin \
+	--with-antlr-jar=$ANTLR_JAR &&
+        { echo "-- make"; make; } &&
+        { echo "-- make install"; make install; } && {
 #
 # Build cacao
 #
@@ -72,4 +83,5 @@ fi
 	    --with-java-runtime-library-prefix=$DEST/classpath &&
 	make && 
 	make install
+}
 )
