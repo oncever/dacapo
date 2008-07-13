@@ -200,6 +200,7 @@
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}"/>
+        <mkdir dir="${jars}"/>
         <mkdir dir="${build.src}"/>
         <mkdir dir="${build.deps}"/>
         <mkdir dir="${build}/cnf"/>
