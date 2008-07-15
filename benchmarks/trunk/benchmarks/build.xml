@@ -45,7 +45,8 @@
 <project name="DacapoBenchmarks" default="dist" basedir=".">
     <description>Dacapo benchmarks</description>
 
-	<property file="ant/user.properties"/>
+	<property file="ant/local.properties"/>
+	<property file="ant/default.properties"/>
  	<property file="ant/dacapo.properties"/>
 
     <!-- BEGIN PUBLIC TARGETS -->
@@ -234,10 +235,6 @@
         <!-- Compile the java code from ${src} into ${build} -->
         <javac srcdir="${src}" destdir="${build}"
                debug="true" debuglevel="lines,vars,source"/>
-        <!-- Test data and configuration files -->
-        <copy todir="${build}/cnf">
-            <fileset dir="${config}"/>
-        </copy>
     </target>
 
     <!-- ================================= 
