@@ -36,10 +36,6 @@
  *   - make
  *   - javacc, assumed to be on the path, with library files in 
  *     /usr/share/javacc/lib
- *   
- *   Author: Robin Garner, Australian National University
- *   $Date$
- *   $Id$
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
