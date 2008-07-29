@@ -15,35 +15,52 @@ of <span style="font-style: italic;">open source</span>,
 <span style="font-style: italic;">real world</span> 
 applications with non-trivial memory loads.  The suite is the culmination of over five years work at eight institutions, as part of the  <a href="http://www.dacapo-group.org" target="_foo">DaCapo research project</a>, which was funded by a National Science Foundation ITR Grant, CCR-0085792.
 <p>
-
+Our suite evolves to maintain its relevance. It is therefore <i>essential that
+you <span style="color: rgb(204, 0, 0); font-style: italic;">cite the version number</span> associated with the release</i> in any use of
+the benchmark, and as a courtesy to the developers, we ask that you <span style="color: rgb(204, 0, 0); font-style: italic;">please cite the paper</span> from OOPSLA 2006 describing the suite:
+<ul>
+<font size=-5>
+  Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur, R., Diwan, A., Feinberg, D., Frampton, D., Guyer, S. Z., Hirzel, M., Hosking, A., Jump, M., Lee, H., Moss, J. E. B., Phansalkar, A., Stefanovic, D., VanDrunen, T., von Dincklage, D., and Wiedermann, B. <b>The DaCapo Benchmarks: Java Benchmarking Development and Analysis</b>, <i>OOPSLA '06: Proceedings of the 21st annual ACM SIGPLAN conference on Object-Oriented Programing, Systems, Languages, and Applications</i>, (Portland, OR, USA, October 22-26, 2006) (<a href="http://portal.acm.org/citation.cfm?doid=1167473.1167488">pdf</a>, <a href="cite.html">BibTeX</a>).
+</font><p>
+</ul>
+<p>
 
 <h2>News</h2>
 
 <ul>
-<b><span style="color: rgb(204, 0, 0);">NEW</span> Jan 27, 2007 </b>A second minor maintenance release (dacapo-2006-10-MR2) is now <a href="download.html">available</a>. This includes minor bug fixes and a repackaging of the benchmarks suitable for people wanting to use tools like <a href="soot.html">Soot</a> to perform ahead of time analysis of the code. The workloads are <i>unchanged</i>.<p>
-<b>Jan 23, 2007 </b>With assistance from Chris Kulla, we have a draft of a new <a href="http://sunflow.sourceforge.net/">SunFlow</a> benchmark in our subversion repository as a <i>candidate</i> for inclusion in the DaCapo suite.   To evaluate the benchmark, grab the svn head ("<tt>svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapo</tt>"), build the sunfow benchmark ("<tt>cd dacapo/benchmarks; ant sunflow.source clean sunflow jar.quick</tt>"), then run it ("<tt>java -jar dacapo.jar sunflow</tt>").  SunFlow, along with other candidates, will be evaluated over the next 6-12 months for possible inclusion in the next release of the suite.  Note that SunFlow requires Java 1.5 or later.<p>
+<b><span style="color: rgb(204, 0, 0);">NEW</span> Aug 1, 2008</b> A new paper describing the development of the DaCapo benchmark suite and broader issues of methodology <a href="http://doi.acm.org/10.1145/1378704.1378723">appears</a> in August 2008 CACM.<p>
+
+<b>Jul 28, 2008</b> We perform comprehensive, 12-hourly performance regressions, running various VMs against the DaCapo  <a href="http://dacapo.anu.edu.au/regression/perf/head.html" target="MAIN">svn head</a> (for the upcoming release), and against the  <a href="http://dacapo.anu.edu.au/regression/perf/2006-10-MR2.html" target="MAIN">2006 release</a>.<p>
+
+<b>Jun 26, 2008</b> Slides from a presentation discussing the development of the DaCapo suite and the broader topic of evaluation methodology are now <a href="dacapo-cacm-2008-slides.pdf">available</a>.<p>
 See <a href="news.html" target="MAIN">news</a> for a list of past news.
 </ul>
 
 <h2>Plans</h2>
 
 <ul>
-With the release of dacapo-2006-10, we have begun working toward the next major release of the suite, which we anticipate will appear in the second half of 2007.  We will make beta releases prior to that.
+Since the release of dacapo-2006-10, we have been working toward the next major release of the suite, currently scheduled to appear in <b>October 2008</b>.  We plan to make beta releases in the coming months.
 <ul>
-<li>We have started examining <i>new benchmarks</i> for potential inclusion in the next release.  The first new benchmark to be proposed is <a href="http://sunflow.sourceforge.net/">SunFlow</a>.  We hope to commence evaluation during November 2006, in cooperation with the SunFlow maintainer.  This benchmark came to our attention via an external nomination.  If there are other benchmarks people would like to be considered, please contact us via the mailing list.
-<li>We are also looking at improving and possibly removing existing workloads.  Please use the mailing list if you have suggestions for improving the existing benchmarks.
+<li>We are examining <i>new benchmarks</i> for potential inclusion in the next release.  The first new benchmark to be proposed was <a href="http://sunflow.sourceforge.net/">SunFlow</a>.  We finished a first cut implementation in late 2006.  Sunflow and all other candidate workloads are evaluated in our <a href="http://jikesrvm.anu.edu.au/~dacapo/index.php?category=regression"/>nightly</a> regressions of our development head.  This benchmark came to our attention via an external nomination.
+<li> We have also started evaluating Apache <a href="http://geronimo.apache.org"/>Geronimo</a> and its <a href="http://cwiki.apache.org/GMOxDOC20/daytrader.html">DayTrader</a> benchmark. If there are other benchmarks people would like to be considered, please contact us via the <a href="lists.html">mailing list</a>.
+<li>We are continually looking at improving and possibly removing existing workloads.  Please use the mailing list if you have suggestions for improving the existing benchmarks.
 <li>We are considering a new workload which will run multiple benchmarks concurrently (simulating a multi-application concurrent workload).
-</ul><br>
+</ul>
+</ul>
+<!--
+<h2>Usage</h2>
+<ul>
 Our suite will evolve to maintain its relevance. It is therefore <span style="color: rgb(204, 0, 0); font-style: italic;">essential that
 the version number associated with the release be cited in any use of
 the benchmark,</span> and we ask that you please cite the 2006 OOPSLA paper describing the suite:
 <ul>
 <font size=-2>
-Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur, R., Diwan, A., Feinberg, D., Frampton, D., Guyer, S. Z., Hirzel, M., Hosking, A., Jump, M., Lee, H., Moss, J. E. B., Phansalkar, A., Stefanovic, D., VanDrunen, T., von Dincklage, D., and Wiedermann, B. <b>The DaCapo Benchmarks: Java Benchmarking Development and Analysis</b>, <i>OOPSLA '06: Proceedings of the 21st annual ACM SIGPLAN conference on Object-Oriented Programing, Systems, Languages, and Applications</i>, (Portland, OR, USA, October 22-26, 2006) (<a href="dacapo-oopsla-2006.pdf">pdf</a>, <a href="cite.html">BibTeX</a>).
+  Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur, R., Diwan, A., Feinberg, D., Frampton, D., Guyer, S. Z., Hirzel, M., Hosking, A., Jump, M., Lee, H., Moss, J. E. B., Phansalkar, A., Stefanovic, D., VanDrunen, T., von Dincklage, D., and Wiedermann, B. <b>The DaCapo Benchmarks: Java Benchmarking Development and Analysis</b>, <i>OOPSLA '06: Proceedings of the 21st annual ACM SIGPLAN conference on Object-Oriented Programing, Systems, Languages, and Applications</i>, (Portland, OR, USA, October 22-26, 2006) (<a href="http://portal.acm.org/citation.cfm?doid=1167473.1167488">pdf</a>, <a href="cite.html">BibTeX</a>).
 </font>
 </ul>
+Look <a href="usage.html">here</a> for more information on usage.
 </ul>
-
+-->
 <h2>Feedback</h2>
 We invite feedback on the suite from the community.&nbsp; Please use the researchers' <a href="lists.html">mailing list</a>.<br>
 
@@ -60,7 +77,7 @@ The suite itself is available under the <a href="http://www.apache.org/licenses/
 
 <address>
 For questions or comments please use the <a href="lists.html">researchers mailing list</a>.
-<p><font size="-2">Copyright 2001-2007 by the&nbsp; <a href="http://www.dacapo-group.org/"  target="_foo">DaCapo
+<p><font size="-2">Copyright 2001-2008 by the&nbsp; <a href="http://www.dacapo-group.org/"  target="_foo">DaCapo
 Project</a>,</font>
 <br>
 <font size="-2">All Rights Reserved.</font>

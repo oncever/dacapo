@@ -8,6 +8,37 @@
 
 <body>
 <h1>News</h1>
+
+<h2>2008-06</h2>
+<ul>
+Cliff Click pointed us to the <a href="http://www.azulsystems.com/e2e/docs/Fragger.java">fragger</a> widgit, which artificially injects fragmentation into a heap.  We are considering including this as a runtime option in the DaCapo suite, as it could be very for those using DaCapo for memory management and locality work.  Thanks Cliff.
+</ul>
+
+<h2>2008-01</h2>
+<ul>
+Stability and performance comparisons among a number of JVMs running against the DaCapo suite can now be found <a href="http://jikesrvm.anu.edu.au/~dacapo/">here</a>, with tests against the current DaCapo development head available <a href="http://jikesrvm.anu.edu.au/~dacapo/index.php?category=regression">here</a>.  These numbers are updated daily.  Note that they currently just present raw data, which tends to be very noisy given the run-to-run variation due to the non-determinism of adaptive optimization in modern JVMs.
+</ul>
+
+<h2>2007-12</h2>
+<ul>
+We have started overhauling our workloads in anticipation of our next release.  This includes the revival of the <a href="http://xmlgraphics.apache.org/batik/">batik</a> workload and a reworking of hsqldb to use the Apache <a href="http://db.apache.org/derby/">derby</a> database engine. We have also started overhauling the implementation of multithreading within the DaCapo harness.
+</ul>
+
+<h2>2007-10</h2>
+<ul>
+We have started evaluating Apache <a href="http://geronimo.apache.org"/>Geronimo</a> and its <a href="http://cwiki.apache.org/GMOxDOC20/daytrader.html">DayTrader</a> benchmark for potential inclusion in the next DaCapo benchmark suite.
+</ul>
+
+<h2>2007-01-27</h2>
+<ul>
+A second minor maintenance release (dacapo-2006-10-MR2) is now <a href="download.html">available</a>. This includes minor bug fixes and a repackaging of the benchmarks suitable for people wanting to use tools like <a href="soot.html">Soot</a> to perform ahead of time analysis of the code. The workloads are <i>unchanged</i>.
+</ul>
+
+<h2>2007-01-23</h2>
+<ul>
+With assistance from Chris Kulla, we have a draft of a new <a href="http://sunflow.sourceforge.net/">SunFlow</a> benchmark in our subversion repository as a <i>candidate</i> for inclusion in the DaCapo suite.   To evaluate the benchmark, grab the svn head ("<tt>svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapo</tt>"), build the sunfow benchmark ("<tt>cd dacapo/benchmarks; ant sunflow.source clean sunflow jar.quick</tt>"), then run it ("<tt>java -jar dacapo.jar sunflow</tt>").  SunFlow, along with other candidates, will be evaluated over the next 6-12 months for possible inclusion in the next release of the suite.  Note that SunFlow requires Java 1.5 or later.
+</ul>
+
 <h2>2006-12-26</h2>
 <ul>A minor maintenance release (dacapo-2006-10-MR1) is now <a href="download.html">available</a>. This includes a bug fix and minor enhancements to the interface.  The workloads are <i>unchanged</i>.
 </ul>
