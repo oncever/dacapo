@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<link rel="stylesheet" type="text/css" href="dacapo.css"/>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>DaCapo Benchmarks TODO List</title>
+</head>
+
+<body>
+<h1>Major TODO Items For Next Release</h1>
+
+The DaCapo benchmark suite is a community project, developed by the research community, for the research community.   The quality of the workloads depends on community critque and community contributions.  There is a large amount of work to be done.  Please feel free to help by contributing to one or more of the following tasks (use the mailing list or email Steve Blackburn directly to co-ordinate your efforts).
+
+
+<h2>DayTrader Benchmarks</h2>
+
+<h3>Move to Little G</h3>
+
+Currently both DayTrader workloads are deployed within a fully configured Geronimo app-server.  It should be possible to significantly prune the configuration, significantly reducing the footprint of the DaCapo suite and the startup time of tradebeans and tradesoap.
+
+<h3>Stability</h3>
+
+The workload was originally developed for DaCapo under MacOS X using the default JVM on that platform, Sun's 1.5.0 HotSpot VM.  Once completed we started testing on a other platforms, with other production JVMs and made two significant observations:
+<ul>
+<li>The workloads are unstable on most VMs.  Need to investigate.</li>
+<li>Performance.  Under Mac OS X, CPU utilization is near 100% (top shows "180%" or so on a dual-core machine), however under ubuntu, running similar HotSpot JVM on similar hardware, CPU utilization drops precipitiously.  Need to investigate.</li>
+</ul>
+
+<h2>Feedback On Existing Benchmarks</h2>
+
+Feedback on the existing benchmarks will help us determine which benchmarks to drop from the upcoming release (the release will include new benchmarks and drop some of the existing benchmarks).  If you have any comments, please let us know.<p>
+Current candidates for exclusion from the upcoming suite include <code>bloat</code> (has some notable idiosyncrasies, and is not extensively deployed), <code>hsqldb</code> (superseded by <code>derby</code>), and possibly <code>antlr</code> and/or <code>chart</code>.
+
+<h2>Incorporate New Benchmarks</h2>
+
+The new suite will include a number of new benchmarks.
+
+<h3><strike>Sunflow</strike></h3>
+Done Jan 2007
+
+<h3><strike>Batik</strike></h3>
+Done Dec 2007
+
+<h3>Derby</h3>
+Initial version done Dec 2007.  May wish to update to use TCP-C rather than our current transaction workload (borrowed from <code>hsqldb</code>).  Partially working code is in svn.
+
+<h3>DayTrader</h3>
+First draft should be available very soon.
+
+<h3>Wiki</h3>
+Sergey Salishev of Intel has created a workload that simulates a cloud computing environment, including a wiki.  It would be great to evaluate this workload and incorporate it into the next release.
+
+<h3>Jetty/Coccoon</h3>
+
+<h2>Improve Harness</h2>
+
+There are a number of ways we could improve the DaCapo benchmark harness.  These include:
+
+<h3>Thread Creation Callbacks</h3>
+Andrew Tick of HP suggested on the mailing list in Sept 07 that we include a callback on thread creation, along the lines of the callback we currently have at each iteration start and end.
+
+<h3>Inclusion of the Fragger Tool</h3>
+Cliff Click pointed me to the <a href="http://www.azulsystems.com/e2e/docs/Fragger.java">fragger</a> tool which injects fragmentation into the Java heap.  It would be nice to include fragger as a commandline option on DaCapo.
+
+<h2>Update Documentation</h2>
+Each of the new benchmarks needs to be documented and the documentation on building etc needs to be updated to reflect changes over the past two years.
+
+<h2>Update Existing Benchmarks</h2>
+
+<h3>Version Updates</h3>
+We have been incrementally updating version numbers in the svn head.  Each benchmark needs to be rechecked to ensure it is at the most recent stable release for that workload.
+
+<h3>Xalan</h3>
+We have used a very particular version of Xalan (2.4.1), on advice from Kev Jones of Intel (who provided us with our current version of the workload).  Kev's rationale may have become dated with newer releases of Xalan.  We should revisit this decision for the next release.
+
+<h3>Eclipse</h3>
+In addition to updating the Eclipse version, it would be great to investigate, and if necessary address a problem identified by Matt Arnold in June 2007:
+
+<blockquote>
+I have some info about the Dacapo Eclipse benchmark that you may be
+interested in.   If I should contact someone else instead, feel free to let
+me know.<p>
+
+If you run eclipse for a large number of iterations, the performance forms
+a saw tooth, degrading significantly (a factor of 10 or more),  then jumps
+back to normal.   An excel graph of the performance over time is attached
+below. (Dacapo version 2006-10.jar).    It happens on both Sun's and IBM
+VM's.<p>
+
+During the slow iterations the program is spending most of its time in
+jitted code.   The problem is the following two methods:<p>
+
+<code>
+ org/eclipse/jdt/internal/compiler/util/WeakHashSetOfCharArray.add([C)[C
+</code><br><code>
+ org/eclipse/jdt/internal/compiler/util/WeakHashSet.add
+(Ljava/lang/Object;)Ljava/lang/Object;
+</code><br><br>
+
+Both of these methods have a linear search through some kind of linked list
+of weak references.   Here's my guess at what is happening:   This list
+grows over time and the linear searches eventually becomes a huge
+bottleneck.   Eventually some memory threshold is crossed and the VM clears
+the weak references, and performance goes back to normal.<p>
+
+This is clearly crappy code (linear searching) but it could also be a
+benchmark bug.   Is it possible that this data structure should have been
+re-initialized between iterations, and the iterating nature of the driver
+is creating a problem is unlikely to exist in the real application?
+</blockquote>
+
+<hr>
+<address>
+For questions or comments please use the <a href="lists.html">researchers mailing list</a>.
+<p><font size="-2">Copyright 2001-2008 by the&nbsp; <a href="http://www.dacapo-group.org/"  target="_foo">DaCapo
+Project</a>,</font>
+<br>
+<font size="-2">All Rights Reserved.</font>
+</p>
+</address>
+<!-- hhmts start --> Last modified: Sun Jun 21 13:46:36 EST 2009 <!-- hhmts end -->
+</body> </html>
