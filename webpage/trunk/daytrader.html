@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<link rel="stylesheet" type="text/css" href="dacapo.css"/>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>DaCapo DayTrader Workloads</title>
+</head>
+
+<body>
+<h2>Overview</h2>
+
+We have introduced two new workloads, <b>tradebeans</b> and <b>tradesoap</b>, each based on the Apache <a href="http://cwiki.apache.org/GMOxDOC20/daytrader.html">DayTrader</a> J2EE workload. Our code is currently based on the <a href="http://geronimo.apache.org"/>Geronimo</a> 767347 svn revision.  DayTrader was originally an IBM workload (<a href="http://publib.boulder.ibm.com/infocenter/lnxinfo/v3r0m0/index.jsp?topic=/liaag/pubdb2c/pubdb2c14.htm">Trade</a>), and was subsequently donated to Apache and made open source.<p>
+
+<b>We are very interested in community feedback on these workloads.</b>  Our hope is to get significant community feedback prior to our intended release of the next version of the suite in October 2009.  If you have feedback, please send it to the mailing list or email Steve Blackburn directly.<p>
+
+<h2>Client, Server and Database</h2>
+
+A real-world app-server will typically comprise clients, servers and a database, often each running on distinct hardware.  Configuring a real app server is a complex process with many degrees of freedom.   In the interests of coherent analysis of JVM performance, DaCapo's workloads remove those degrees of freedom, trading realism for methodological and analyitical clarity.  Thus the benchmarks are executed within the <a href="http://geronimo.apache.org"/>Geronimo</a> application server and utilize the Derby in-memory database that comes with Geronimo, both client and server run within a single JVM, and use the loopback device to communicate between client and server.
+
+<h2>Beans and Soap</h2>
+
+We include the DayTrader workload in two flavors; tradebeans and tradesoap.  The beans and soap configurations correspond to different modes of client/server interaction.   Tradebeans performs the entire workload and each of its operations <i>directly</i> on the server.  On the other hand, tradesoap runs the workload on the client, communicating with the server at a fine grain, sending each request via the <i>soap</i> protocol.  Both use exactly the same workload engine and the only difference in the code executed is that the trade API is implemented with direct calls in one case, and with indirect calls through soap in the other. The overhead of sending (relatively) fine grained operations to the server means that tradesoap has <i>much</i> lower throughput than tradebeans.  Tradebeans' <i>default</i> configuration performs exactly the same workload as tradesoap's <i>large</i> configuration, and similarly tradebean's <i>small</i> configuration uses exactly the same workload as tradesoap's <i>default</i> configuration.  Tradesoap is more representative of real workloads.  We provide tradebeans to researchers as an interesting counterpoint.
+
+<h2>The Workload</h2>
+
+The workloads used by both tradebeans and tradesoap are <i>scripted</i>, meaning that exactly the same set of operations will be performed each time the workloads are executed (although the ordering and interleaving of operations will vary from run to run according to the way threads are scheduled).   By contrast, the pre-existing DayTrader workloads were randomly generated on the fly (according to a prescribed probabilistic distribution of operation types).  The workloads comprise a database of stocks, a database of users and a pool of user "sessions", where each session comprises a login, a string of operations, and a logout.  The databases are rebuilt upon each iteration of each workload, so each iteration starts in the same state.  The workloads are currently configured to concurrently execute 2P client threads, where P is the number of available processors. This is something we want to tune, and are interested in feedback on how we should configure threads for these workloads.  Threads cooperatively work their way through the set of user sessions, each thread working through a single user session at a time.<p>
+
+The workloads were constructed using a perl script which can be found in the daytrader directory of the dacapo distribution (see below for directions on accessing it via svn).  Researchers are free to generate new workloads using this script, however, a performance run of the benchmark will not validate unless the correct pre-computed workload is used.  We are interested in user feedback on the workload construction.  If you have improvements by all means pass them on.<p>
+
+We constructed a realistic set of stocks, based on real stock information (names, quotes, volumes) at the time (previously DayTrader had simply used random integers to reflect these names and values).<p>
+
+We also constructed a realistic set of randomized users, using real (randomized) names, addresses, etc.  Each user has a randomly determined portfolio, although we took care not avoid a simple uniform distribution of stocks, instead skewing stocks on the basis of volume and/or market capitalization.  We applied a similar approach when creating the workloads, biasing operations toward popular stocks.  We believe that this will give more realistic levels of contention than simple uniform distributions.  Each workload size requires a different number of users.  We over-provision the number of users by 50% relative to the number of unique user-sessions.  This means that the user database is (slightly) sparsely utilized.  Realistically, this over-provisioning might be higher, however, initializing the user database is relatively expensive and we do not wish for it to dominate the benchmark execution. The current configurations are thus:<p>
+<center>
+<table>
+  <TR> <TH></TH><TH>tradebeans</TH><TH></TH><TH>tradesoap</TH><TH></TH></TR>
+  <TR> <TH>config</TH><TH>users</TH><TH>sessions</TH></TH><TH>users</TH><TH>sessions</TH></TR>
+  <TR> <TD>small</TD><TD>48</TD><TD>32</TD><TD>48</TD><TD>32</TD></TR>
+  <TR> <TD>default</TD><TD>384</TD><TD>256</TD><TD>48</TD><TD>32</TD></TR>
+  <TR> <TD>large</TD><TD>1536</TD><TD>1024</TD><TD>384</TD><TD>256</TD></TR>
+</table>
+</center>
+
+Finally, we constructed scripted workloads comprising user sessions.  We have designed the workloads such that the smaller workloads are strict subsets of the larger workloads.   The smaller workloads involve fewer users and by drawing those from the start of the user database, we are able to initialize the user database with a smaller user set for smaller workloads.   This is significant because populating the user database is relatively expensive.  Each user session comprises a mix of DayTrader <a href="http://cwiki.apache.org/GMOxDOC20/daytrader.html">operations</a>.  Some of these operations (such as "quote") are simple while others (such as "portfolio") are compound.  For example, the portfolio operation first requests the users' holdings and then performs a quote operation on each holding (so a single portfolio operation may involve a number of quote operations).  The workload generation script tries to achieve a random mix of operations according to target proportions.  The table below shows each of the operations, the target mix and the actual mix for each of the three workload sizes.  Note that "register" includes an implicit login (so logout = login + register).<p>
+
+<center>
+<table>
+<TR><TH>operation</TH><TH>target</TH><TH>32</TH></TH><TH>256</TH><TH>1024</TH></TR>
+  <TR> <TD>home</TD><TD>20%</TD><TD>20%</TD><TD>18.8%</TD><TD>18.8%</TD></TR>
+  <TR> <TD>portfolio</TD><TD>9%</TD><TD>6.3%</TD><TD>8.3%</TD><TD>8.1%</TD></TR>
+  <TR> <TD>quote</TD><TD>45%</TD><TD>44.6%</TD><TD>41.6%</TD><TD>41.5%</TD></TR>
+  <TR> <TD>buy</TD><TD>9%</TD><TD>8.8%</TD><TD>8.2%</TD><TD>8.7%</TD></TR>
+  <TR> <TD>sell</TD><TD>9%</TD><TD>7.2%</TD><TD>8.0%</TD><TD>7.9%</TD></TR>
+  <TR> <TD>update</TD><TD>1.5%</TD><TD>1.2%</TD><TD>1.5%</TD><TD>1.4%</TD></TR>
+  <TR> <TD>register</TD><TD>0.5%</TD><TD>0.6%</TD><TD>0.6%</TD><TD>0.5%</TD></TR>
+  <TR> <TD>login</TD><TD>6.0%</TD><TD>5.0%</TD><TD>6.2%</TD><TD>6.2%</TD></TR>
+  <TR> <TD>logout</TD><TD>6.5%</TD><TD>5.6%</TD><TD>6.8%</TD><TD>6.7%</TD></TR>
+<!--  <TR> <TD>account</TD><TD>20%</TD><TD>%</TD><TD>%</TD><TD>%</TD></TR> -->
+</table>
+</center>
+Typical output:<p>
+<code>
+$ java -jar dacapo.jar tradebeans<br>
+Booting Geronimo Kernel (in Java 1.5.0_19)...<br>
+Geronimo startup complete<br>
+Successfully created tables<br>
+===== DaCapo tradebeans starting =====<br>
+Resetting database and populating with 1098 stocks...<br>
+Populating database with 384 users...<br>
+Finished repopulating database<br>
+Running 256 trade sessions directly on server<br>
+Completed 256 trade sessions comprising 4098 trader actions<br>
+	Home ....................   769 (18.8%)<br>
+	Portfolio ...............   341 ( 8.3%)<br>
+	Quote ...................  1706 (41.6%)<br>
+	Buy .....................   334 ( 8.2%)<br>
+	Sell ....................   326 ( 8.0%)<br>
+	Update ..................    62 ( 1.5%)<br>
+	Register ................    24 ( 0.6%)<br>
+	Login ...................   256 ( 6.2%)<br>
+	Logout ..................   280 ( 6.8%)<br>
+===== DaCapo tradebeans PASSED in 30346 msec =====<br>
+Shutting down Geronimo...<br>
+$<br>
+</code>
+
+<h2>Getting The Source</h2>
+
+The latest version of the DaCapo benchmarks is always available via svn:<p>
+
+<code>svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapo
+</code><p>
+
+The benchmarks themselves reside within the benchmarks directory.  The code is organized with  daytrader as a library used by both tradebeans and tradesoap, and is built within the libs/daytrader directory.  The easiest way to do this is to invoke ant from within the benchmarks directory with either tradebeans or tradesoap targets.   Important: you need maven (mvn) in your path before you can build either of the trade workloads within ant, since the daytrader build includes nested calls to mvn which fail unless mvn is in the path.  We include a recent maven release in the tools directory.<p>
+
+For convenience, and to encourage people to explore the source, we provide the sources pre-patched <a href="dacapo-daytrader-src.zip">here</a>.  You can also see the patch against r767347 <a href="daytrader.patch">here</a>.
