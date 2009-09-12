@@ -1,0 +1,46 @@
+benchmark avrora
+  class org.dacapo.harness.Avrora
+  thread-model single
+  jar "avrora-cvs-20090612.jar";
+
+size small args "-seconds=30",
+		"-platform=mica2",
+        "-simulation=sensor-network",
+        "-nodecount=3,3",
+		"-stagger-start=1000000",
+		"test/tinyos/CntToRfm.elf",
+		"test/tinyos/RfmToLeds.elf"
+  output 
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+ 
+size default args "-seconds=30",
+		"-platform=mica2",
+        "-simulation=sensor-network",
+        "-nodecount=3,3",
+		"-stagger-start=1000000",
+		"test/tinyos/CntToRfm.elf",
+		"test/tinyos/RfmToLeds.elf"
+  output 
+    	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+ 
+size large args "-seconds=30",
+		"-platform=mica2",
+        "-simulation=sensor-network",
+        "-nodecount=3,3",
+		"-stagger-start=1000000",
+		"test/tinyos/CntToRfm.elf",
+		"test/tinyos/RfmToLeds.elf"
+  output 
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+
+description
+  short		"AVRORA is a simulation and analysis framework for AVR microcontrollers",
+  long		"AVRORA is a set of simulation and analysis tools in a framework for AVR microcontrollers. Each simulator instance processes events from an event queue, using one of the available threads, for events that have a set order then that ordering is respected.",
+  copyright	"2004-2005, Regents of the University of California",
+  author	"Ben L. Titzer",
+  license	"UCLA",
+  url		"http://compilers.cs.ucla.edu/avrora/",
+  version	"cvs-20090612",
+  threads	"Multi-threaded",
+  repeats	"Each execution simulates a range of microcontroller functions.";
