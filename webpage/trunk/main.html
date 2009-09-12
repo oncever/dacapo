@@ -28,17 +28,8 @@ the benchmark, and as a courtesy to the developers, we ask that you <span style=
 <h2>News</h2>
 
 <ul>
-<b><span style="color: rgb(204, 0, 0);">NEW</span> Jun 22, 2009</b> Our continuous performance regression pages (<a href="http://dacapo.anu.edu.au/regression/perf/2006-10-MR2.html">release</a> and <a href="http://dacapo.anu.edu.au/regression/perf/head.html">development</a>) have been updated to include time stamps and direct links to the jars used.  This means you can always download the current development <a href="http://dacapo.anu.edu.au/regression/perf/dacapo-head.jar">jar</a>.<p>
+<b><span style="color: rgb(204, 0, 0);">NEW </span>Sep 12, 2009</b> Three years after our last major release, we have <i>finally</i> made a beta release of the next major version of the suite.  This release is <i>not</i> suitable as a research tool; we have made the release <i>only</i> to garner community feedback in anticipation of a major release in October.  We encourage JVM developers to start testing their JVMs against this beta release.  We encourage those interested in the suite's composition to evaluate and offer feedback on this release.   We particularly encourage those interested in app server workloads to evaluate this release.  Please be sure to read the <a href="RELEASE_NOTES.txt">release notes</a> before using this release.  It is available <a href="http://sourceforge.net/project/showfiles.php?group_id=172498">here</a>.  Please use the project's <a href="http://sourceforge.net/tracker/?group_id=172498&atid=861957">trackers</a> or <a href="lists.html"> mailing lists</a> for your feedback.<p>
   
-<b><span style="color: rgb(204, 0, 0);">NEW</span> Jun 20, 2009</b> After a huge development effort, we now have early drafts of two benchmarks based on the Apache DayTrader J2EE workload: <b>tradebeans</b> and <b>tradesoap</b>.  At this stage both benchmarks are unstable on some platforms, including our testing environment.  We strongly encourage feedback (please use the mailing list).  Please try them out by downloading the development <a href="http://dacapo.anu.edu.au/regression/perf/dacapo-head.jar">jar</a>.  Read more about these workloads <a href="daytrader.html">here</a>. <p>
-
-<b><span style="color: rgb(204, 0, 0);">NEW</span> Jun 18, 2009</b> As part of a major push to get a beta version of the suite ready, we have started culling those benchmarks that will not appear in the next release.  The following benchmarks have been removed: <b>antlr</b> (jython now uses antlr internally),  <b>bloat</b> (we have a number of program analysis tools),  <b>chart</b> (batik has some similarity as a vector graphics renderer), <b>hsqldb</b> (replaced by derby). <p>
-  
-<b><span style="color: rgb(204, 0, 0);">NEW</span> Jun 18, 2009</b> A new benchmark, <b>avrora</b>, has been added to the suite.  Avrora was proposed by Ben Titzer from Sun.  <a href="http://compilers.cs.ucla.edu/avrora">Avrora</a> is a parallel discrete event simulator that performs cycle accurate simulation of a sensor network.  Avrora exhibits interesting patterns of parallelism, and is unlike any of the existing DaCapo workloads, so makes a very interesting addition.  Please try it out by downloading the development jar <a href="http://dacapo.anu.edu.au/regression/perf/dacapo-head.jar">here</a>. Thank you very much Ben!<p>
-
-<b><span style="color: rgb(204, 0, 0);">NEW</span> Jun 17, 2009</b> Almost all benchmarks have been updated to reflect the latest publicly available releases.  For jython, lusearch, luindex, and pmd this marks significant changes.  Only eclipse and xalan remain to be updated.<p>
-  
-<b> Nov 19, 2008</b> In anticipation of the upcoming release, we have created a <a href="todo.html" target="MAIN">TODO list</a> of work that needs to be done before the upcoming release.  Please send email to the mailing list or directly to Steve Blackburn if you think you can help.<p>
 
 See <a href="news.html" target="MAIN">news</a> for a list of past news.
 </ul>
@@ -46,10 +37,9 @@ See <a href="news.html" target="MAIN">news</a> for a list of past news.
 <h2>Plans</h2>
 
 <ul>
-Since the release of dacapo-2006-10, we have been working toward the next major release of the suite, currently scheduled to appear in <b>October 2009</b>.  We plan to make beta releases in the coming months.  See above for news on new benchmarks, the removal of old ones, and the refreshing of retained benchmarks.
+Since the release of dacapo-2006-10, we have been working toward the next major release of the suite, currently scheduled to appear in <b>October 2009</b>.  We plan to make multiple beta releases in the weeks prior to the major release.
 <ul>
 <li>We are continually looking at improving and possibly removing existing workloads.  Please use the mailing list if you have suggestions for improving the existing benchmarks.
-<li>We are considering a new workload which will run multiple benchmarks concurrently (simulating a multi-application concurrent workload).
 </ul>
 </ul>
 <!--

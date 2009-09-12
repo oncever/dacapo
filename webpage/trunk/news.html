@@ -9,11 +9,42 @@
 <body>
 <h1>News</h1>
 
+
+<h2>2009-07</h2>
+<ul>
+  Our continuous performance regression pages (<a href="http://dacapo.anu.edu.au/regression/perf/2006-10-MR2.html">release</a> and <a href="http://dacapo.anu.edu.au/regression/perf/head.html">development</a>) have been updated to include time stamps and direct links to the jars used.  This means you can always download the current development <a href="http://dacapo.anu.edu.au/regression/perf/dacapo-head.jar">jar</a>.
+</ul>
+
+<h2>2009-06</h2>
+<ul>
+After a huge development effort, we now have early drafts of two benchmarks based on the Apache DayTrader J2EE workload: <b>tradebeans</b> and <b>tradesoap</b>.  At this stage both benchmarks are unstable on some platforms, including our testing environment.  We strongly encourage feedback (please use the mailing list).  Please try them out by downloading the development <a href="http://dacapo.anu.edu.au/regression/perf/dacapo-head.jar">jar</a>.  Read more about these workloads <a href="daytrader.html">here</a>.
+</ul>
+
+<h2>2009-06</h2>
+<ul>
+As part of a major push to get a beta version of the suite ready, we have started culling those benchmarks that will not appear in the next release.  The following benchmarks have been removed: <b>antlr</b> (jython now uses antlr internally),  <b>bloat</b> (we have a number of program analysis tools),  <b>chart</b> (batik has some similarity as a vector graphics renderer), <b>hsqldb</b> (replaced by derby).
+</ul>
+
+<h2>2009-06</h2>
+<ul>
+A new benchmark, <b>avrora</b>, has been added to the suite.  Avrora was proposed by Ben Titzer from Sun.  <a href="http://compilers.cs.ucla.edu/avrora">Avrora</a> is a parallel discrete event simulator that performs cycle accurate simulation of a sensor network.  Avrora exhibits interesting patterns of parallelism, and is unlike any of the existing DaCapo workloads, so makes a very interesting addition.  Please try it out by downloading the development jar <a href="http://dacapo.anu.edu.au/regression/perf/dacapo-head.jar">here</a>. Thank you very much Ben!
+</ul>
+
+<h2>2009-06</h2>
+<ul>
+  Almost all benchmarks have been updated to reflect the latest publicly available releases.  For jython, lusearch, luindex, and pmd this marks significant changes.  Only eclipse and xalan remain to be updated.
+</ul>
+
+<h2>2008-11</h2>
+<ul>
+In anticipation of the upcoming release, we have created a <a href="todo.html" target="MAIN">TODO list</a> of work that needs to be done before the upcoming release.  Please send email to the mailing list or directly to Steve Blackburn if you think you can help.
+</ul>
+
 <h2>2008-08</h2>
 <ul>
 A new paper describing the development of the DaCapo benchmark suite and broader issues of methodology <a href="http://doi.acm.org/10.1145/1378704.1378723">appears</a> in August 2008 CACM.
 </ul>
-<h2>2008-07</b>
+<h2>2008-07</h2>
 <ul>
   We perform comprehensive, 12-hourly performance regressions, running various VMs against the DaCapo  <a href="http://dacapo.anu.edu.au/regression/perf/head.html" target="MAIN">svn head</a> (for the upcoming release), and against the  <a href="http://dacapo.anu.edu.au/regression/perf/2006-10-MR2.html" target="MAIN">2006 release</a>.
 </ul>
