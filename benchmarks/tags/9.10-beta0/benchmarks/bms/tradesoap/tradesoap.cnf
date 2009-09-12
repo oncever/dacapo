@@ -1,0 +1,30 @@
+benchmark tradesoap
+  class org.dacapo.harness.Tradesoap
+  thread-model per_cpu
+  libs "daytrader.jar";
+
+size small args "small" 
+  threads 1
+  output stdout  digest 0x7a214488a9a0f009e8266dc03cbc6742fe1e91cf,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size default args "small"
+  threads 2
+  output stdout  digest 0x7a214488a9a0f009e8266dc03cbc6742fe1e91cf,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size large args "medium"
+  threads 2
+  output stdout  digest 0x29194ac5c73563166a5ecd553f9eca0a5d4195ef,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+description
+  short		"TradeSOAP Daytrader benchmark",
+  long		"TradeSOAP a SOAP version of the Daytrader benchmark from Apache",
+  copyright	"Copyright (C) The Apache Software Foundation",
+  author        "Apache Geronimo, donated by IBM",
+  license       "Apache License, Version 2.0",
+  url           "http://geronimo.apache.org/",
+  version	"2.1.4",
+  repeats	"Populates a database of th 1098 stocks and 384 users, and then 639 trader actions in 32 trade sesions",
+  threads       "Multi-threaded; Server thread plus 1, 2 or 3 client threads per CPU";
