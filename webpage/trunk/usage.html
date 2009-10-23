@@ -37,118 +37,11 @@ Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur
 </font>
 </ul>
 <h2>Running benchmarks</h2>
+Execute the jar without any arguments to get usage information:<p>
 To run one of the benchmarks, use the command:<p>
 <span style="font-family: monospace;">
-java -jar dacapo-2006-10.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-&lt;flags&gt;] &lt;bm&gt; [&lt;bm2&gt;, ...]
+java -jar dacapo-2006-10.jar
 </span>
-<p>
-where:
-<table class="options">
-  <tbody>
-    <tr><td class="section" colspan=2>Standard options</td></tr>
-    <tr>
-      <td class="flag"> -s&nbsp;<i>size</i></td>
-      <td class="desc"> specifies the workload size (small, default, large) </td>
-    </tr>
-    <tr>
-      <td class="flag">-c&nbsp;<i>class</i></td>
-      <td class="desc">
-      specifies the name of a callback class which extends dacapo.Callback, 
-allowing hooks for benchmark start, end, warmup start, and warm up end
-      </td>
-    </tr>
-    <tr>
-      <td class="flag"><i>bm</i></td>
-      <td class="desc">
-      a list of benchmarks to execute {antlr, bloat, chart, eclipse, fop, hsqldb, jython, 
-lusearch, luindex, pmd, xalan}
-      </td>
-    </tr>
-    <tr>
-      <td class="flag">-h</td>
-      <td class="desc"> prints a usage message </td>
-    </tr>
-
-    <tr>
-      <td class="flag">-i</td>
-      <td class="desc">
-      print information about the benchmark(s), including brief description, urls,
-copyright and version
-      </td>
-    </tr>
-    <tr>
-      <td class="flag">-scratch&nbsp;<i>scratch-dir</i></tt> </td>
-      <td class="desc">
-      Specify a scratch directory for temporary output files.  If it exists, the harness
-will delete and re-create it.  Defaults to "./scratch".
-      </td>
-    </tr>
-
-    <tr><td class="section" colspan=2>Measurement methodology options</td></tr>
-    <tr>
-    <td class="flag">-converge </td>
-      <td class="desc">Allow benchmark times to converge before timing.  This
-        option calculates a running coefficient of variation over the last <i>k</i> runs
-        of the benchmark, and when this drops below a threshold, the following iteration
-        is timed.  The following flags control the convergence process:
-        <table>
-          <tr>
-            <td class="flag">-max_iterations&nbsp;<i>n</i></td>
-            <td class="desc"> Run a max of <i>n</i> iterations (default 20)</td>
-          </tr>
-          <tr>
-            <td class="flag">-variance&nbsp;<i>pct</i></td>
-            <td class="desc"> Target coefficient of variation (default 3.0)</td>
-          </tr>
-          <tr>
-            <td class="flag">-window&nbsp;<i>n</i></td>
-            <td class="desc"> Measure variance over <i>n</i> runs (default 3)</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td class="flag">-n&nbsp;<i>num</i> </td>
-      <td class="desc">
-      Number of iterations.  The first (n-1) are warmup iterations, 
-and the last one is timed.
-      </td>
-    </tr>
-  <tr><td class="section" colspan=2>Debugging options</td></tr>
-    <tr>
-      <td class="flag">-debug</td>
-      <td class="desc">
-      debugging output (probably only of interest to maintainers)
-      </td>
-    </tr>
-    <tr>
-      <td class="flag">-noDigestOutput</td>
-      <td class="desc"> Disable digest validation of standard output and error streams.  </td>
-    </tr>
-    <tr>
-      <td class="flag">-noValidation</td>
-      <td class="desc"> Disable validation completely. </td>
-    </tr>
-    <tr>
-      <td class="flag">-ignoreValidation</td>
-      <td class="desc"> Don't halt on validation failure.  Validation failures are reported to
-         the user, but benchmark execution continues. </td>
-    </tr>
-    <tr>
-      <td class="flag">-preserve</td>
-      <td class="desc">
-      preserve output files (probably only of interest to maintainers)
-      </td>
-    </tr>
-    <tr>
-      <td class="flag">-v</td>
-      <td class="desc">
-      verbose output (probably only of interest to maintainers)
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br>
 
 <h3>Callbacks</h3> 
 
@@ -158,14 +51,6 @@ statistics collection to be started and stopped.<p>
 
 <a href="MyCallback.java">Here</a> is an example benchmark callback
 class.<p>
-
-<b>Note:</b> To allow java to find your callback class, you will need to
-avoid using <span style="font-family: monospace;">-jar</span>, which
-overrides the classpath. So instead of:<br> <span style="font-family:
-monospace;">"java <b>-jar dacapo.jar</b> [remaining args]"</span>,<br>use:<br><span
-style="font-family: monospace;">"java <b>-classpath .:./dacapo.jar
-Harness -c MyCallback</b> [remaining args]"</span><br> (you should replace  <span style="font-family:
-monospace;">"."</span> with whichever directory contains your callback class).<p>
 
 The distributed jar file contains one pre-built callback,
 <bf>MMTkCallback</bf>, which brackets the timing run with calls to

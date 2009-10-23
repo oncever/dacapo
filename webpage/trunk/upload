@@ -1,3 +1,3 @@
 #!/bin/bash
 #rsync -aCve ssh batchsoot *.html *.pdf *.css *.java images steveb-oss@shell.sourceforge.net:/home/groups/d/da/dacapobench/htdocs
-rsync -aCv batchsoot *.html *.pdf *.css *.java images steveb-oss,dacapobench@web.sourceforge.net:/home/groups/d/da/dacapobench/htdocs
+rsync -aCv batchsoot RELEASE_NOTES.txt *.html *.pdf *.css *.java images steveb-oss,dacapobench@web.sourceforge.net:/home/groups/d/da/dacapobench/htdocs
