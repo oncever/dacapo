@@ -12,10 +12,10 @@ import java.security.NoSuchAlgorithmException;
  * @author Robin Garner
  * @date $Date$
  * @id $Id$
- *
+ * 
  */
 public class Digest {
-  
+
   /**
    * Return an instance of our chosen message digest
    * 
@@ -30,7 +30,7 @@ public class Digest {
       return null;
     }
   }
-  
+
   /**
    * String representation of a message digest.
    * 
@@ -38,9 +38,9 @@ public class Digest {
    * @return
    */
   public static String toString(byte[] digest) {
-    StringBuffer result = new StringBuffer(digest.length*2);
-    for (int i=0; i < digest.length; i++) {
-      String s = Integer.toHexString(((int)digest[i])&0xFF);
+    StringBuffer result = new StringBuffer(digest.length * 2);
+    for (int i = 0; i < digest.length; i++) {
+      String s = Integer.toHexString(((int) digest[i]) & 0xFF);
       if (s.length() == 1)
         result.append("0");
       result.append(s);
