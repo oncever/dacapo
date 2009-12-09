@@ -19,6 +19,8 @@ import java.text.DecimalFormat;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.jar.JarFile;
+import java.util.Locale;
+
 
 import org.dacapo.parser.Config;
 
@@ -96,6 +98,10 @@ public class TestHarness {
   }
 
   public static void main(String[] args) {
+    // force the locale so that we don't have any character set issues
+    // when generating output for the digests.
+    Locale.setDefault(new Locale("en","AU"));
+
     try {
       commandLineArgs = new CommandLineArgs(args);
 
