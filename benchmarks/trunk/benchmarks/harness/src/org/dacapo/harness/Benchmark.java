@@ -144,9 +144,20 @@ public abstract class Benchmark {
    */
   public final boolean run(Callback callback, String size) throws Exception {
     iteration++;
-    if (iteration == 1)
+    if (iteration == 1) {
       prepare(size);
+
+	  // this rather obscure addition is here in case the preparation stage
+	  // of a benchmark manipulates System.out and System.err
+	  System.setOut(savedOut);
+	  System.setErr(savedErr);
+    }
+
     preIteration(size);
+    // again we may have to correct a benchmarks manipulation of the 
+    // Systemout and Sytem.err during the preIteration phase of the benchmark
+    System.setOut(savedOut);
+    System.setErr(savedErr);
 
     if (preIterationGC) {
       System.gc();
