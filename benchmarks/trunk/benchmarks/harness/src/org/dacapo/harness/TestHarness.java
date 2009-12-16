@@ -106,8 +106,7 @@ public class TestHarness {
       commandLineArgs = new CommandLineArgs(args);
 
       File scratch = new File(commandLineArgs.getScratchDir());
-      rmdir(scratch);
-      scratch.mkdir();
+      makeCleanScratch(scratch);
 
       // this is not right
       Benchmark.setCommandLineOptions(commandLineArgs);
@@ -151,6 +150,11 @@ public class TestHarness {
     }
   }
 
+  public static void makeCleanScratch(File scratch) {
+    rmdir(scratch);
+    scratch.mkdir();
+  }
+  
   /**
    * @param scratch
    * @param bm
