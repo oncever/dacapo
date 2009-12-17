@@ -102,6 +102,9 @@ public class TestHarness {
     // when generating output for the digests.
     Locale.setDefault(new Locale("en","AU"));
 
+    /* All benchmarks run headless */
+    System.setProperty("java.awt.headless", "true");
+
     try {
       commandLineArgs = new CommandLineArgs(args);
 
