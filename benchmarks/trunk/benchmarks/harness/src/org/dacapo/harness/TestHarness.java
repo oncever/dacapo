@@ -135,7 +135,9 @@ public class TestHarness {
 
         TestHarness harness = new TestHarness(ins);
 
-        if (commandLineArgs.getInformation()) {
+        if (! harness.isValidSize(commandLineArgs.getSize())) {
+          System.err.println("No configuration size, " + commandLineArgs.getSize() + ", for benchmark " + bm + ".");
+        } else if (commandLineArgs.getInformation()) {
           harness.bmInfo(commandLineArgs.getSize());
         } else {
           harness.dump(commandLineArgs.getVerbose());
@@ -153,6 +155,10 @@ public class TestHarness {
   public static void makeCleanScratch(File scratch) {
     rmdir(scratch);
     scratch.mkdir();
+  }
+
+  private boolean isValidSize(String size) {
+    return size != null && config.getSizes().contains(size);
   }
   
   /**
