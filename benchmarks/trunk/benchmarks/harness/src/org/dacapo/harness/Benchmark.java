@@ -770,4 +770,5 @@ public abstract class Benchmark {
   public static boolean getSilent() {
     return silent;
   }
+  
 }

@@ -23,6 +23,8 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Vector;
 
+import org.dacapo.harness.Benchmark;
+
 /**
  * Container class for all options specified in a benchmark's configuration
  * file.
@@ -31,6 +33,21 @@ import java.util.Vector;
  */
 public class Config {
 
+  /**
+   * threadCount is the specified threadCountOverride from the user.  A value of 
+   * 0 indicates that it is unspecified and not to override the standard
+   * configuration
+   */
+  private static int threadCountOverride = 0;
+  
+  public static void setThreadCountOverride(int threadCount) {
+    threadCountOverride = threadCount;
+  }
+  
+  public static int getThreadCountOverride() {
+    return threadCountOverride;
+  }
+  
   public enum ThreadModel {
     SINGLE("single threaded"), FIXED("fixed #threads"), PER_CPU(
         "scaled to available CPUs");
@@ -100,7 +117,7 @@ public class Config {
      * specified
      * </ul>
      */
-    private int threadLimit = 1;
+    private int threadLimit = 0;
     private int nThreads = 1;
     private String description;
 
@@ -371,7 +388,7 @@ public class Config {
   /**
    * Set the threading factor for this size.
    */
-  void setThreadFactor(String size, int nThreads) throws ParseException {
+  public void setThreadFactor(String size, int nThreads) throws ParseException {
     if (threadModel == ThreadModel.SINGLE && nThreads != 1)
       throw new ParseException("Single threaded benchmarks must have exactly 1 thread");
     if (nThreads < 1)
@@ -493,6 +510,16 @@ public class Config {
     }
   }
 
+  /**
+   * Get the thread limit for this size of this benchmark.
+   * 
+   * @param size
+   * @return the thread limit
+   */
+  public int getThreadLimit(String size) {
+    return getSize(size).getThreadLimit();
+  }
+  
   /**
    * Get the threading factor for this size of this benchmark.
    * 
@@ -708,7 +735,7 @@ public class Config {
       str.println("Using scaled threading model. "
           + Runtime.getRuntime().availableProcessors()
           + " processors detected, " + getThreadCount(size)
-          + " threads used to drive the workload.");
+          + " threads used to drive the workload, in a possible range of [1," + (getThreadLimit(size)==0?"unlimited":""+getThreadLimit(size)) + "]");
     } else if (verbose) {
       if (getThreadModel() == ThreadModel.FIXED) {
         str.println("Using a fixed threading model. " + getThreadCount(size)
@@ -735,9 +762,7 @@ public class Config {
     case FIXED:
       return getThreadFactor(size);
     case PER_CPU: {
-      int factor = getThreadFactor(size);
-      int cpuCount = Runtime.getRuntime().availableProcessors();
-      return factor * cpuCount;
+      return threadCountOverride!=0 ? threadCountOverride : getThreadFactor(size)*Runtime.getRuntime().availableProcessors();
     }
     default:
       throw new RuntimeException("Unknown thread model");
