@@ -171,8 +171,7 @@ public class Callback {
     timer = System.currentTimeMillis();
     System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " "
         + benchmark + " starting ");
-    System.err
-        .println((warmup ? ("warmup " + iterations + " ") : "") + "=====");
+    System.err.println((warmup ? ("warmup " + (iterations + 1) +  " ") : "") + "=====");
     System.err.flush();
   }
 
@@ -204,7 +203,7 @@ public class Callback {
     System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " "
         + benchmark);
     if (valid) {
-      System.err.print(warmup ? (" completed warmup " + iterations + " ")
+      System.err.print(warmup ? (" completed warmup " + (iterations + 1) + " ")
           : " PASSED ");
       System.err.print("in " + elapsed + " msec ");
     } else {
