@@ -803,6 +803,7 @@ public class Config {
     if (s == null) {
       System.err
           .println("No such size: \"" + size + "\" in this configuration");
+      System.exit(-1);
     }
     return s;
   }
