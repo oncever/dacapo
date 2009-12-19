@@ -802,7 +802,7 @@ public class Config {
     Size s = (Size) sizes.get(size);
     if (s == null) {
       System.err
-          .println("No such size: \"" + size + "\" for this benchmark");
+          .println("No such size: \"" + size + "\" for benchmark "+name);
       System.exit(-1);
     }
     return s;
