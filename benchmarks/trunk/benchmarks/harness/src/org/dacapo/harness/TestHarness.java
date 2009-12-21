@@ -156,13 +156,17 @@ public class TestHarness {
           System.err.println("No configuration size, " + size + ", for benchmark " + bm + ".");
         } else if (factor != 0 && harness.config.getThreadModel() != Config.ThreadModel.PER_CPU) {
           System.err.println("Can only set the thread factor for per_cpu configurable benchmarks");
-        } else if (! harness.isValidThreadCount(size)) {
-          System.err.println("The specified number of threads is outside the range [1," + (limit==0?"unlimited":""+limit) + "] and not 0 (unspecified)");
+        } else if (!harness.isValidThreadCount(size) && (harness.config.getThreadCountOverride() > 0 || factor > 0)) {
+          System.err.println("The specified number of threads ("+harness.config.getThreadCount(size)+") is outside the range [1," + (limit==0?"unlimited":""+limit) + "]");
         } else if (commandLineArgs.getInformation()) {
           harness.bmInfo(size);
         } else {
-          harness.dump(commandLineArgs.getVerbose());
+          if (!harness.isValidThreadCount(size)) {
+            System.err.println("The derived number of threads ("+harness.config.getThreadCount(size)+") is outside the range [1," + (limit==0?"unlimited":""+limit) + "]; rescaling to match thread limit.");
+            harness.config.setThreadCountOverride(harness.config.getThreadLimit(size));
+          }
 
+          harness.dump(commandLineArgs.getVerbose());
           runBenchmark(scratch, bm, harness);
         }
       }
