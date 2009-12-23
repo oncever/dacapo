@@ -1,11 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2009 The Australian National University.
+/*
+ * Copyright (c) 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date$
- * @id $Id$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -15,6 +15,10 @@ import java.util.Vector;
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
+/**
+ * @date $Date$
+ * @id $Id$
+ */
 public class Batik extends Benchmark {
 
   private String[] args;
@@ -22,8 +26,7 @@ public class Batik extends Benchmark {
 
   public Batik(Config config, File scratch) throws Exception {
     super(config, scratch, false);
-    Class<?> clazz = Class.forName("org.apache.batik.apps.rasterizer.Main",
-        true, loader);
+    Class<?> clazz = Class.forName("org.apache.batik.apps.rasterizer.Main", true, loader);
     this.method = clazz.getMethod("execute");
     this.constructor = clazz.getConstructor(String[].class);
   }

@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2005, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date$
- * @id $Id$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.*;
@@ -15,11 +15,14 @@ import java.lang.reflect.Method;
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
-/*
- * Xalan test harness. Uses a single pre-compiled stylesheet to transfrom
- * a number of sample files using a number of threads. The goal is to 
- * simulate a typical server XSLT load which is performing XML to (X)HTML
- * transforms as part of a presentation layer.
+/**
+ * Xalan test harness. Uses a single pre-compiled stylesheet to transfrom a
+ * number of sample files using a number of threads. The goal is to simulate a
+ * typical server XSLT load which is performing XML to (X)HTML transforms as
+ * part of a presentation layer.
+ * 
+ * @date $Date$
+ * @id $Id$
  */
 public class Xalan extends Benchmark {
   Object benchmark;
@@ -46,8 +49,7 @@ public class Xalan extends Benchmark {
 
     useBenchmarkClassLoader();
     try {
-      createWorkersMethod.invoke(benchmark, new Object[] { config
-          .getThreadCount(size) });
+      createWorkersMethod.invoke(benchmark, new Object[] { config.getThreadCount(size) });
     } finally {
       revertClassLoader();
     }

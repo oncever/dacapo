@@ -1,20 +1,16 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date$
- * @id $Id$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 /**
- * Exception class for local error conditions.
- * 
- * @author Robin Garner
  * @date $Date$
  * @id $Id$
- * 
  */
 public class DacapoException extends Exception {
   public DacapoException(String text) {
