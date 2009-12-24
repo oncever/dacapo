@@ -7,13 +7,31 @@
 </head>
 
 <body>
-This page describes how to use the 'xdeps' packaging of the DaCapo benchmark suite (eg <tt>dacapo-2006-10-MR2-xdeps.zip</tt>) to process them with <a target="_foo" href="http://www.sable.mcgill.ca/soot/">Soot</a>.  The information may be of interest to anyone performing <i>ahead-of-time whole program analyses</i>.<p>
+<h1>DaCapo 9.12 "bach"</h1>
+
+The initial release of the DaCapo suite featured support for whole
+program static analysis, courtesy of Eric Bodden.  <b>Unfortunately we
+are unable to support such analysis in 9.12</b>, mainly due to the
+pervasive use of reflection and substantially more complex benchmarks
+and their associated dependencies.<p>
+
+We welcome feedback and contributions that may help rectify the
+situation.  We are very grateful to the significant contributions and
+assistance from Eric Bodden, who implemented this support for earlier
+versions and worked with us to try to get such support for the more
+recent versions.<p>
+
+<hr width="50%" size="1">
+
+<h1>Deprecated: DaCapo 2006-10</h1>
+
+The remainder of this page describes how to use the 'xdeps' packaging of the old (out of date) 2006-10 release of the DaCapo benchmark suite (eg <tt>dacapo-2006-10-MR2-xdeps.zip</tt>) to process them with <a target="_foo" href="http://www.sable.mcgill.ca/soot/">Soot</a>.  The information may be of interest to anyone performing <i>ahead-of-time whole program analyses</i>.<p>
 
 <b>Please note</b> that we strongly recommend that you use the regular jar packaging of the suite (eg <tt>dacapo-2006-10-MR2.jar</tt>) unless you specifically need to use the 'xdeps' repackaging as described here.<p>
 
 Special thanks to Eric Bodden of McGill for helping develop support for Soot and contributing the following.<p>
 
-<h1>Processing the DaCapo benchmarks with Soot</h1>
+<h2>Processing the DaCapo benchmarks with Soot</h2>
 
 The DaCapo benchmarks can be fully processed with <a target="_foo" href="http://www.sable.mcgill.ca/soot/">Soot</a>. (The following was tested with Soot version 2.2.3.)<br>
 

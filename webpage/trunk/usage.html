@@ -43,6 +43,38 @@ To run one of the benchmarks, use the command:<p>
 java -jar dacapo-2006-10.jar
 </span>
 
+<h3>Guidance</h3> 
+
+When reporting results, be sure to report the precise version of the
+suite, as well as any command line arguments used.<p>
+
+The benchmark harness allows control over the number of iterations
+executed (allowing observation of the benchmark warm-up).<p>
+
+The harness also allows the number of client (external) threads to be
+controlled for many benchmarks (some benchmarks are intentionally
+single-threaded).  Note that we sharply differentiate <b>internal</b>
+and <b>external</b> concurrency.  The former (internal) is an
+intrinsic property of the benchmark and is not user-controlable.  For
+example the avrora benchmark uses threads to represent simulated
+entities.  The number of threads used is a property of the system
+being simulated and is not user controllable.  This is an example of
+internal concurrency.  On the other hand, some benchmarks, such as
+lusearch exhibit external concurrency which allows the user to define
+the number of threads across which the task (or part of the task) is
+partitioned.  The tradebeans and tradesoap benchmarks exhibit both
+forms of concurrency, with their server components using thread pools
+to manage requests (internal concurrency, not user controlable), and
+while the harness specifies the number of clients which concurrently
+make requests to the server (external concurrency, user controlable).
+For all benchmarks that exhibit external concurrency, the level of
+concurrency is by default set at the number of available processors.
+This may be overriden at the command-line, either with an explicit
+number of threads or with a user-specified multiplier against the
+number of available processors.  It is important that you explicitly
+report the number of threads used when you override the harness
+defaults.
+
 <h3>Callbacks</h3> 
 
 The harness allows for pluggable callbacks which are executed before
