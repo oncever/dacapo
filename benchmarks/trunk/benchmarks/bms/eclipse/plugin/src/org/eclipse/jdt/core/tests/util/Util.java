@@ -25,8 +25,8 @@ public class Util {
    * 
    * Example of use: [org.eclipse.jdt.core.tests.util.Util.getJavaClassLib()]
    * 
-   * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
-   * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+   * @date $Date$
+   * @id $Id$
    */
   public static String[] getJavaClassLibs() {
     // check bootclasspath properties for Sun, JRockit and Harmony VMs
