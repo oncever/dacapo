@@ -23,8 +23,8 @@ import org.dacapo.harness.Digest;
 /**
  * Interact with an Http page
  * 
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date$
+ * @id $Id$
  */
 public abstract class Page {
 

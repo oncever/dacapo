@@ -17,8 +17,8 @@ import org.dacapo.parser.Config;
 /**
  * Benchmark harness for the Tomcat benchmark
  * 
- * @date $Date: 2008-07-27 12:53:06 +1000 (Sun, 27 Jul 2008) $
- * @id $Id: $
+ * @date $Date$
+ * @id $Id$
  * 
  */
 public class Tomcat extends Benchmark {

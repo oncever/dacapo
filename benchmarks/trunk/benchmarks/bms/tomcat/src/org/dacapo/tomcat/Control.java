@@ -19,8 +19,8 @@ import org.apache.catalina.startup.Bootstrap;
  * Separated into a single class with a single public method for ease of use via
  * reflection.
  * 
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date$
+ * @id $Id$
  */
 public class Control {
   /**

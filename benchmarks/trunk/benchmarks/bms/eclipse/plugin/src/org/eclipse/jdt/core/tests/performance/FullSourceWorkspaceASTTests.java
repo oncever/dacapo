@@ -30,8 +30,8 @@ import org.eclipse.jdt.core.dom.*;
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
  *  
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date$
+ * @id $Id$
  */
 public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
 

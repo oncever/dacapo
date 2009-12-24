@@ -17,8 +17,8 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 /**
  * An authenticated Tomcat session
  * 
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date$
+ * @id $Id$
  */
 public class AuthenticatedSession extends Session {
 
